@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:ditonton/data/models/movie_table.dart';
+import 'package:ditonton/data/models/tv_table.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
@@ -21,20 +22,29 @@ class DatabaseHelper {
   }
 
   static const String _tblWatchlist = 'watchlist';
+  static const String _tblTVWatchlist = 'watchlist_tv';
 
   Future<Database> _initDb() async {
     final path = await getDatabasesPath();
     final databasePath = '$path/ditonton.db';
 
-    var db = await openDatabase(databasePath, version: 1, onCreate: _onCreate);
+    var db = await openDatabase(databasePath, version: 2, onOpen: _onOpen);
     return db;
   }
 
-  void _onCreate(Database db, int version) async {
+  void _onOpen(Database db) async {
     await db.execute('''
-      CREATE TABLE  $_tblWatchlist (
+      CREATE TABLE IF NOT EXISTS $_tblWatchlist (
         id INTEGER PRIMARY KEY,
         title TEXT,
+        overview TEXT,
+        posterPath TEXT
+      );
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $_tblTVWatchlist (
+        id INTEGER PRIMARY KEY,
+        name TEXT,
         overview TEXT,
         posterPath TEXT
       );
@@ -55,6 +65,20 @@ class DatabaseHelper {
     );
   }
 
+  Future<int> insertTVWatchlist(TVTable tv) async {
+    final db = await database;
+    return await db!.insert(_tblTVWatchlist, tv.toJson());
+  }
+
+  Future<int> removeTVWatchlist(TVTable tv) async {
+    final db = await database;
+    return await db!.delete(
+      _tblTVWatchlist,
+      where: 'id = ?',
+      whereArgs: [tv.id],
+    );
+  }
+
   Future<Map<String, dynamic>?> getMovieById(int id) async {
     final db = await database;
     final results = await db!.query(
@@ -69,10 +93,32 @@ class DatabaseHelper {
       return null;
     }
   }
+  
+  Future<Map<String, dynamic>?> getTVById(int id) async {
+    final db = await database;
+    final results = await db!.query(
+      _tblTVWatchlist,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+
+    if (results.isNotEmpty) {
+      return results.first;
+    } else {
+      return null;
+    }
+  }
 
   Future<List<Map<String, dynamic>>> getWatchlistMovies() async {
     final db = await database;
     final List<Map<String, dynamic>> results = await db!.query(_tblWatchlist);
+
+    return results;
+  }
+
+  Future<List<Map<String, dynamic>>> getWatchlistTV() async {
+    final db = await database;
+    final List<Map<String, dynamic>> results = await db!.query(_tblTVWatchlist);
 
     return results;
   }
