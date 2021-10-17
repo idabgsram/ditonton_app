@@ -55,9 +55,9 @@ class TVDetailResponse extends Equatable {
     final bool inProduction;
     final List<String> languages;
     final String lastAirDate;
-    final TVEpisodesModel lastEpisodeToAir;
+    final TVEpisodesModel? lastEpisodeToAir;
     final String name;
-    final TVEpisodesModel nextEpisodeToAir;
+    final TVEpisodesModel? nextEpisodeToAir;
     final List<NetworkModel> networks;
     final int numberOfEpisodes;
     final int numberOfSeasons;
@@ -89,9 +89,9 @@ class TVDetailResponse extends Equatable {
         inProduction: json["in_production"],
         languages: List<String>.from(json["languages"].map((x) => x)),
         lastAirDate: json["last_air_date"],
-        lastEpisodeToAir: TVEpisodesModel.fromJson(json["last_episode_to_air"]),
+        lastEpisodeToAir: json["last_episode_to_air"]!=null?TVEpisodesModel.fromJson(json["last_episode_to_air"]):null,
         name: json["name"],
-        nextEpisodeToAir: TVEpisodesModel.fromJson(json["next_episode_to_air"]),
+        nextEpisodeToAir: json["next_episode_to_air"]!=null?TVEpisodesModel.fromJson(json["next_episode_to_air"]):null,
         networks: List<NetworkModel>.from(json["networks"].map((x) => NetworkModel.fromJson(x))),
         numberOfEpisodes: json["number_of_episodes"],
         numberOfSeasons: json["number_of_seasons"],
@@ -123,9 +123,9 @@ class TVDetailResponse extends Equatable {
         "in_production": inProduction,
         "languages": List<dynamic>.from(languages.map((x) => x)),
         "last_air_date": lastAirDate,
-        "last_episode_to_air": lastEpisodeToAir.toJson(),
+        "last_episode_to_air": lastEpisodeToAir?.toJson(),
         "name": name,
-        "next_episode_to_air": nextEpisodeToAir.toJson(),
+        "next_episode_to_air": nextEpisodeToAir?.toJson(),
         "networks": List<dynamic>.from(networks.map((x) => x.toJson())),
         "number_of_episodes": numberOfEpisodes,
         "number_of_seasons": numberOfSeasons,
@@ -158,9 +158,9 @@ class TVDetailResponse extends Equatable {
         inProduction: this.inProduction,
         languages: this.languages,
         lastAirDate: this.lastAirDate,
-        lastEpisodeToAir: this.lastEpisodeToAir.toEntity(),
+        lastEpisodeToAir: this.lastEpisodeToAir?.toEntity(),
         name: this.name,
-        nextEpisodeToAir: this.nextEpisodeToAir.toEntity(),
+        nextEpisodeToAir: this.nextEpisodeToAir?.toEntity(),
         networks: this.networks.map((networks) => networks.toEntity()).toList(),
         numberOfEpisodes: this.numberOfEpisodes,
         numberOfSeasons: this.numberOfSeasons,

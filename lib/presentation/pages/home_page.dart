@@ -8,7 +8,7 @@ import 'package:ditonton/presentation/pages/search_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_tv_page.dart';
 import 'package:ditonton/presentation/pages/tv_detail_page.dart';
-import 'package:ditonton/presentation/pages/watchlist_movies_page.dart';
+import 'package:ditonton/presentation/pages/watchlist_page.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/provider/tv_list_notifier.dart';
@@ -63,8 +63,7 @@ class _HomePageState extends State<HomePage> {
                   leading: Icon(Icons.save_alt),
                   title: Text('Watchlist'),
                   onTap: () {
-                    Navigator.pushNamed(
-                        context, WatchlistMoviesPage.ROUTE_NAME);
+                    Navigator.pushNamed(context, WatchlistPage.ROUTE_NAME);
                   },
                 ),
                 ListTile(
@@ -80,6 +79,7 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
             title: Text('Ditonton'),
             bottom: const TabBar(
+              indicatorColor: Colors.yellowAccent,
               tabs: [
                 Tab(icon: Icon(Icons.movie), text: "Movies"),
                 Tab(icon: Icon(Icons.tv), text: "TV Shows"),

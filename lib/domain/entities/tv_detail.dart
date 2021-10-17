@@ -53,9 +53,9 @@ class TVDetail extends Equatable {
   final bool inProduction;
   final List<String> languages;
   final String lastAirDate;
-  final TVEpisodes lastEpisodeToAir;
+  final TVEpisodes? lastEpisodeToAir;
   final String name;
-  final TVEpisodes nextEpisodeToAir;
+  final TVEpisodes? nextEpisodeToAir;
   final List<Network> networks;
   final int numberOfEpisodes;
   final int numberOfSeasons;

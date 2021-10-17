@@ -31,7 +31,7 @@ class MovieDetailResponse extends Equatable {
   final String? backdropPath;
   final int budget;
   final List<GenreModel> genres;
-  final String homepage;
+  final String? homepage;
   final int id;
   final String? imdbId;
   final String originalLanguage;

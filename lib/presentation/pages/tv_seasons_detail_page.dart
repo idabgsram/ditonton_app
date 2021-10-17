@@ -12,17 +12,17 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
-class TVDetailPage extends StatefulWidget {
-  static const ROUTE_NAME = '/detail-tv';
+class TVSeasonsDetailPage extends StatefulWidget {
+  static const ROUTE_NAME = '/detail-tv-seasons';
 
   final int id;
-  TVDetailPage({required this.id});
+  TVSeasonsDetailPage({required this.id});
 
   @override
-  _TVDetailPageState createState() => _TVDetailPageState();
+  _TVSeasonsDetailPageState createState() => _TVSeasonsDetailPageState();
 }
 
-class _TVDetailPageState extends State<TVDetailPage> {
+class _TVSeasonsDetailPageState extends State<TVSeasonsDetailPage> {
   @override
   void initState() {
     super.initState();
@@ -291,7 +291,7 @@ class DetailContent extends StatelessWidget {
                                             onTap: () {
                                               Navigator.pushReplacementNamed(
                                                 context,
-                                                TVDetailPage.ROUTE_NAME,
+                                                TVSeasonsDetailPage.ROUTE_NAME,
                                                 arguments: tv.id,
                                               );
                                             },

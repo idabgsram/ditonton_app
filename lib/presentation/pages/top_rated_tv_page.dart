@@ -1,6 +1,6 @@
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/provider/top_rated_tv_notifier.dart';
-import 'package:ditonton/presentation/widgets/tv_card_list.dart';
+import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,7 +38,7 @@ class _TopRatedTVPageState extends State<TopRatedTVPage> {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final tv = data.tvList[index];
-                  return TVCard(tv);
+                  return ItemCard(tv);
                 },
                 itemCount: data.tvList.length,
               );

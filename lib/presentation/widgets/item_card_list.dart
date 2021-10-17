@@ -1,13 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
-import 'package:ditonton/domain/entities/tv.dart';
+import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:flutter/material.dart';
 
-class TVCard extends StatelessWidget {
-  final TV tv;
+class ItemCard extends StatelessWidget {
+  final dynamic item;
+  final bool isMovies;
 
-  TVCard(this.tv);
+  ItemCard(this.item, {this.isMovies = false});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +18,8 @@ class TVCard extends StatelessWidget {
         onTap: () {
           Navigator.pushNamed(
             context,
-            TVDetailPage.ROUTE_NAME,
-            arguments: tv.id,
+            isMovies ? MovieDetailPage.ROUTE_NAME : TVDetailPage.ROUTE_NAME,
+            arguments: item.id,
           );
         },
         child: Stack(
@@ -26,6 +27,7 @@ class TVCard extends StatelessWidget {
           children: [
             Card(
               child: Container(
+                width: double.infinity,
                 margin: const EdgeInsets.only(
                   left: 16 + 80 + 16,
                   bottom: 8,
@@ -35,14 +37,14 @@ class TVCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      tv.name ?? '-',
+                      isMovies ? item.title ?? '-' : item.name ?? '-',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: kHeading6,
                     ),
                     SizedBox(height: 16),
                     Text(
-                      tv.overview ?? '-',
+                      item.overview ?? '-',
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -57,7 +59,7 @@ class TVCard extends StatelessWidget {
               ),
               child: ClipRRect(
                 child: CachedNetworkImage(
-                  imageUrl: '$BASE_IMAGE_URL${tv.posterPath}',
+                  imageUrl: '$BASE_IMAGE_URL${item.posterPath}',
                   width: 80,
                   placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),

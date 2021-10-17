@@ -1,7 +1,7 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/movie_search_notifier.dart';
-import 'package:ditonton/presentation/widgets/movie_card_list.dart';
+import 'package:ditonton/presentation/provider/search_notifier.dart';
+import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,8 +21,8 @@ class SearchPage extends StatelessWidget {
           children: [
             TextField(
               onSubmitted: (query) {
-                Provider.of<MovieSearchNotifier>(context, listen: false)
-                    .fetchMovieSearch(query);
+                Provider.of<SearchNotifier>(context, listen: false)
+                    .fetchSearch(query);
               },
               decoration: InputDecoration(
                 hintText: 'Search title',
@@ -32,11 +32,34 @@ class SearchPage extends StatelessWidget {
               textInputAction: TextInputAction.search,
             ),
             SizedBox(height: 16),
+            DropdownButton<String>(
+                value: Provider.of<SearchNotifier>(context, listen: true)
+                    .currentSelection,
+                icon: const Icon(Icons.arrow_downward),
+                iconSize: 24,
+                elevation: 16,
+                style: const TextStyle(color: Colors.white),
+                underline: Container(
+                  height: 2,
+                  color: Colors.yellowAccent,
+                ),
+                onChanged: (String? newValue) {
+                  Provider.of<SearchNotifier>(context, listen: false)
+                      .setCurrentSelection(newValue);
+                },
+                items: <String>['Movies', 'TV Shows']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value, style: TextStyle(color: Colors.white),),
+                  );
+                }).toList()),
+            SizedBox(height: 16),
             Text(
               'Search Result',
               style: kHeading6,
             ),
-            Consumer<MovieSearchNotifier>(
+            Consumer<SearchNotifier>(
               builder: (context, data, child) {
                 if (data.state == RequestState.Loading) {
                   return Center(
@@ -48,8 +71,8 @@ class SearchPage extends StatelessWidget {
                     child: ListView.builder(
                       padding: const EdgeInsets.all(8),
                       itemBuilder: (context, index) {
-                        final movie = data.searchResult[index];
-                        return MovieCard(movie);
+                        final item = data.searchResult[index];
+                        return ItemCard(item, isMovies: data.isMovies,);
                       },
                       itemCount: result.length,
                     ),
