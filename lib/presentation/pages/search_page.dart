@@ -51,7 +51,10 @@ class SearchPage extends StatelessWidget {
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
-                    child: Text(value, style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      value,
+                      style: TextStyle(color: Colors.white),
+                    ),
                   );
                 }).toList()),
             SizedBox(height: 16),
@@ -72,7 +75,10 @@ class SearchPage extends StatelessWidget {
                       padding: const EdgeInsets.all(8),
                       itemBuilder: (context, index) {
                         final item = data.searchResult[index];
-                        return ItemCard(item, isMovies: data.isMovies,);
+                        return ItemCard(
+                          item,
+                          isMovies: data.isMovies,
+                        );
                       },
                       itemCount: result.length,
                     ),

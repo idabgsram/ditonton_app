@@ -1,12 +1,11 @@
 import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_tv_notifier.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PopularTVPage extends StatefulWidget {
-  static const ROUTE_NAME = '/popular-tv';
+  static const ROUTE_NAME = '/tv-shows/popular';
 
   @override
   _PopularTVPageState createState() => _PopularTVPageState();

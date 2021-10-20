@@ -59,7 +59,9 @@ class ItemCard extends StatelessWidget {
               ),
               child: ClipRRect(
                 child: CachedNetworkImage(
-                  imageUrl: '$BASE_IMAGE_URL${item.posterPath}',
+                  imageUrl: item.posterPath != null
+                      ? '$BASE_IMAGE_URL${item.posterPath}'
+                      : '$NO_IMAGE_URL',
                   width: 80,
                   placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),

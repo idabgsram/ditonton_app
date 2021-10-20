@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 const String BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
+const String NO_IMAGE_URL = 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/768px-No_image_available.svg.png';
 
 // colors
 const Color kRichBlack = Color(0xFF000814);
@@ -32,8 +33,8 @@ final kTextTheme = TextTheme(
 const kColorScheme = ColorScheme(
   primary: kMikadoYellow,
   primaryVariant: kMikadoYellow,
-  secondary: kPrussianBlue,
-  secondaryVariant: kPrussianBlue,
+  secondary: kMikadoYellow,
+  secondaryVariant: kMikadoYellow,
   surface: kRichBlack,
   background: kRichBlack,
   error: Colors.red,

@@ -271,7 +271,9 @@ class ItemList extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(16)),
                 child: CachedNetworkImage(
-                  imageUrl: '$BASE_IMAGE_URL${item.posterPath}',
+                  imageUrl: item.posterPath != null
+                      ? '$BASE_IMAGE_URL${item.posterPath}'
+                      : '$NO_IMAGE_URL',
                   placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),
                   ),

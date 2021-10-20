@@ -1,0 +1,208 @@
+{
+    "backdrop_path": "/zrMCOQnzIgGyBtGCdMPom9bOw0r.jpg",
+    "created_by": [
+        {
+            "id": 63554,
+            "credit_id": "5d77e07539549a000f96cc12",
+            "name": "Dave Erickson",
+            "gender": 2,
+            "profile_path": null
+        },
+        {
+            "id": 1223867,
+            "credit_id": "5521364b9251417be2002abc",
+            "name": "Robert Kirkman",
+            "gender": 2,
+            "profile_path": "/ulYOkxtk8lUvg4Ltkg2q22ibg4R.jpg"
+        }
+    ],
+    "episode_run_time": [
+        43,
+        60
+    ],
+    "first_air_date": "2015-08-23",
+    "genres": [
+        {
+            "id": 10759,
+            "name": "Action & Adventure"
+        },
+        {
+            "id": 18,
+            "name": "Drama"
+        }
+    ],
+    "homepage": "http://www.amc.com/shows/fear-the-walking-dead",
+    "id": 62286,
+    "in_production": true,
+    "languages": [
+        "en",
+        "es"
+    ],
+    "last_air_date": "2021-06-13",
+    "last_episode_to_air": {
+        "air_date": "2021-06-13",
+        "episode_number": 16,
+        "id": 2870876,
+        "name": "The Beginning",
+        "overview": "Everyone struggles desperately to live the destruction that is approaching on their own terms.",
+        "production_code": "",
+        "season_number": 6,
+        "still_path": "/g2vc5HB01YbAqhXHxRAQW6Rd43F.jpg",
+        "vote_average": 6.2,
+        "vote_count": 4
+    },
+    "name": "Fear the Walking Dead",
+    "next_episode_to_air": {
+        "air_date": "2021-10-17",
+        "episode_number": 1,
+        "id": 3092334,
+        "name": "The Beacon",
+        "overview": "While most of the landscape is destroyed by nuclear warheads, Strand thrives in one of the few inhabitable places left; Strand's search for survivors uncovers a stranger with an unexpected connection to his past.",
+        "production_code": "",
+        "season_number": 7,
+        "still_path": "/qjPC95E31iiJJ5mt39winwOsybl.jpg",
+        "vote_average": 8.0,
+        "vote_count": 1
+    },
+    "networks": [
+        {
+            "name": "AMC",
+            "id": 174,
+            "logo_path": "/pmvRmATOCaDykE6JrVoeYxlFHw3.png",
+            "origin_country": "US"
+        }
+    ],
+    "number_of_episodes": 93,
+    "number_of_seasons": 7,
+    "origin_country": [
+        "US"
+    ],
+    "original_language": "en",
+    "original_name": "Fear the Walking Dead",
+    "overview": "What did the world look like as it was transforming into the horrifying apocalypse depicted in \"The Walking Dead\"? This spin-off set in Los Angeles, following new characters as they face the beginning of the end of the world, will answer that question.",
+    "popularity": 605.496,
+    "poster_path": "/upmd11A2ZaZEG1j6wRGdD4B5cxs.jpg",
+    "production_companies": [
+        {
+            "id": 11533,
+            "logo_path": "/tWM9pmzVYxok4GbQIttxdcml1yT.png",
+            "name": "Valhalla Motion Pictures",
+            "origin_country": "US"
+        },
+        {
+            "id": 23242,
+            "logo_path": "/fOALFvgnO1ZdIaA9PNIAAuaDKWd.png",
+            "name": "AMC Networks",
+            "origin_country": "US"
+        },
+        {
+            "id": 43346,
+            "logo_path": null,
+            "name": "Fox Productions",
+            "origin_country": "US"
+        },
+        {
+            "id": 23921,
+            "logo_path": "/simDvqT8y6jhP530ggUMbikvVKc.png",
+            "name": "Circle of Confusion",
+            "origin_country": "US"
+        }
+    ],
+    "production_countries": [
+        {
+            "iso_3166_1": "US",
+            "name": "United States of America"
+        }
+    ],
+    "seasons": [
+        {
+            "air_date": "2015-10-04",
+            "episode_count": 38,
+            "id": 70218,
+            "name": "Specials",
+            "overview": "Fear the Walking Dead: Flight 462 follows the story of a group of airline passengers who discover that one of their fellow travelers is infected with the virus, putting their lives at risk.\n\nA new installment of the 16-part series is available every sunday online, and on-air as promos during two commercial breaks of The Walking Dead.",
+            "poster_path": "/9fXoAcfHTktdWIUr7BopLqelb8Y.jpg",
+            "season_number": 0
+        },
+        {
+            "air_date": "2015-08-23",
+            "episode_count": 6,
+            "id": 65692,
+            "name": "Season 1",
+            "overview": "After a string of ominous warnings, guidance counselor Madison Clark and the rest of her family are horrified to see their world descend into a zombie nightmare -- which will soon become their new reality.",
+            "poster_path": "/i2bXSzpKWw0RVmLdldhBFT3a0Ty.jpg",
+            "season_number": 1
+        },
+        {
+            "air_date": "2016-04-10",
+            "episode_count": 15,
+            "id": 73780,
+            "name": "Season 2",
+            "overview": "Season two returns aboard the Abigail. Abandoning land, the group sets out for ports unknown, some place where Infection has not hit. They will discover that the water may be no safer than land.",
+            "poster_path": "/oxAm6varqgV3WOGYX2OrgCGKnZo.jpg",
+            "season_number": 2
+        },
+        {
+            "air_date": "2017-06-04",
+            "episode_count": 16,
+            "id": 87822,
+            "name": "Season 3",
+            "overview": "As Fear the Walking Dead returns for season three, our families will be brought together in the vibrant and violent ecotone of the U.S.-Mexico border.",
+            "poster_path": "/yd8cDZG4XjNRk7jfEWy18KH07d2.jpg",
+            "season_number": 3
+        },
+        {
+            "air_date": "2018-04-15",
+            "episode_count": 16,
+            "id": 99582,
+            "name": "Season 4",
+            "overview": "In season four, we see the world of Madison Clark and her family through new eyes -- the eyes of Morgan Jones. The characters' immediate past mixes with an uncertain present of struggle and discovery as they meet new friends, foes and threats. They fight for each other, against each other and against a legion of the dead to somehow build an existence against the crushing pressure of lives coming apart. There will be darkness and light; terror and grace; the heroic, mercenary, and craven, all crashing together towards a new reality.",
+            "poster_path": "/k8T1iiKU9zQ8NAvwsB95KZXJ3O6.jpg",
+            "season_number": 4
+        },
+        {
+            "air_date": "2019-06-02",
+            "episode_count": 16,
+            "id": 121629,
+            "name": "Season 5",
+            "overview": "In season 5, the mission to help others will be put to the ultimate test when our group lands in uncharted territory. They will be forced to face not just their pasts but also their fears, leaving them forever changed.",
+            "poster_path": "/aUBFD7zPl4fyE8e4FjASq4OgOUc.jpg",
+            "season_number": 5
+        },
+        {
+            "air_date": "2020-10-11",
+            "episode_count": 16,
+            "id": 157589,
+            "name": "Season 6",
+            "overview": "Heading into Season 5 of \"Fear the Walking Dead,\" the group's mission is clear: locate survivors and help make what's left of the world a slightly better place. With dogged determination, Morgan Jones leads the group with a philosophy rooted in benevolence, community and hope. Each character believes that helping others will allow them to make up for the wrongs of their pasts. But trust won't be easily earned. Their mission of helping others will be put to the ultimate test when the members of the group find themselves in uncharted territory, forced to face not just their pasts but also their fears. It is only by facing those fears that the group will discover an entirely new way to live, one that will leave them changed forever changed.",
+            "poster_path": "/tTjLJ7NN5V9x9d55jq0XdvlUt1u.jpg",
+            "season_number": 6
+        },
+        {
+            "air_date": "2021-10-17",
+            "episode_count": 8,
+            "id": 203528,
+            "name": "Season 7",
+            "overview": "",
+            "poster_path": "/upmd11A2ZaZEG1j6wRGdD4B5cxs.jpg",
+            "season_number": 7
+        }
+    ],
+    "spoken_languages": [
+        {
+            "english_name": "English",
+            "iso_639_1": "en",
+            "name": "English"
+        },
+        {
+            "english_name": "Spanish",
+            "iso_639_1": "es",
+            "name": "Español"
+        }
+    ],
+    "status": "Returning Series",
+    "tagline": "Every decision is life or death.",
+    "type": "Scripted",
+    "vote_average": 7.7,
+    "vote_count": 3832
+}

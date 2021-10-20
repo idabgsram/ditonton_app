@@ -3,7 +3,9 @@ import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/genre.dart';
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/domain/entities/tv_detail.dart';
-import 'package:ditonton/domain/entities/tv_episodes.dart';
+import 'package:ditonton/domain/entities/tv_detail_episodes.dart';
+import 'package:ditonton/domain/entities/tv_detail_season.dart';
+import 'package:ditonton/presentation/pages/tv_seasons_detail_page.dart';
 import 'package:ditonton/presentation/provider/tv_detail_notifier.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/provider/tv_detail_notifier.dart';
@@ -13,7 +15,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 class TVDetailPage extends StatefulWidget {
-  static const ROUTE_NAME = '/detail-tv';
+  static const ROUTE_NAME = '/tv-shows/detail';
 
   final int id;
   TVDetailPage({required this.id});
@@ -69,8 +71,8 @@ class DetailContent extends StatelessWidget {
   DetailContent(this.tv, this.recommendations, this.isAddedWatchlist);
 
   @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+  Widget build(BuildContext mainContext) {
+    final screenWidth = MediaQuery.of(mainContext).size.width;
     return Stack(
       children: [
         CachedNetworkImage(
@@ -108,6 +110,10 @@ class DetailContent extends StatelessWidget {
                               tv.name,
                               style: kHeading5,
                             ),
+                            if (tv.inProduction)
+                              Text(
+                                "Ongoing",
+                              ),
                             ElevatedButton(
                               onPressed: () async {
                                 if (!isAddedWatchlist) {
@@ -156,9 +162,6 @@ class DetailContent extends StatelessWidget {
                             Text(
                               _showGenres(tv.genres),
                             ),
-                            Text(
-                              _showDuration(tv.episodeRunTime),
-                            ),
                             Row(
                               children: [
                                 RatingBarIndicator(
@@ -173,16 +176,36 @@ class DetailContent extends StatelessWidget {
                                 Text('${tv.voteAverage}')
                               ],
                             ),
-                            SizedBox(height: 16),
+                            if(tv.firstAirDate!=null)
+                            Text('Aired on ${tv.firstAirDate}'),
+                            
+                            if(tv.episodeRunTime.length>0)
+                            Text(
+                              _showDuration(tv.episodeRunTime),
+                            ),
+                            Text('Total Episodes : ${tv.numberOfEpisodes}'),
+                            SizedBox(height: 8),
+                            Container(
+                                height: 1,
+                                width: double.infinity,
+                                color: Colors.grey.withOpacity(.2)),
+                            SizedBox(height: 8),
                             Text(
                               'Overview',
                               style: kHeading6,
                             ),
                             Text(
-                              tv.overview,
+                              tv.overview.length < 3 ? "-" : tv.overview,
                             ),
                             if (tv.lastEpisodeToAir != null)
-                              SizedBox(height: 16),
+                              Column(children: [
+                                SizedBox(height: 8),
+                                Container(
+                                    height: 1,
+                                    width: double.infinity,
+                                    color: Colors.grey.withOpacity(.2)),
+                                SizedBox(height: 8),
+                              ]),
                             if (tv.lastEpisodeToAir != null)
                               Text(
                                 'Last Episodes${tv.lastEpisodeToAir != null ? ' (Episode ${tv.lastEpisodeToAir!.episodeNumber!})' : ''}',
@@ -217,8 +240,8 @@ class DetailContent extends StatelessWidget {
                                         tv.nextEpisodeToAir!.name
                                                 .toString()
                                                 .length >
-                                            1||
-                                    tv.nextEpisodeToAir!.overview != null&&
+                                            1 ||
+                                    tv.nextEpisodeToAir!.overview != null &&
                                         tv.nextEpisodeToAir!.overview
                                                 .toString()
                                                 .length >
@@ -232,14 +255,19 @@ class DetailContent extends StatelessWidget {
                                         tv.nextEpisodeToAir!.name
                                                 .toString()
                                                 .length >
-                                            1||
-                                    tv.nextEpisodeToAir!.overview != null&&
+                                            1 ||
+                                    tv.nextEpisodeToAir!.overview != null &&
                                         tv.nextEpisodeToAir!.overview
                                                 .toString()
                                                 .length >
                                             1))
                               _episodesItem(tv.nextEpisodeToAir!),
-                            SizedBox(height: 16),
+                            SizedBox(height: 8),
+                            Container(
+                                height: 1,
+                                width: double.infinity,
+                                color: Colors.grey.withOpacity(.2)),
+                            SizedBox(height: 8),
                             Text(
                               'Seasons',
                               style: kHeading6,
@@ -248,21 +276,22 @@ class DetailContent extends StatelessWidget {
                               height: 130,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
+                                itemBuilder: (_, index) {
                                   final seasonsItem = tv.seasons[index];
                                   return Padding(
                                       padding: const EdgeInsets.all(4.0),
-                                      child: _seasonsItem(
-                                          index,
-                                          seasonsItem.name,
-                                          seasonsItem.episodeCount ?? 1,
-                                          seasonsItem.airDate,
-                                          seasonsItem.posterPath));
+                                      child: _seasonsItem(mainContext, index,
+                                          tv.id, seasonsItem));
                                 },
                                 itemCount: tv.seasons.length,
                               ),
                             ),
-                            SizedBox(height: 16),
+                            SizedBox(height: 8),
+                            Container(
+                                height: 1,
+                                width: double.infinity,
+                                color: Colors.grey.withOpacity(.2)),
+                            SizedBox(height: 8),
                             Text(
                               'Recommendations',
                               style: kHeading6,
@@ -281,42 +310,57 @@ class DetailContent extends StatelessWidget {
                                     RequestState.Loaded) {
                                   return Container(
                                     height: 150,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, index) {
-                                        final tv = recommendations[index];
-                                        return Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: InkWell(
-                                            onTap: () {
-                                              Navigator.pushReplacementNamed(
-                                                context,
-                                                TVDetailPage.ROUTE_NAME,
-                                                arguments: tv.id,
-                                              );
+                                    child: recommendations.length > 0
+                                        ? ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) {
+                                              final tv = recommendations[index];
+                                              return tv.posterPath != null
+                                                  ? Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4.0),
+                                                      child: InkWell(
+                                                        onTap: () {
+                                                          Navigator
+                                                              .pushReplacementNamed(
+                                                            context,
+                                                            TVDetailPage
+                                                                .ROUTE_NAME,
+                                                            arguments: tv.id,
+                                                          );
+                                                        },
+                                                        child: ClipRRect(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                            Radius.circular(8),
+                                                          ),
+                                                          child:
+                                                              CachedNetworkImage(
+                                                            imageUrl:
+                                                                'https://image.tmdb.org/t/p/w500${tv.posterPath}',
+                                                            placeholder:
+                                                                (context,
+                                                                        url) =>
+                                                                    Center(
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            ),
+                                                            errorWidget:
+                                                                (context, url,
+                                                                        error) =>
+                                                                    Icon(Icons
+                                                                        .error),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : SizedBox.shrink();
                                             },
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(8),
-                                              ),
-                                              child: CachedNetworkImage(
-                                                imageUrl:
-                                                    'https://image.tmdb.org/t/p/w500${tv.posterPath}',
-                                                placeholder: (context, url) =>
-                                                    Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      itemCount: recommendations.length,
-                                    ),
+                                            itemCount: recommendations.length,
+                                          )
+                                        : Text(
+                                            'No similar recommendation currently'),
                                   );
                                 } else {
                                   return Container();
@@ -352,7 +396,7 @@ class DetailContent extends StatelessWidget {
             child: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(mainContext);
               },
             ),
           ),
@@ -382,21 +426,22 @@ class DetailContent extends StatelessWidget {
     }
   }
 
-  Widget _episodesItem(TVEpisodes episodes) {
+  Widget _episodesItem(TVDetailEpisodes episodes) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (episodes.name != null)
+          if (episodes.name != null && episodes.name!.length > 1)
             Text(
               episodes.name!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: kHeading6,
             ),
+          if (episodes.overview != null && episodes.overview!.length > 1)
           Text(
-            episodes.overview ?? '-',
+            episodes.overview!,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
           ),
@@ -405,61 +450,77 @@ class DetailContent extends StatelessWidget {
     );
   }
 
-  Widget _seasonsItem(int index, String? seasonsTitle, int episodesCount,
-      String? airDate, String? poster) {
+  Widget _seasonsItem(
+      BuildContext context, int index, int tvId, TVDetailSeason seasonData) {
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
-        child: Stack(
-          alignment: Alignment.bottomLeft,
-          children: [
-            Card(
-              child: Container(
-                margin: const EdgeInsets.only(
-                  left: 16 + 80 + 16,
-                  bottom: 8,
-                  right: 13,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      seasonsTitle ?? "Seasons $index",
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: kHeading6,
+        child: InkWell(
+            onTap: seasonData.episodeCount < 1
+                ? null
+                : () {
+                    Navigator.pushNamed(
+                      context,
+                      TVSeasonsDetailPage.ROUTE_NAME,
+                      arguments: {
+                        'id': tvId,
+                        'seasonNumber': seasonData.seasonNumber
+                      },
+                    );
+                  },
+            child: Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                Card(
+                  color: Colors.white.withOpacity(.1),
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      left: 16 + 80 + 16,
+                      bottom: 8,
+                      right: 13,
                     ),
-                    Text(
-                      episodesCount < 1
-                          ? 'TBA'
-                          : '$episodesCount episode(s)${airDate != null ? '\n\nAired on $airDate' : ''}',
-                      maxLines: 4,
-                      overflow: TextOverflow.ellipsis,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          seasonData.name ?? "Seasons $index",
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: kHeading6,
+                        ),
+                        Text(
+                          seasonData.episodeCount < 1
+                              ? 'TBA'
+                              : '${seasonData.episodeCount} episode(s)${seasonData.airDate != null ? '\n\nAired on ${seasonData.airDate}' : ''}',
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              margin: const EdgeInsets.only(
-                left: 16,
-                bottom: 16,
-              ),
-              child: ClipRRect(
-                child: CachedNetworkImage(
-                  imageUrl: '$BASE_IMAGE_URL$poster',
-                  width: 80,
-                  placeholder: (context, url) => Center(
-                    child: CircularProgressIndicator(),
                   ),
-                  errorWidget: (context, url, error) => Container(
-                      height: 120,
-                      color: Colors.black38,
-                      child: Icon(Icons.error)),
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-            ),
-          ],
-        ));
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 16,
+                    bottom: 16,
+                  ),
+                  child: ClipRRect(
+                    child: CachedNetworkImage(
+                      imageUrl: seasonData.posterPath != null
+                          ? '$BASE_IMAGE_URL${seasonData.posterPath}'
+                          : '$NO_IMAGE_URL',
+                      width: 80,
+                      placeholder: (context, url) => Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                          height: 120,
+                          color: Colors.black38,
+                          child: Icon(Icons.error)),
+                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  ),
+                ),
+              ],
+            )));
   }
 }

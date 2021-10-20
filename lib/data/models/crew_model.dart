@@ -10,8 +10,8 @@ class CrewModel extends Equatable {
     required this.profilePath,
   });
 
-  final String job;
-  final String character;
+  final String? job;
+  final String? character;
   final String name;
   final int id;
   final String? profilePath;

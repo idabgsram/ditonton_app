@@ -11,7 +11,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
 class MovieDetailPage extends StatefulWidget {
-  static const ROUTE_NAME = '/detail';
+  static const ROUTE_NAME = '/movies/detail';
 
   final int id;
   MovieDetailPage({required this.id});
@@ -173,15 +173,25 @@ class DetailContent extends StatelessWidget {
                                 Text('${movie.voteAverage}')
                               ],
                             ),
-                            SizedBox(height: 16),
+                            SizedBox(height: 8),
+                            Container(
+                                height: 1,
+                                width: double.infinity,
+                                color: Colors.grey.withOpacity(.2)),
+                            SizedBox(height: 8),
                             Text(
                               'Overview',
                               style: kHeading6,
                             ),
                             Text(
-                              movie.overview,
+                              movie.overview.length < 3 ? "-" : movie.overview,
                             ),
-                            SizedBox(height: 16),
+                            SizedBox(height: 8),
+                            Container(
+                                height: 1,
+                                width: double.infinity,
+                                color: Colors.grey.withOpacity(.2)),
+                            SizedBox(height: 8),
                             Text(
                               'Recommendations',
                               style: kHeading6,
@@ -200,42 +210,51 @@ class DetailContent extends StatelessWidget {
                                     RequestState.Loaded) {
                                   return Container(
                                     height: 150,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, index) {
-                                        final movie = recommendations[index];
-                                        return Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: InkWell(
-                                            onTap: () {
-                                              Navigator.pushReplacementNamed(
-                                                context,
-                                                MovieDetailPage.ROUTE_NAME,
-                                                arguments: movie.id,
+                                    child: recommendations.length > 0
+                                        ? ListView.builder(
+                                            scrollDirection: Axis.horizontal,
+                                            itemBuilder: (context, index) {
+                                              final movie =
+                                                  recommendations[index];
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    Navigator
+                                                        .pushReplacementNamed(
+                                                      context,
+                                                      MovieDetailPage
+                                                          .ROUTE_NAME,
+                                                      arguments: movie.id,
+                                                    );
+                                                  },
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(8),
+                                                    ),
+                                                    child: CachedNetworkImage(
+                                                      imageUrl:
+                                                          'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                                                      placeholder:
+                                                          (context, url) =>
+                                                              Center(
+                                                        child:
+                                                            CircularProgressIndicator(),
+                                                      ),
+                                                      errorWidget: (context,
+                                                              url, error) =>
+                                                          Icon(Icons.error),
+                                                    ),
+                                                  ),
+                                                ),
                                               );
                                             },
-                                            child: ClipRRect(
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(8),
-                                              ),
-                                              child: CachedNetworkImage(
-                                                imageUrl:
-                                                    'https://image.tmdb.org/t/p/w500${movie.posterPath}',
-                                                placeholder: (context, url) =>
-                                                    Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
-                                                errorWidget:
-                                                    (context, url, error) =>
-                                                        Icon(Icons.error),
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      itemCount: recommendations.length,
-                                    ),
+                                            itemCount: recommendations.length,
+                                          )
+                                        : Text(
+                                            'No similar recommendation currently'),
                                   );
                                 } else {
                                   return Container();

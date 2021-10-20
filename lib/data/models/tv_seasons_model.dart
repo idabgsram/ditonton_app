@@ -2,8 +2,8 @@ import 'package:ditonton/data/models/tv_episodes_model.dart';
 import 'package:ditonton/domain/entities/tv_seasons.dart';
 import 'package:equatable/equatable.dart';
 
-class TVSeasonsModel extends Equatable {
-  TVSeasonsModel({
+class TVSeasonsResponse extends Equatable {
+  TVSeasonsResponse({
     required this.itemId,
     required this.airDate,
     required this.episodes,
@@ -23,7 +23,7 @@ class TVSeasonsModel extends Equatable {
   final String? posterPath;
   final int seasonNumber;
 
-  factory TVSeasonsModel.fromJson(Map<String, dynamic> json) => TVSeasonsModel(
+  factory TVSeasonsResponse.fromJson(Map<String, dynamic> json) => TVSeasonsResponse(
         itemId: json["_id"],
         airDate: json["air_date"],
         episodes: List<TVEpisodesModel>.from(
