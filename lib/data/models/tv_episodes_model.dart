@@ -1,83 +1,81 @@
-
+import 'package:ditonton/data/models/crew_model.dart';
 import 'package:ditonton/domain/entities/tv_episodes.dart';
 import 'package:equatable/equatable.dart';
 
 class TVEpisodesModel extends Equatable {
-    TVEpisodesModel({
-        required this.airDate,
-        required this.episodeNumber,
-        required this.id,
-        required this.name,
-        required this.overview,
-        required this.productionCode,
-        required this.seasonNumber,
-        required this.stillPath,
-        required this.voteAverage,
-        required this.voteCount,
-    });
+  TVEpisodesModel({
+    required this.airDate,
+    required this.crew,
+    required this.episodeNumber,
+    required this.guestStars,
+    required this.name,
+    required this.overview,
+    required this.id,
+    required this.seasonNumber,
+    required this.stillPath,
+  });
 
-    final String airDate;
-    final int episodeNumber;
-    final int id;
-    final String name;
-    final String overview;
-    final String productionCode;
-    final int seasonNumber;
-    final String? stillPath;
-    final double voteAverage;
-    final int voteCount;
+  final String airDate;
+  final List<CrewModel> crew;
+  final int episodeNumber;
+  final List<CrewModel> guestStars;
+  final String name;
+  final String overview;
+  final int id;
+  final int seasonNumber;
+  final String? stillPath;
 
-    factory TVEpisodesModel.fromJson(Map<String, dynamic> json) => TVEpisodesModel(
-        airDate:json["air_date"],
+  factory TVEpisodesModel.fromJson(Map<String, dynamic> json) =>
+      TVEpisodesModel(
+        airDate: json["air_date"],
+        crew: List<CrewModel>.from(
+            json["crew"].map((x) => CrewModel.fromJson(x))),
         episodeNumber: json["episode_number"],
-        id: json["id"],
+        guestStars: List<CrewModel>.from(
+            json["guest_stars"].map((x) => CrewModel.fromJson(x))),
         name: json["name"],
         overview: json["overview"],
-        productionCode: json["production_code"],
+        id: json["id"],
         seasonNumber: json["season_number"],
         stillPath: json["still_path"],
-        voteAverage: json["vote_average"].toDouble(),
-        voteCount: json["vote_count"],
-    );
+      );
 
-    Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() => {
         "air_date": airDate,
+        "crew": List<dynamic>.from(crew.map((x) => x.toJson())),
         "episode_number": episodeNumber,
-        "id": id,
+        "guest_stars": List<dynamic>.from(guestStars.map((x) => x.toJson())),
         "name": name,
         "overview": overview,
-        "production_code": productionCode,
+        "id": id,
         "season_number": seasonNumber,
         "still_path": stillPath,
-        "vote_average": voteAverage,
-        "vote_count": voteCount,
-    };
-    TVEpisodes toEntity() {
-     return TVEpisodes(
-        airDate: this.airDate,
-        episodeNumber: this.episodeNumber,
-        id: this.id,
-        name: this.name,
-        overview: this.overview,
-        productionCode: this.productionCode,
-        seasonNumber: this.seasonNumber,
-        stillPath: this.stillPath,
-        voteAverage: this.voteAverage,
-        voteCount: this.voteCount,
-     );
-    }
+      };
+  TVEpisodes toEntity() {
+    return TVEpisodes(
+      airDate: this.airDate,
+      crew: this.crew.map((crew) => crew.toEntity()).toList(),
+      episodeNumber: this.episodeNumber,
+      guestStars:
+          this.guestStars.map((guestStars) => guestStars.toEntity()).toList(),
+      name: this.name,
+      overview: this.overview,
+      id: this.id,
+      seasonNumber: this.seasonNumber,
+      stillPath: this.stillPath,
+    );
+  }
 
-    @override
-    List<Object?> get props => [
+  @override
+  List<Object?> get props => [
         airDate,
+        crew,
         episodeNumber,
-        id,
+        guestStars,
         name,
         overview,
-        productionCode,
+        id,
         seasonNumber,
         stillPath,
-        voteAverage,
-        voteCount,
-     ];
+      ];
 }

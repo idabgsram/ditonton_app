@@ -1,40 +1,36 @@
+import 'package:ditonton/domain/entities/tv_episodes.dart';
 import 'package:equatable/equatable.dart';
 
-import 'crew.dart';
-
-class TVEpisodes extends Equatable {
-  TVEpisodes({
+class TVSeasons extends Equatable {
+  TVSeasons({
+    required this.itemId,
     required this.airDate,
-    required this.crew,
-    required this.episodeNumber,
-    required this.guestStars,
+    required this.episodes,
     required this.name,
     required this.overview,
     required this.id,
+    required this.posterPath,
     required this.seasonNumber,
-    required this.stillPath,
   });
 
+  final String itemId;
   final String airDate;
-  final List<Crew> crew;
-  final int episodeNumber;
-  final List<Crew> guestStars;
+  final List<TVEpisodes> episodes;
   final String name;
   final String overview;
   final int id;
+  final String? posterPath;
   final int seasonNumber;
-  final String? stillPath;
 
   @override
   List<Object?> get props => [
+        itemId,
         airDate,
-        crew,
-        episodeNumber,
-        guestStars,
+        episodes,
         name,
         overview,
         id,
+        posterPath,
         seasonNumber,
-        stillPath,
       ];
 }

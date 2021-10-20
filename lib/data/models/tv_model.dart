@@ -3,34 +3,34 @@ import 'package:equatable/equatable.dart';
 
 class TVModel extends Equatable {
   TVModel({
-        required this.backdropPath,
-        required this.firstAirDate,
-        required this.genreIds,
-        required this.id,
-        required this.name,
-        required this.originCountry,
-        required this.originalLanguage,
-        required this.originalName,
-        required this.overview,
-        required this.popularity,
-        required this.posterPath,
-        required this.voteAverage,
-        required this.voteCount,
+    required this.backdropPath,
+    required this.firstAirDate,
+    required this.genreIds,
+    required this.id,
+    required this.name,
+    required this.originCountry,
+    required this.originalLanguage,
+    required this.originalName,
+    required this.overview,
+    required this.popularity,
+    required this.posterPath,
+    required this.voteAverage,
+    required this.voteCount,
   });
 
-    String? backdropPath;
-    String firstAirDate;
-    List<int> genreIds;
-    int id;
-    String name;
-    List<String> originCountry;
-    String originalLanguage;
-    String originalName;
-    String overview;
-    double popularity;
-    String? posterPath;
-    double voteAverage;
-    int voteCount;
+  String? backdropPath;
+  String firstAirDate;
+  List<int> genreIds;
+  int id;
+  String name;
+  List<String> originCountry;
+  String originalLanguage;
+  String originalName;
+  String overview;
+  double popularity;
+  String? posterPath;
+  double voteAverage;
+  int voteCount;
 
   factory TVModel.fromJson(Map<String, dynamic> json) => TVModel(
         backdropPath: json["backdrop_path"],
@@ -66,19 +66,19 @@ class TVModel extends Equatable {
 
   TV toEntity() {
     return TV(
-        backdropPath: this.backdropPath,
-        firstAirDate: this.firstAirDate,
-        genreIds: this.genreIds,
-        id: this.id,
-        name: this.name,
-        originCountry: this.originCountry,
-        originalLanguage: this.originalLanguage,
-        originalName: this.originalName,
-        overview: this.overview,
-        popularity: this.popularity,
-        posterPath: this.posterPath,
-        voteAverage: this.voteAverage,
-        voteCount: this.voteCount,
+      backdropPath: this.backdropPath,
+      firstAirDate: this.firstAirDate,
+      genreIds: this.genreIds,
+      id: this.id,
+      name: this.name,
+      originCountry: this.originCountry,
+      originalLanguage: this.originalLanguage,
+      originalName: this.originalName,
+      overview: this.overview,
+      popularity: this.popularity,
+      posterPath: this.posterPath,
+      voteAverage: this.voteAverage,
+      voteCount: this.voteCount,
     );
   }
 
