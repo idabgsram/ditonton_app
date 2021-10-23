@@ -15,7 +15,7 @@ void main() {
     dataSource = TVLocalDataSourceImpl(databaseHelper: mockDatabaseHelper);
   });
 
-  group('save watchlist', () {
+  group('save tv watchlist', () {
     test('should return success message when insert to database is success',
         () async {
       // arrange
@@ -27,7 +27,7 @@ void main() {
       expect(result, 'Added to TV Watchlist');
     });
 
-    test('should throw DatabaseException when insert to database is failed',
+    test('should throw tv DatabaseException when insert to database is failed',
         () async {
       // arrange
       when(mockDatabaseHelper.insertTVWatchlist(testTVTable))
@@ -39,7 +39,7 @@ void main() {
     });
   });
 
-  group('remove watchlist', () {
+  group('remove tv watchlist', () {
     test('should return success message when remove from database is success',
         () async {
       // arrange
@@ -63,10 +63,10 @@ void main() {
     });
   });
 
-  group('Get Movie Detail By Id', () {
+  group('Get TV Detail By Id', () {
     final tId = 1;
 
-    test('should return Movie Detail Table when data is found', () async {
+    test('should return TV Detail Table when data is found', () async {
       // arrange
       when(mockDatabaseHelper.getTVById(tId))
           .thenAnswer((_) async => testTVMap);

@@ -19,7 +19,7 @@ class TVModel extends Equatable {
   });
 
   String? backdropPath;
-  String firstAirDate;
+  String? firstAirDate;
   List<int> genreIds;
   int id;
   String name;

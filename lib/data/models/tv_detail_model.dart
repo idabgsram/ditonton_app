@@ -2,7 +2,6 @@ import 'package:ditonton/data/models/genre_model.dart';
 import 'package:ditonton/data/models/tv_detail_season_model.dart';
 import 'package:ditonton/data/models/tv_detail_episodes_model.dart';
 import 'package:ditonton/domain/entities/tv_detail.dart';
-import 'package:ditonton/domain/entities/tv_detail_episodes.dart';
 import 'package:equatable/equatable.dart';
 
 class TVDetailResponse extends Equatable {

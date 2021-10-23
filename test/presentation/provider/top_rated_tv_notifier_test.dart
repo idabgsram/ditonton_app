@@ -43,7 +43,7 @@ void main() {
 
   final tTVList = <TV>[tTV];
 
-  test('should change state to loading when usecase is called', () async {
+  test('should change tv state to loading when usecase is called', () async {
     // arrange
     when(mockGetTopRatedTVs.execute())
         .thenAnswer((_) async => Right(tTVList));
@@ -54,7 +54,7 @@ void main() {
     expect(listenerCallCount, 1);
   });
 
-  test('should change movies data when data is gotten successfully', () async {
+  test('should change tv data when data is gotten successfully', () async {
     // arrange
     when(mockGetTopRatedTVs.execute())
         .thenAnswer((_) async => Right(tTVList));

@@ -77,7 +77,7 @@ void main() {
       expect(provider.onTheAirState, RequestState.Loading);
     });
 
-    test('should change movies when data is gotten successfully', () async {
+    test('should change tv when data is gotten successfully', () async {
       // arrange
       when(mockGetOnTheAirTVs.execute())
           .thenAnswer((_) async => Right(tTVList));

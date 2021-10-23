@@ -1,0 +1,16 @@
+{
+    "adult": false,
+    "backdrop_path": "backdropPath",
+    "genre_ids": [1, 2, 3],
+    "id": 1,
+    "original_language": "en",
+    "original_title": "originalTitle",
+    "overview": "overview",
+    "popularity": 1,
+    "poster_path": "posterPath",
+    "release_date": "releaseDate",
+    "title": "title",
+    "video": false,
+    "vote_average": 1,
+    "vote_count": 1
+}
