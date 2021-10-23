@@ -14,7 +14,7 @@ class TVSeasons extends Equatable {
   });
 
   final String itemId;
-  final String airDate;
+  final String? airDate;
   final List<TVEpisodes> episodes;
   final String name;
   final String overview;

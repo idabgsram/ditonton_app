@@ -163,7 +163,7 @@ class DetailContent extends StatelessWidget {
               tvSeasonsData.name,
               style: kHeading5,
             ),
-            if (tvSeasonsData.airDate.length > 0)
+            if (tvSeasonsData.airDate!=null && tvSeasonsData.airDate!.length > 0)
               Text('Aired on ${tvSeasonsData.airDate}'),
             SizedBox(height: 8),
             Container(

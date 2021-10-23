@@ -8,6 +8,7 @@
     "overview": "overview",
     "popularity": 1,
     "poster_path": "posterPath",
+    "posterPath": "posterPath",
     "release_date": "releaseDate",
     "title": "title",
     "video": false,

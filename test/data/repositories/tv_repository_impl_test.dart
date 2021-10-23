@@ -1,13 +1,16 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:ditonton/data/models/crew_model.dart';
 import 'package:ditonton/data/models/genre_model.dart';
 import 'package:ditonton/data/models/tv_detail_episodes_model.dart';
 import 'package:ditonton/data/models/tv_detail_model.dart';
 import 'package:ditonton/data/models/tv_detail_season_model.dart';
+import 'package:ditonton/data/models/tv_episodes_model.dart';
 import 'package:ditonton/data/models/tv_model.dart';
 import 'package:ditonton/common/exception.dart';
 import 'package:ditonton/common/failure.dart';
+import 'package:ditonton/data/models/tv_seasons_model.dart';
 import 'package:ditonton/data/repositories/tv_repository_impl.dart';
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -270,13 +273,159 @@ void main() {
           equals(Left(ConnectionFailure('Failed to connect to the network'))));
     });
   });
+  group('Get TV Episodes Detail', () {
+    final tId = 1;
+    final tTVResponse = TVEpisodesModel(
+      airDate: "2019-01-25",
+      crew: [
+        CrewModel(
+            job: "Animation Director",
+            character: "Basketball Captain (voice)",
+            name: "Huang Feng",
+            id: 2965969,
+            profilePath: null)
+      ],
+      episodeNumber: 3,
+      guestStars: [
+        CrewModel(
+            job: "Animation Director",
+            character: "Basketball Captain (voice)",
+            name: "Aina Suzuki",
+            id: 1661870,
+            profilePath: "/bRLwfft4yckDTpLenlbTrt3FRRN.jpg"),
+        CrewModel(
+            job: "Animation Director",
+            character: "Beard Man (voice)",
+            name: "Ryota Akazawa",
+            id: 3211842,
+            profilePath: null)
+      ],
+      name: "A Mountain of Problems",
+      overview:
+          "Nino isn't happy that Futaro is beginning to get along with her sisters, so she takes matters into her own hands.",
+      id: 1659817,
+      seasonNumber: 1,
+      stillPath: "/vkuYEpktTjfZTZcl8XcChR0CN71.jpg",
+    );
+
+    test(
+        'should return TV data when the call to remote data source is successful',
+        () async {
+      // arrange
+      when(mockRemoteDataSource.getTVEpisodesDetail(tId, tId, tId))
+          .thenAnswer((_) async => tTVResponse);
+      // act
+      final result = await repository.getTVEpisodesDetail(tId, tId, tId);
+      // assert
+      verify(mockRemoteDataSource.getTVEpisodesDetail(tId, tId, tId));
+      expect(result, equals(Right(testTVEpisodesDetail)));
+    });
+
+    test(
+        'should return Server Failure when the call to remote data source is unsuccessful',
+        () async {
+      // arrange
+      when(mockRemoteDataSource.getTVEpisodesDetail(tId, tId, tId))
+          .thenThrow(ServerException());
+      // act
+      final result = await repository.getTVEpisodesDetail(tId, tId, tId);
+      // assert
+      verify(mockRemoteDataSource.getTVEpisodesDetail(tId, tId, tId));
+      expect(result, equals(Left(ServerFailure(''))));
+    });
+
+    test(
+        'should return connection failure when the device is not connected to internet',
+        () async {
+      // arrange
+      when(mockRemoteDataSource.getTVEpisodesDetail(tId, tId, tId))
+          .thenThrow(SocketException('Failed to connect to the network'));
+      // act
+      final result = await repository.getTVEpisodesDetail(tId, tId, tId);
+      // assert
+      verify(mockRemoteDataSource.getTVEpisodesDetail(tId, tId, tId));
+      expect(result,
+          equals(Left(ConnectionFailure('Failed to connect to the network'))));
+    });
+  });
+
+  group('Get TV Seasons Detail', () {
+    final tId = 1;
+    final tTVResponse = TVSeasonsResponse(
+      episodes: [
+        TVEpisodesModel(
+            airDate: "2006-09-18",
+            crew: [],
+            episodeNumber: 1,
+            guestStars: [
+              CrewModel(
+                  job: "Animation Director",
+                  character: "",
+                  name: "Diane Sawyer",
+                  id: 1215497,
+                  profilePath: "/9CDV3wzGxIVF2vBFk2WV0Z3SCab.jpg")
+            ],
+            name: "Rachael's Premiere",
+            overview: "",
+            id: 135844,
+            seasonNumber: 1,
+            stillPath: null)
+      ],
+      airDate: "2006-09-18",
+      name: "Season 1",
+      overview: "",
+      id: 5904,
+      itemId: "52571e1819c2957114101a1a",
+      seasonNumber: 1,
+      posterPath: null,
+    );
+
+    test(
+        'should return TV data when the call to remote data source is successful',
+        () async {
+      // arrange
+      when(mockRemoteDataSource.getTVSeasonsDetail(tId, tId))
+          .thenAnswer((_) async => tTVResponse);
+      // act
+      final result = await repository.getTVSeasonsDetail(tId, tId);
+      // assert
+      verify(mockRemoteDataSource.getTVSeasonsDetail(tId, tId));
+      expect(result, equals(Right(testTVSeasonsDetail)));
+    });
+
+    test(
+        'should return Server Failure when the call to remote data source is unsuccessful',
+        () async {
+      // arrange
+      when(mockRemoteDataSource.getTVSeasonsDetail(tId, tId))
+          .thenThrow(ServerException());
+      // act
+      final result = await repository.getTVSeasonsDetail(tId, tId);
+      // assert
+      verify(mockRemoteDataSource.getTVSeasonsDetail(tId, tId));
+      expect(result, equals(Left(ServerFailure(''))));
+    });
+
+    test(
+        'should return connection failure when the device is not connected to internet',
+        () async {
+      // arrange
+      when(mockRemoteDataSource.getTVSeasonsDetail(tId, tId))
+          .thenThrow(SocketException('Failed to connect to the network'));
+      // act
+      final result = await repository.getTVSeasonsDetail(tId, tId);
+      // assert
+      verify(mockRemoteDataSource.getTVSeasonsDetail(tId, tId));
+      expect(result,
+          equals(Left(ConnectionFailure('Failed to connect to the network'))));
+    });
+  });
 
   group('Get TV Recommendations', () {
     final tTVList = <TVModel>[];
     final tId = 1;
 
-    test('should return data (tv list) when the call is successful',
-        () async {
+    test('should return data (tv list) when the call is successful', () async {
       // arrange
       when(mockRemoteDataSource.getTVRecommendations(tId))
           .thenAnswer((_) async => tTVList);
@@ -333,7 +482,8 @@ void main() {
       expect(resultList, tTVList);
     });
 
-    test('should return TV ServerFailure when call to data source is unsuccessful',
+    test(
+        'should return TV ServerFailure when call to data source is unsuccessful',
         () async {
       // arrange
       when(mockRemoteDataSource.searchTV(tQuery)).thenThrow(ServerException());

@@ -73,7 +73,7 @@ airDate: "2019-01-25",
     stillPath: "/vkuYEpktTjfZTZcl8XcChR0CN71.jpg",
   );
 
-  test('should be a subclass of Movie entity', () async {
+  test('should be a subclass of the entity', () async {
     final result = tTVEpisodesModel.toEntity();
     expect(result, tTVEpisodes);
   });
