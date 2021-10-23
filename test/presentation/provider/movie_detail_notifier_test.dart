@@ -192,7 +192,7 @@ void main() {
     test('should update watchlist status when add watchlist success', () async {
       // arrange
       when(mockSaveWatchlist.execute(testMovieDetail))
-          .thenAnswer((_) async => Right('Added to Watchlist'));
+          .thenAnswer((_) async => Right(MovieDetailNotifier.watchlistAddSuccessMessage));
       when(mockGetWatchlistStatus.execute(testMovieDetail.id))
           .thenAnswer((_) async => true);
       // act
@@ -200,8 +200,23 @@ void main() {
       // assert
       verify(mockGetWatchlistStatus.execute(testMovieDetail.id));
       expect(provider.isAddedToWatchlist, true);
-      expect(provider.watchlistMessage, 'Added to Watchlist');
+      expect(provider.watchlistMessage, MovieDetailNotifier.watchlistAddSuccessMessage);
       expect(listenerCallCount, 1);
+    });
+
+    test('should update remove watchlist when remove watchlist success',
+        () async {
+      // arrange
+      when(mockRemoveWatchlist.execute(testMovieDetail)).thenAnswer(
+          (_) async => Right(MovieDetailNotifier.watchlistRemoveSuccessMessage));
+      when(mockGetWatchlistStatus.execute(testTVDetail.id))
+          .thenAnswer((_) async => false);
+      // act
+      await provider.removeFromWatchlist(testMovieDetail);
+      // assert
+      expect(provider.watchlistMessage,
+          MovieDetailNotifier.watchlistRemoveSuccessMessage);
+      verify(mockRemoveWatchlist.execute(testMovieDetail));
     });
 
     test('should update watchlist message when add watchlist failed', () async {

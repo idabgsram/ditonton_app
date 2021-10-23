@@ -113,6 +113,7 @@ void main() {
       // act
       provider.fetchSearch(tTVQuery);
       // assert
+      expect(provider.isMovies, false);
       expect(provider.state, RequestState.Loading);
     });
 
@@ -125,6 +126,7 @@ void main() {
       // act
       await provider.fetchSearch(tTVQuery);
       // assert
+      expect(provider.isMovies, false);
       expect(provider.state, RequestState.Loaded);
       expect(provider.searchResult, tTVList);
       expect(listenerCallCount, 3);
@@ -138,6 +140,7 @@ void main() {
       // act
       await provider.fetchSearch(tTVQuery);
       // assert
+      expect(provider.isMovies, false);
       expect(provider.state, RequestState.Error);
       expect(provider.message, 'Server Failure');
       expect(listenerCallCount, 3);
