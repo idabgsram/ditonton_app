@@ -31,6 +31,7 @@ import 'package:ditonton/domain/usecases/remove_tv_watchlist.dart';
 import 'package:ditonton/domain/usecases/save_tv_watchlist.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
+import 'package:ditonton/presentation/provider/ota_tv_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/search_notifier.dart';
 import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
@@ -100,6 +101,11 @@ locator.registerFactory(
   );
   locator.registerFactory(
     () => PopularTVNotifier(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => OTATVNotifier(
       locator(),
     ),
   );

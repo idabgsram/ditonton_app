@@ -1,7 +1,7 @@
 import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/domain/entities/movie.dart';
-import 'package:ditonton/presentation/pages/popular_movies_page.dart';
-import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
+import 'package:ditonton/domain/entities/tv.dart';
+import 'package:ditonton/presentation/pages/top_rated_tv_page.dart';
+import 'package:ditonton/presentation/provider/top_rated_tv_notifier.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,18 +9,18 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
-import 'popular_movies_page_test.mocks.dart';
+import 'top_rated_tv_page_test.mocks.dart';
 
-@GenerateMocks([PopularMoviesNotifier])
+@GenerateMocks([TopRatedTVNotifier])
 void main() {
-  late MockPopularMoviesNotifier mockNotifier;
+  late MockTopRatedTVNotifier mockNotifier;
 
   setUp(() {
-    mockNotifier = MockPopularMoviesNotifier();
+    mockNotifier = MockTopRatedTVNotifier();
   });
 
   Widget _makeTestableWidget(Widget body) {
-    return ChangeNotifierProvider<PopularMoviesNotifier>.value(
+    return ChangeNotifierProvider<TopRatedTVNotifier>.value(
       value: mockNotifier,
       child: MaterialApp(
         home: body,
@@ -35,7 +35,7 @@ void main() {
     final progressBarFinder = find.byType(CircularProgressIndicator);
     final centerFinder = find.byType(Center);
 
-    await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
+    await tester.pumpWidget(_makeTestableWidget(TopRatedTVPage()));
 
     expect(centerFinder, findsOneWidget);
     expect(progressBarFinder, findsOneWidget);
@@ -44,37 +44,37 @@ void main() {
   testWidgets('Page should display ListView when data is loaded',
       (WidgetTester tester) async {
     when(mockNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockNotifier.movies).thenReturn(<Movie>[]);
+    when(mockNotifier.tvList).thenReturn(<TV>[]);
 
     final listViewFinder = find.byType(ListView);
 
-    await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
+    await tester.pumpWidget(_makeTestableWidget(TopRatedTVPage()));
 
     expect(listViewFinder, findsOneWidget);
   });
 
   testWidgets('List View should show item card', (WidgetTester tester) async {
     when(mockNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockNotifier.movies).thenReturn(<Movie>[
-      Movie(
-        adult: false,
-        backdropPath: '/muth4OYamXf41G2evdrLEg8d3om.jpg',
-        genreIds: [14, 28],
-        id: 557,
-        originalTitle: 'Spider-Man',
+    when(mockNotifier.tvList).thenReturn(<TV>[
+      TV(
+        backdropPath: '/4QNBIgt5fwgNCN3OSU6BTFv0NGR.jpg',
+        genreIds: [16, 10759],
+        id: 888,
+        name: 'Spider-Man',
         overview:
-            'After being bitten by a genetically altered spider, nerdy high school student Peter Parker is endowed with amazing powers to become the Amazing superhero known as Spider-Man.',
-        popularity: 60.441,
-        posterPath: '/rweIrveL43TaxUN0akQEaAXL6x0.jpg',
-        releaseDate: '2002-05-01',
-        title: 'Spider-Man',
-        video: false,
-        voteAverage: 7.2,
-        voteCount: 13507,
-      )
+            'Bitten by a radioactive spider, Peter Parker develops spider-like superpowers. He uses these to fight crime while trying to balance it with the struggles of his personal life.',
+        popularity: 82.967,
+        posterPath: '/wXthtEN5kdWA1bHz03lkuCJS6hA.jpg',
+        firstAirDate: '1994-11-19',
+        originalName: 'Spider-Man',
+        originalLanguage: "en",
+        voteAverage: 8.3,
+        voteCount: 633,
+        originCountry: ["US"],
+      ),
     ]);
 
-    await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
+    await tester.pumpWidget(_makeTestableWidget(TopRatedTVPage()));
 
     final itemCardFinder = find.byType(ItemCard);
 
@@ -88,7 +88,7 @@ void main() {
 
     final textFinder = find.byKey(Key('error_message'));
 
-    await tester.pumpWidget(_makeTestableWidget(PopularMoviesPage()));
+    await tester.pumpWidget(_makeTestableWidget(TopRatedTVPage()));
 
     expect(textFinder, findsOneWidget);
   });

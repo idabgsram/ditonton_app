@@ -2,6 +2,7 @@ import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/pages/home_page.dart';
+import 'package:ditonton/presentation/pages/ota_tv_page.dart';
 import 'package:ditonton/presentation/pages/popular_movies_page.dart';
 import 'package:ditonton/presentation/pages/popular_tv_page.dart';
 import 'package:ditonton/presentation/pages/search_page.dart';
@@ -13,6 +14,7 @@ import 'package:ditonton/presentation/pages/tv_episodes_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_page.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
+import 'package:ditonton/presentation/provider/ota_tv_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
 import 'package:ditonton/presentation/provider/popular_tv_notifier.dart';
 import 'package:ditonton/presentation/provider/search_notifier.dart';
@@ -70,6 +72,9 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<PopularTVNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<OTATVNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => di.locator<WatchlistTVNotifier>(),
         ),
         ChangeNotifierProvider(
@@ -108,6 +113,8 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(builder: (_) => WatchlistPage());
             case PopularTVPage.ROUTE_NAME:
               return CupertinoPageRoute(builder: (_) => PopularTVPage());
+            case OTATVPage.ROUTE_NAME:
+              return CupertinoPageRoute(builder: (_) => OTATVPage());
             case TopRatedTVPage.ROUTE_NAME:
               return CupertinoPageRoute(builder: (_) => TopRatedTVPage());
             case TVDetailPage.ROUTE_NAME:

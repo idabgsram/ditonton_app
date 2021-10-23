@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
+import 'package:ditonton/presentation/pages/ota_tv_page.dart';
 import 'package:ditonton/presentation/pages/popular_movies_page.dart';
 import 'package:ditonton/presentation/pages/popular_tv_page.dart';
 import 'package:ditonton/presentation/pages/search_page.dart';
@@ -166,9 +167,9 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'On The Air',
-            style: kHeading6,
+          _buildSubHeading(
+            title: 'On The Air',
+            onTap: () => Navigator.pushNamed(context, OTATVPage.ROUTE_NAME),
           ),
           Consumer<TVListNotifier>(builder: (context, data, child) {
             final state = data.onTheAirState;
