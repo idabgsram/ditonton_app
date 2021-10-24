@@ -46,7 +46,7 @@ class _TVSeasonsDetailPageState extends State<TVSeasonsDetailPage> {
                   DetailContent(tvSeasonsData, widget.id, widget.seasonNumber),
             );
           } else {
-            return Text(provider.message);
+            return Text(provider.message,key: Key('provider_message'));
           }
         },
       ),

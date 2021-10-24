@@ -2,18 +2,15 @@
 // in ditonton/test/presentation/pages/watchlist_page_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i7;
-import 'dart:ui' as _i8;
+import 'dart:async' as _i8;
+import 'dart:ui' as _i9;
 
-import 'package:ditonton/common/state_enum.dart' as _i6;
+import 'package:ditonton/common/state_enum.dart' as _i7;
 import 'package:ditonton/domain/entities/movie.dart' as _i5;
-import 'package:ditonton/domain/entities/tv.dart' as _i10;
+import 'package:ditonton/domain/entities/tv.dart' as _i6;
 import 'package:ditonton/domain/usecases/get_watchlist_movies.dart' as _i2;
 import 'package:ditonton/domain/usecases/get_watchlist_tv.dart' as _i3;
-import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart'
-    as _i4;
-import 'package:ditonton/presentation/provider/watchlist_tv_notifier.dart'
-    as _i9;
+import 'package:ditonton/presentation/provider/watchlist_notifier.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -30,12 +27,11 @@ class _FakeGetWatchlistMovies_0 extends _i1.Fake
 
 class _FakeGetWatchlistTV_1 extends _i1.Fake implements _i3.GetWatchlistTV {}
 
-/// A class which mocks [WatchlistMovieNotifier].
+/// A class which mocks [WatchlistNotifier].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockWatchlistMovieNotifier extends _i1.Mock
-    implements _i4.WatchlistMovieNotifier {
-  MockWatchlistMovieNotifier() {
+class MockWatchlistNotifier extends _i1.Mock implements _i4.WatchlistNotifier {
+  MockWatchlistNotifier() {
     _i1.throwOnMissingStub(this);
   }
 
@@ -44,66 +40,21 @@ class MockWatchlistMovieNotifier extends _i1.Mock
       (super.noSuchMethod(Invocation.getter(#getWatchlistMovies),
           returnValue: _FakeGetWatchlistMovies_0()) as _i2.GetWatchlistMovies);
   @override
-  List<_i5.Movie> get watchlistMovies =>
-      (super.noSuchMethod(Invocation.getter(#watchlistMovies),
-          returnValue: <_i5.Movie>[]) as List<_i5.Movie>);
-  @override
-  _i6.RequestState get watchlistState =>
-      (super.noSuchMethod(Invocation.getter(#watchlistState),
-          returnValue: _i6.RequestState.Empty) as _i6.RequestState);
-  @override
-  String get message =>
-      (super.noSuchMethod(Invocation.getter(#message), returnValue: '')
-          as String);
-  @override
-  bool get hasListeners =>
-      (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
-          as bool);
-  @override
-  _i7.Future<void> fetchWatchlistMovies() =>
-      (super.noSuchMethod(Invocation.method(#fetchWatchlistMovies, []),
-          returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i7.Future<void>);
-  @override
-  void addListener(_i8.VoidCallback? listener) =>
-      super.noSuchMethod(Invocation.method(#addListener, [listener]),
-          returnValueForMissingStub: null);
-  @override
-  void removeListener(_i8.VoidCallback? listener) =>
-      super.noSuchMethod(Invocation.method(#removeListener, [listener]),
-          returnValueForMissingStub: null);
-  @override
-  void dispose() => super.noSuchMethod(Invocation.method(#dispose, []),
-      returnValueForMissingStub: null);
-  @override
-  void notifyListeners() =>
-      super.noSuchMethod(Invocation.method(#notifyListeners, []),
-          returnValueForMissingStub: null);
-  @override
-  String toString() => super.toString();
-}
-
-/// A class which mocks [WatchlistTVNotifier].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockWatchlistTVNotifier extends _i1.Mock
-    implements _i9.WatchlistTVNotifier {
-  MockWatchlistTVNotifier() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
   _i3.GetWatchlistTV get getWatchlistTVs =>
       (super.noSuchMethod(Invocation.getter(#getWatchlistTVs),
           returnValue: _FakeGetWatchlistTV_1()) as _i3.GetWatchlistTV);
   @override
-  List<_i10.TV> get watchlistTVs =>
-      (super.noSuchMethod(Invocation.getter(#watchlistTVs),
-          returnValue: <_i10.TV>[]) as List<_i10.TV>);
+  List<_i5.Movie> get watchlistMovies =>
+      (super.noSuchMethod(Invocation.getter(#watchlistMovies),
+          returnValue: <_i5.Movie>[]) as List<_i5.Movie>);
   @override
-  _i6.RequestState get watchlistState =>
+  List<_i6.TV> get watchlistTVs =>
+      (super.noSuchMethod(Invocation.getter(#watchlistTVs),
+          returnValue: <_i6.TV>[]) as List<_i6.TV>);
+  @override
+  _i7.RequestState get watchlistState =>
       (super.noSuchMethod(Invocation.getter(#watchlistState),
-          returnValue: _i6.RequestState.Empty) as _i6.RequestState);
+          returnValue: _i7.RequestState.Empty) as _i7.RequestState);
   @override
   String get message =>
       (super.noSuchMethod(Invocation.getter(#message), returnValue: '')
@@ -113,16 +64,16 @@ class MockWatchlistTVNotifier extends _i1.Mock
       (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
           as bool);
   @override
-  _i7.Future<void> fetchWatchlistTVs() =>
-      (super.noSuchMethod(Invocation.method(#fetchWatchlistTVs, []),
+  _i8.Future<void> fetchWatchlist() =>
+      (super.noSuchMethod(Invocation.method(#fetchWatchlist, []),
           returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i7.Future<void>);
+          returnValueForMissingStub: Future<void>.value()) as _i8.Future<void>);
   @override
-  void addListener(_i8.VoidCallback? listener) =>
+  void addListener(_i9.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i8.VoidCallback? listener) =>
+  void removeListener(_i9.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override

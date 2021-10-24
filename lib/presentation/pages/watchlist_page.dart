@@ -1,6 +1,5 @@
 import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
-import 'package:ditonton/presentation/provider/watchlist_tv_notifier.dart';
+import 'package:ditonton/presentation/provider/watchlist_notifier.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,11 +16,8 @@ class _WatchlistPageState extends State<WatchlistPage> {
   void initState() {
     super.initState();
     Future.microtask(() =>
-        Provider.of<WatchlistMovieNotifier>(context, listen: false)
-            .fetchWatchlistMovies());
-    Future.microtask(() =>
-        Provider.of<WatchlistTVNotifier>(context, listen: false)
-            .fetchWatchlistTVs());
+        Provider.of<WatchlistNotifier>(context, listen: false)
+            .fetchWatchlist());
   }
 
   @override
@@ -41,13 +37,13 @@ class _WatchlistPageState extends State<WatchlistPage> {
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TabBarView(children: [_buildMoviesBody(), _buildTVsBody()]),
+            child: TabBarView(children: [buildMoviesBody(), _buildTVsBody()]),
           ),
         ));
   }
 
-  Widget _buildMoviesBody() {
-    return Consumer<WatchlistMovieNotifier>(
+  Widget buildMoviesBody() {
+    return Consumer<WatchlistNotifier>(
       builder: (context, data, child) {
         if (data.watchlistState == RequestState.Loading) {
           return Center(
@@ -72,7 +68,7 @@ class _WatchlistPageState extends State<WatchlistPage> {
   }
 
   Widget _buildTVsBody() {
-    return Consumer<WatchlistTVNotifier>(
+    return Consumer<WatchlistNotifier>(
       builder: (context, data, child) {
         if (data.watchlistState == RequestState.Loading) {
           return Center(

@@ -157,6 +157,35 @@ final testTVSeasonsDetail = TVSeasons(
     posterPath: null,
   );
 
+final testTVSeasonsDetailWithImage = TVSeasons(
+    episodes: [
+      TVEpisodes(
+          airDate: "2006-09-18",
+          crew: [],
+          episodeNumber: 1,
+          guestStars: [
+            Crew(
+                job: "Animation Director",
+                character: "",
+                name: "Diane Sawyer",
+                id: 1215497,
+                profilePath: "/9CDV3wzGxIVF2vBFk2WV0Z3SCab.jpg")
+          ],
+          name: "Rachael's Premiere",
+          overview: "",
+          id: 135844,
+          seasonNumber: 1,
+          stillPath: "/9CDV3wzGxIVF2vBFk2WV0Z3SCab.jpg")
+    ],
+    airDate: "2006-09-18",
+    name: "Season 1",
+    overview: "",
+    id: 5904,
+    itemId: "52571e1819c2957114101a1a",
+    seasonNumber: 1,
+    posterPath: "/9CDV3wzGxIVF2vBFk2WV0Z3SCab.jpg",
+  );
+
 final testTVEpisodesDetail = TVEpisodes(
 airDate: "2019-01-25",
     crew: [

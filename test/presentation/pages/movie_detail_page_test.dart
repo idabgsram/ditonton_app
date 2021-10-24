@@ -105,4 +105,16 @@ void main() {
     expect(find.byType(AlertDialog), findsOneWidget);
     expect(find.text('Failed'), findsOneWidget);
   });
+
+  testWidgets('Page should display text with message when Error',
+      (WidgetTester tester) async {
+    when(mockNotifier.movieState).thenReturn(RequestState.Error);
+    when(mockNotifier.message).thenReturn('Error message');
+
+    final textFinder = find.byKey(Key('provider_message'));
+
+    await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id:1,)));
+
+    expect(textFinder, findsOneWidget);
+  });
 }

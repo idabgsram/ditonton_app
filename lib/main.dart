@@ -24,8 +24,7 @@ import 'package:ditonton/presentation/provider/tv_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_episodes_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_list_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_seasons_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/watchlist_movie_notifier.dart';
-import 'package:ditonton/presentation/provider/watchlist_tv_notifier.dart';
+import 'package:ditonton/presentation/provider/watchlist_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<PopularMoviesNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistMovieNotifier>(),
+          create: (_) => di.locator<WatchlistNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<SearchNotifier>(),
@@ -73,9 +72,6 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<OTATVNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistTVNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<TVSeasonsDetailNotifier>(),

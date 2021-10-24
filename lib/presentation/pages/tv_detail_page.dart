@@ -54,7 +54,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
               ),
             );
           } else {
-            return Text(provider.message);
+            return Text(provider.message,key: Key('provider_message'));
           }
         },
       ),

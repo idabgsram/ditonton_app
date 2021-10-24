@@ -51,7 +51,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               ),
             );
           } else {
-            return Text(provider.message);
+            return Text(provider.message,key: Key('provider_message'));
           }
         },
       ),
