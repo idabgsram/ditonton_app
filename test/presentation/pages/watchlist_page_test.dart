@@ -65,41 +65,6 @@ void main() {
     );
   }
 
-// testWidgets('TabBar tap selects tab', (WidgetTester tester) async {
-//     final List<String> tabs = <String>['A', 'B', 'C'];
-
-//     await tester.pumpWidget(buildFrame(tabs: tabs, value: 'C'));
-//     expect(find.text('A'), findsOneWidget);
-//     expect(find.text('B'), findsOneWidget);
-//     expect(find.text('C'), findsOneWidget);
-//     final TabController controller = DefaultTabController.of(tester.element(find.text('A')))!;
-//     expect(controller, isNotNull);
-//     expect(controller.index, 2);
-//     expect(controller.previousIndex, 2);
-
-//     await tester.pumpWidget(buildFrame(tabs: tabs, value: 'C'));
-//     await tester.tap(find.text('B'));
-//     await tester.pump();
-//     expect(controller.indexIsChanging, true);
-//     await tester.pump(const Duration(seconds: 1)); // finish the animation
-//     expect(controller.index, 1);
-//     expect(controller.previousIndex, 2);
-//     expect(controller.indexIsChanging, false);
-
-//     await tester.pumpWidget(buildFrame(tabs: tabs, value: 'C'));
-//     await tester.tap(find.text('C'));
-//     await tester.pump();
-//     await tester.pump(const Duration(seconds: 1));
-//     expect(controller.index, 2);
-//     expect(controller.previousIndex, 1);
-
-//     await tester.pumpWidget(buildFrame(tabs: tabs, value: 'C'));
-//     await tester.tap(find.text('A'));
-//     await tester.pump();
-//     await tester.pump(const Duration(seconds: 1));
-//     expect(controller.index, 0);
-//     expect(controller.previousIndex, 2);
-//   });
   testWidgets('Page should display tab on init',
       (WidgetTester tester) async {
     when(mockNotifier.watchlistState).thenReturn(RequestState.Empty);

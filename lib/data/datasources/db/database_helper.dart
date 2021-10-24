@@ -21,6 +21,10 @@ class DatabaseHelper {
     return _database;
   }
 
+  setDatabase (Database database){
+    _database = database;
+  }
+
   static const String _tblWatchlist = 'watchlist';
   static const String _tblTVWatchlist = 'watchlist_tv';
 
