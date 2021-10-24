@@ -54,7 +54,7 @@ class _TVDetailPageState extends State<TVDetailPage> {
               ),
             );
           } else {
-            return Text(provider.message,key: Key('provider_message'));
+            return Text(provider.message, key: Key('provider_message'));
           }
         },
       ),
@@ -175,13 +175,12 @@ class DetailContent extends StatelessWidget {
                                 Text('${tv.voteAverage}')
                               ],
                             ),
-                            if(tv.firstAirDate!=null)
-                            Text('Aired on ${tv.firstAirDate}'),
-                            
-                            if(tv.episodeRunTime.length>0)
-                            Text(
-                              _showDuration(tv.episodeRunTime),
-                            ),
+                            if (tv.firstAirDate != null)
+                              Text('Aired on ${tv.firstAirDate}'),
+                            if (tv.episodeRunTime.length > 0)
+                              Text(
+                                _showDuration(tv.episodeRunTime),
+                              ),
                             Text('Total Episodes : ${tv.numberOfEpisodes}'),
                             SizedBox(height: 8),
                             Container(
@@ -300,11 +299,15 @@ class DetailContent extends StatelessWidget {
                                 if (data.recommendationState ==
                                     RequestState.Loading) {
                                   return Center(
-                                    child: CircularProgressIndicator(),
+                                    key: Key('recommendations_center'),
+                                    child: CircularProgressIndicator(
+                                      key: Key('recommendations_loading'),
+                                    ),
                                   );
                                 } else if (data.recommendationState ==
                                     RequestState.Error) {
-                                  return Text(data.message);
+                                  return Text(data.message,
+                                      key: Key('recommendation_message'));
                                 } else if (data.recommendationState ==
                                     RequestState.Loaded) {
                                   return Container(
@@ -439,11 +442,11 @@ class DetailContent extends StatelessWidget {
               style: kHeading6,
             ),
           if (episodes.overview != null && episodes.overview!.length > 1)
-          Text(
-            episodes.overview!,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
+            Text(
+              episodes.overview!,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
         ],
       ),
     );

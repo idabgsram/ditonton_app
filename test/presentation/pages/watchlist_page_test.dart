@@ -23,37 +23,37 @@ void main() {
   setUp(() {
     mockNotifier = MockWatchlistNotifier();
     movieData = Movie(
-        adult: false,
-        backdropPath: '/muth4OYamXf41G2evdrLEg8d3om.jpg',
-        genreIds: [14, 28],
-        id: 557,
-        originalTitle: 'Spider-Man',
-        overview:
-            'After being bitten by a genetically altered spider, nerdy high school student Peter Parker is endowed with amazing powers to become the Amazing superhero known as Spider-Man.',
-        popularity: 60.441,
-        posterPath: '/rweIrveL43TaxUN0akQEaAXL6x0.jpg',
-        releaseDate: '2002-05-01',
-        title: 'Spider-Man',
-        video: false,
-        voteAverage: 7.2,
-        voteCount: 13507,
-      );
-      tvData=TV(
-        backdropPath: '/4QNBIgt5fwgNCN3OSU6BTFv0NGR.jpg',
-        genreIds: [16, 10759],
-        id: 888,
-        name: 'Spider-Man',
-        overview:
-            'Bitten by a radioactive spider, Peter Parker develops spider-like superpowers. He uses these to fight crime while trying to balance it with the struggles of his personal life.',
-        popularity: 82.967,
-        posterPath: '/wXthtEN5kdWA1bHz03lkuCJS6hA.jpg',
-        firstAirDate: '1994-11-19',
-        originalName: 'Spider-Man',
-        originalLanguage: "en",
-        voteAverage: 8.3,
-        voteCount: 633,
-        originCountry: ["US"],
-      );
+      adult: false,
+      backdropPath: '/muth4OYamXf41G2evdrLEg8d3om.jpg',
+      genreIds: [14, 28],
+      id: 557,
+      originalTitle: 'Spider-Man',
+      overview:
+          'After being bitten by a genetically altered spider, nerdy high school student Peter Parker is endowed with amazing powers to become the Amazing superhero known as Spider-Man.',
+      popularity: 60.441,
+      posterPath: '/rweIrveL43TaxUN0akQEaAXL6x0.jpg',
+      releaseDate: '2002-05-01',
+      title: 'Spider-Man',
+      video: false,
+      voteAverage: 7.2,
+      voteCount: 13507,
+    );
+    tvData = TV(
+      backdropPath: '/4QNBIgt5fwgNCN3OSU6BTFv0NGR.jpg',
+      genreIds: [16, 10759],
+      id: 888,
+      name: 'Spider-Man',
+      overview:
+          'Bitten by a radioactive spider, Peter Parker develops spider-like superpowers. He uses these to fight crime while trying to balance it with the struggles of his personal life.',
+      popularity: 82.967,
+      posterPath: '/wXthtEN5kdWA1bHz03lkuCJS6hA.jpg',
+      firstAirDate: '1994-11-19',
+      originalName: 'Spider-Man',
+      originalLanguage: "en",
+      voteAverage: 8.3,
+      voteCount: 633,
+      originCountry: ["US"],
+    );
   });
 
   Widget _makeTestableWidget(Widget body) {
@@ -65,16 +65,20 @@ void main() {
     );
   }
 
-  testWidgets('Page should display tab on init',
-      (WidgetTester tester) async {
+  testWidgets('Page should display tab on init', (WidgetTester tester) async {
     when(mockNotifier.watchlistState).thenReturn(RequestState.Empty);
     when(mockNotifier.message).thenReturn('Initialized');
 
-    final tabBarFinder = find.byType(TabBarView);
-
     await tester.pumpWidget(_makeTestableWidget(WatchlistPage()));
 
+    final TabController controller =
+        DefaultTabController.of(tester.element(find.text('Movies')))!;
+    final tabBarFinder = find.byType(TabBarView);
+    final tabBarItemFinder = find.byType(Tab);
+
+    expect(controller, isNotNull);
     expect(tabBarFinder, findsOneWidget);
+    expect(tabBarItemFinder, findsNWidgets(2));
   });
 
   testWidgets('Page should display center progress bar when loading',
@@ -98,6 +102,18 @@ void main() {
     expect(centerFinder, findsWidgets);
     expect(progressBarFinder, findsOneWidget);
   });
+  testWidgets('Check for consumer', (WidgetTester tester) async {
+    when(mockNotifier.watchlistState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.watchlistTVs).thenReturn(<TV>[]);
+    when(mockNotifier.watchlistMovies).thenReturn(<Movie>[]);
+
+    await tester.pumpWidget(_makeTestableWidget(WatchlistPage()));
+
+    final movieConsumerFinder = find.byKey(Key('consumer_movies'));
+
+    expect(movieConsumerFinder, findsOneWidget);
+  });
+  
   testWidgets('Page should display ListView when data is loaded',
       (WidgetTester tester) async {
     when(mockNotifier.watchlistState).thenReturn(RequestState.Loaded);
@@ -124,12 +140,8 @@ void main() {
   testWidgets('Page should display Item Card when data is loaded',
       (WidgetTester tester) async {
     when(mockNotifier.watchlistState).thenReturn(RequestState.Loaded);
-    when(mockNotifier.watchlistTVs).thenReturn(<TV>[
-      tvData
-    ]);
-    when(mockNotifier.watchlistMovies).thenReturn(<Movie>[
-      movieData
-    ]);
+    when(mockNotifier.watchlistTVs).thenReturn(<TV>[tvData]);
+    when(mockNotifier.watchlistMovies).thenReturn(<Movie>[movieData]);
 
     await tester.pumpWidget(_makeTestableWidget(WatchlistPage()));
     final TabController controller =

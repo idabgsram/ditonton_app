@@ -106,6 +106,69 @@ void main() {
     expect(find.text('Failed'), findsOneWidget);
   });
 
+testWidgets('Recommendation should display loading first when its come to load',
+      (WidgetTester tester) async {
+    when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvData).thenReturn(testTVDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loading);
+    when(mockNotifier.tvRecommendations).thenReturn(<TV>[]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+    
+    final centerFinder = find.byKey(Key('recommendations_center'));
+    final progressBarFinder = find.byKey(Key('recommendations_loading'));
+
+    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id:1,)));
+
+    expect(centerFinder, findsOneWidget);
+    expect(progressBarFinder, findsOneWidget);
+  });
+testWidgets(
+      'Recommendation shows when exists',
+      (WidgetTester tester) async {
+    when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvData).thenReturn(testTVDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvRecommendations).thenReturn(<TV>[testTV]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+    final listViewFinder = find.byType(ListView);
+
+    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id: 1)));
+
+    expect(listViewFinder, findsNWidgets(2));
+  });
+
+  testWidgets('Recommendation should show no recommendation when exist',
+      (WidgetTester tester) async {
+    when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvData).thenReturn(testTVDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvRecommendations).thenReturn(<TV>[]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+    final listViewFinder = find.byType(ListView);
+    final noRecommendationText = find.text('No similar recommendation currently');
+
+    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id: 1)));
+
+    expect(listViewFinder, findsOneWidget);
+    expect(noRecommendationText, findsOneWidget);
+  });
+  testWidgets('Recommendations should display text with message when Error',
+      (WidgetTester tester) async {
+    when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvData).thenReturn(testTVDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Error);
+    when(mockNotifier.tvRecommendations).thenReturn(<TV>[]);
+    when(mockNotifier.message).thenReturn('Error message');
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+    
+    final textFinder = find.byKey(Key('recommendation_message'));
+
+    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id:1,)));
+
+    expect(textFinder, findsOneWidget);
+  });
   testWidgets('Page should display text with message when Error',
       (WidgetTester tester) async {
     when(mockNotifier.tvState).thenReturn(RequestState.Error);

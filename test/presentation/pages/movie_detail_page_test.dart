@@ -45,7 +45,7 @@ void main() {
   });
 
   testWidgets(
-      'Watchlist button should dispay check icon when movie is added to wathclist',
+      'Watchlist button should display check icon when movie is added to wathclist',
       (WidgetTester tester) async {
     when(mockNotifier.movieState).thenReturn(RequestState.Loaded);
     when(mockNotifier.movie).thenReturn(testMovieDetail);
@@ -105,7 +105,69 @@ void main() {
     expect(find.byType(AlertDialog), findsOneWidget);
     expect(find.text('Failed'), findsOneWidget);
   });
+testWidgets('Recommendation should display loading first when its come to load',
+      (WidgetTester tester) async {
+    when(mockNotifier.movieState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.movie).thenReturn(testMovieDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loading);
+    when(mockNotifier.movieRecommendations).thenReturn(<Movie>[]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+    
+    final centerFinder = find.byKey(Key('recommendations_center'));
+    final progressBarFinder = find.byKey(Key('recommendations_loading'));
 
+    await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id:1,)));
+
+    expect(centerFinder, findsOneWidget);
+    expect(progressBarFinder, findsOneWidget);
+  });
+testWidgets(
+      'Recommendation shows when exists',
+      (WidgetTester tester) async {
+    when(mockNotifier.movieState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.movie).thenReturn(testMovieDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.movieRecommendations).thenReturn(<Movie>[testMovie]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+    final recommendationList = find.byType(ListView);
+
+    await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
+
+    expect(recommendationList, findsOneWidget);
+  });
+
+  testWidgets('Recommendation should show no recommendation when exist',
+      (WidgetTester tester) async {
+    when(mockNotifier.movieState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.movie).thenReturn(testMovieDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.movieRecommendations).thenReturn(<Movie>[]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+
+    final recommendationList = find.byType(ListView);
+    final noRecommendationText = find.text('No similar recommendation currently');
+
+    await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id: 1)));
+
+    expect(recommendationList, findsNothing);
+    expect(noRecommendationText, findsOneWidget);
+  });
+  testWidgets('Recommendations should display text with message when Error',
+      (WidgetTester tester) async {
+    when(mockNotifier.movieState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.movie).thenReturn(testMovieDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Error);
+    when(mockNotifier.movieRecommendations).thenReturn(<Movie>[]);
+    when(mockNotifier.message).thenReturn('Error message');
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+    
+    final textFinder = find.byKey(Key('recommendation_message'));
+
+    await tester.pumpWidget(_makeTestableWidget(MovieDetailPage(id:1,)));
+
+    expect(textFinder, findsOneWidget);
+  });
   testWidgets('Page should display text with message when Error',
       (WidgetTester tester) async {
     when(mockNotifier.movieState).thenReturn(RequestState.Error);

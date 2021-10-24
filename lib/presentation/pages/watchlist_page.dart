@@ -37,13 +37,14 @@ class _WatchlistPageState extends State<WatchlistPage> {
           ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TabBarView(children: [buildMoviesBody(), _buildTVsBody()]),
+            child: TabBarView(children: [_buildMoviesBody(), _buildTVsBody()]),
           ),
         ));
   }
 
-  Widget buildMoviesBody() {
+  Widget _buildMoviesBody() {
     return Consumer<WatchlistNotifier>(
+      key: Key('consumer_movies'),
       builder: (context, data, child) {
         if (data.watchlistState == RequestState.Loading) {
           return Center(
@@ -69,6 +70,7 @@ class _WatchlistPageState extends State<WatchlistPage> {
 
   Widget _buildTVsBody() {
     return Consumer<WatchlistNotifier>(
+      key: Key('consumer_tv'),
       builder: (context, data, child) {
         if (data.watchlistState == RequestState.Loading) {
           return Center(

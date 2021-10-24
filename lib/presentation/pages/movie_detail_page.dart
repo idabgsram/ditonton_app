@@ -201,11 +201,13 @@ class DetailContent extends StatelessWidget {
                                 if (data.recommendationState ==
                                     RequestState.Loading) {
                                   return Center(
-                                    child: CircularProgressIndicator(),
+                                    key: Key('recommendations_center'),
+                                    child: CircularProgressIndicator(
+                                    key: Key('recommendations_loading'),),
                                   );
                                 } else if (data.recommendationState ==
                                     RequestState.Error) {
-                                  return Text(data.message);
+                                  return Text(data.message, key: Key('recommendation_message'));
                                 } else if (data.recommendationState ==
                                     RequestState.Loaded) {
                                   return Container(
