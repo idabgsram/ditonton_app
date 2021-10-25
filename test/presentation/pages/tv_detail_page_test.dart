@@ -27,7 +27,22 @@ void main() {
       ),
     );
   }
+testWidgets('Detail should show loading first',
+      (WidgetTester tester) async {
+    when(mockNotifier.tvState).thenReturn(RequestState.Loading);
+    when(mockNotifier.tvData).thenReturn(testTVDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loading);
+    when(mockNotifier.tvRecommendations).thenReturn(<TV>[]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(false);
+    
+    final centerFinder = find.byType(Center);
+    final progressBarFinder = find.byType(CircularProgressIndicator);
 
+    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id:1,)));
+
+    expect(centerFinder, findsOneWidget);
+    expect(progressBarFinder, findsOneWidget);
+  });
   testWidgets(
       'Watchlist button should display add icon when movie not added to watchlist',
       (WidgetTester tester) async {
@@ -105,7 +120,28 @@ void main() {
     expect(find.byType(AlertDialog), findsOneWidget);
     expect(find.text('Failed'), findsOneWidget);
   });
+  testWidgets(
+      'Watchlist button should display Snackbar when removed from watchlist',
+      (WidgetTester tester) async {
+    when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvData).thenReturn(testTVDetail);
+    when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.tvRecommendations).thenReturn(<TV>[]);
+    when(mockNotifier.isAddedToWatchlist).thenReturn(true);
+    when(mockNotifier.tvWatchlistMessage).thenReturn('Removed from TV Watchlist');
 
+    final watchlistButton = find.byType(ElevatedButton);
+
+    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id: 1)));
+
+    expect(find.byIcon(Icons.check), findsOneWidget);
+
+    await tester.tap(watchlistButton);
+    await tester.pump();
+
+    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.text('Removed from TV Watchlist'), findsOneWidget);
+  });
 testWidgets('Recommendation should display loading first when its come to load',
       (WidgetTester tester) async {
     when(mockNotifier.tvState).thenReturn(RequestState.Loaded);

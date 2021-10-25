@@ -1,3 +1,4 @@
+import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
@@ -27,15 +28,23 @@ void main() {
 
   Widget _makeTestableWidget(Widget body) {
     return MaterialApp(
-      home: Scaffold(body:body),
+      theme: ThemeData.dark().copyWith(
+        colorScheme: kColorScheme,
+        primaryColor: kRichBlack,
+        scaffoldBackgroundColor: kRichBlack,
+        textTheme: kTextTheme,
+      ),
+      home: Scaffold(body: body),
     );
   }
 
   testWidgets('Widgets ', (WidgetTester tester) async {
-    
     // final imageFinder = find.byType(CachedNetworkImage);
     final cardFinder = find.byType(Card);
-    await tester.pumpWidget(_makeTestableWidget(ItemCard(movieData, isMovies: true,)));
+    await tester.pumpWidget(_makeTestableWidget(ItemCard(
+      movieData,
+      isMovies: true,
+    )));
     final textFinder = find.text('Spider-Man');
     expect(textFinder, findsOneWidget);
     expect(cardFinder, findsOneWidget);

@@ -97,7 +97,7 @@ void main() {
     expect(progressBarFinder, findsOneWidget);
 
     await tester.tap(find.text('TV Shows'));
-    await tester.pump();
+    await tester.pump(Duration(seconds: 2));
     expect(controller.index, 1);
     expect(centerFinder, findsWidgets);
     expect(progressBarFinder, findsOneWidget);
@@ -137,6 +137,22 @@ void main() {
     expect(listViewFinder, findsOneWidget);
   });
 
+  testWidgets('Check for TV consumer', (WidgetTester tester) async {
+    when(mockNotifier.watchlistState).thenReturn(RequestState.Loaded);
+    when(mockNotifier.watchlistTVs).thenReturn(<TV>[]);
+    when(mockNotifier.watchlistMovies).thenReturn(<Movie>[]);
+
+    await tester.pumpWidget(_makeTestableWidget(WatchlistPage()));
+    final TabController controller =
+        DefaultTabController.of(tester.element(find.text('TV Shows')))!;
+        controller.index = 1;
+    await tester.pumpAndSettle();
+
+    final tvConsumerFinder = find.byKey(Key('consumer_tv'));
+
+    expect(tvConsumerFinder, findsOneWidget);
+  });
+
   testWidgets('Page should display Item Card when data is loaded',
       (WidgetTester tester) async {
     when(mockNotifier.watchlistState).thenReturn(RequestState.Loaded);
@@ -153,7 +169,7 @@ void main() {
     expect(itemCardFinder, findsOneWidget);
 
     await tester.tap(find.text('TV Shows'));
-    await tester.pump();
+    await tester.pump(Duration(seconds: 3));
     expect(controller.index, 1);
 
     expect(itemCardFinder, findsOneWidget);
@@ -174,7 +190,7 @@ void main() {
     expect(textFinder, findsOneWidget);
 
     await tester.tap(find.text('TV Shows'));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(controller.index, 1);
     expect(textFinder, findsOneWidget);
   });
