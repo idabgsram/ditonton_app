@@ -82,8 +82,8 @@ class _HomePageState extends State<HomePage> {
             bottom: const TabBar(
               indicatorColor: Colors.yellowAccent,
               tabs: [
-                Tab(icon: Icon(Icons.movie), text: "Movies"),
-                Tab(icon: Icon(Icons.tv), text: "TV Shows"),
+                Tab(key: Key('movies_tab'), icon: Icon(Icons.movie), text: "Movies"),
+                Tab(key: Key('tv_tab'), icon: Icon(Icons.tv), text: "TV Shows"),
               ],
             ),
             actions: [
