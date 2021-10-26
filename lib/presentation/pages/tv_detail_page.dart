@@ -114,6 +114,7 @@ class DetailContent extends StatelessWidget {
                                 "Ongoing",
                               ),
                             ElevatedButton(
+                              key: Key('watchlist_btn'),
                               onPressed: () async {
                                 if (!isAddedWatchlist) {
                                   await Provider.of<TVDetailNotifier>(context,
@@ -314,6 +315,7 @@ class DetailContent extends StatelessWidget {
                                     height: 150,
                                     child: recommendations.length > 0
                                         ? ListView.builder(
+                                            key: Key('recommendations_lv'),
                                             scrollDirection: Axis.horizontal,
                                             itemBuilder: (context, index) {
                                               final tv = recommendations[index];
@@ -396,6 +398,7 @@ class DetailContent extends StatelessWidget {
             backgroundColor: kRichBlack,
             foregroundColor: Colors.white,
             child: IconButton(
+              key: Key('back_button'),
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pop(mainContext);

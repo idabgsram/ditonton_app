@@ -25,6 +25,13 @@ class _PopularMoviesPageState extends State<PopularMoviesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Popular Movies'),
+        leading: IconButton(
+          key: Key('back_button'),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -36,6 +43,7 @@ class _PopularMoviesPageState extends State<PopularMoviesPage> {
               );
             } else if (data.state == RequestState.Loaded) {
               return ListView.builder(
+                key: Key('popular_movies_lv'),
                 itemBuilder: (context, index) {
                   final movie = data.movies[index];
                   return ItemCard(

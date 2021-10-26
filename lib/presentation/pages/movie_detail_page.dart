@@ -51,7 +51,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               ),
             );
           } else {
-            return Text(provider.message,key: Key('provider_message'));
+            return Text(provider.message, key: Key('provider_message'));
           }
         },
       ),
@@ -107,6 +107,7 @@ class DetailContent extends StatelessWidget {
                               style: kHeading5,
                             ),
                             ElevatedButton(
+                              key: Key('watchlist_btn'),
                               onPressed: () async {
                                 if (!isAddedWatchlist) {
                                   await Provider.of<MovieDetailNotifier>(
@@ -203,17 +204,20 @@ class DetailContent extends StatelessWidget {
                                   return Center(
                                     key: Key('recommendations_center'),
                                     child: CircularProgressIndicator(
-                                    key: Key('recommendations_loading'),),
+                                      key: Key('recommendations_loading'),
+                                    ),
                                   );
                                 } else if (data.recommendationState ==
                                     RequestState.Error) {
-                                  return Text(data.message, key: Key('recommendation_message'));
+                                  return Text(data.message,
+                                      key: Key('recommendation_message'));
                                 } else if (data.recommendationState ==
                                     RequestState.Loaded) {
                                   return Container(
                                     height: 150,
                                     child: recommendations.length > 0
                                         ? ListView.builder(
+                                            key: Key('recommendations_lv'),
                                             scrollDirection: Axis.horizontal,
                                             itemBuilder: (context, index) {
                                               final movie =
@@ -290,6 +294,7 @@ class DetailContent extends StatelessWidget {
             backgroundColor: kRichBlack,
             foregroundColor: Colors.white,
             child: IconButton(
+              key: Key('back_button'),
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 Navigator.pop(context);

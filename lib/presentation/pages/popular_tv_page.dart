@@ -25,6 +25,13 @@ class _PopularTVPageState extends State<PopularTVPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Popular TV'),
+        leading: IconButton(
+          key: Key('back_button'),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -36,6 +43,7 @@ class _PopularTVPageState extends State<PopularTVPage> {
               );
             } else if (data.state == RequestState.Loaded) {
               return ListView.builder(
+                key: Key('popular_tv_lv'),
                 itemBuilder: (context, index) {
                   final tv = data.tvList[index];
                   return ItemCard(tv);

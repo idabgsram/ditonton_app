@@ -15,9 +15,8 @@ class _OTATVPageState extends State<OTATVPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<OTATVNotifier>(context, listen: false)
-            .fetchOTATV());
+    Future.microtask(
+        () => Provider.of<OTATVNotifier>(context, listen: false).fetchOTATV());
   }
 
   @override
@@ -25,6 +24,13 @@ class _OTATVPageState extends State<OTATVPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('On The Air TV'),
+        leading: IconButton(
+          key: Key('back_button'),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

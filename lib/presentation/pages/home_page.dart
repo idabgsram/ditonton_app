@@ -54,6 +54,7 @@ class _HomePageState extends State<HomePage> {
                   accountEmail: Text('ditonton@dicoding.com'),
                 ),
                 ListTile(
+                  key: Key('home_tile'),
                   leading: Icon(Icons.home),
                   title: Text('Home'),
                   onTap: () {
@@ -61,6 +62,7 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 ListTile(
+                  key: Key('watchlist_tile'),
                   leading: Icon(Icons.save_alt),
                   title: Text('Watchlist'),
                   onTap: () {
@@ -68,6 +70,7 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 ListTile(
+                  key: Key('about_tile'),
                   onTap: () {
                     Navigator.pushNamed(context, AboutPage.ROUTE_NAME);
                   },
@@ -82,7 +85,10 @@ class _HomePageState extends State<HomePage> {
             bottom: const TabBar(
               indicatorColor: Colors.yellowAccent,
               tabs: [
-                Tab(key: Key('movies_tab'), icon: Icon(Icons.movie), text: "Movies"),
+                Tab(
+                    key: Key('movies_tab'),
+                    icon: Icon(Icons.movie),
+                    text: "Movies"),
                 Tab(key: Key('tv_tab'), icon: Icon(Icons.tv), text: "TV Shows"),
               ],
             ),
@@ -118,12 +124,16 @@ class _HomePageState extends State<HomePage> {
                 child: CircularProgressIndicator(),
               );
             } else if (state == RequestState.Loaded) {
-              return ItemList(data.nowPlayingMovies, isMovies: true);
+              return ItemList(data.nowPlayingMovies,
+                  isMovies: true,
+                  key: Key('nowpl_movies_lv'),
+                  itemKey: 'nowpl_movies_item');
             } else {
               return Text('Failed');
             }
           }),
           _buildSubHeading(
+            key: Key('popular_movies_more'),
             title: 'Popular',
             onTap: () =>
                 Navigator.pushNamed(context, PopularMoviesPage.ROUTE_NAME),
@@ -135,12 +145,16 @@ class _HomePageState extends State<HomePage> {
                 child: CircularProgressIndicator(),
               );
             } else if (state == RequestState.Loaded) {
-              return ItemList(data.popularMovies, isMovies: true);
+              return ItemList(data.popularMovies,
+                  isMovies: true,
+                  key: Key('popular_movies_lv'),
+                  itemKey: 'popular_movies_item');
             } else {
               return Text('Failed');
             }
           }),
           _buildSubHeading(
+            key: Key('toprate_movies_more'),
             title: 'Top Rated',
             onTap: () =>
                 Navigator.pushNamed(context, TopRatedMoviesPage.ROUTE_NAME),
@@ -152,7 +166,10 @@ class _HomePageState extends State<HomePage> {
                 child: CircularProgressIndicator(),
               );
             } else if (state == RequestState.Loaded) {
-              return ItemList(data.topRatedMovies, isMovies: true);
+              return ItemList(data.topRatedMovies,
+                  isMovies: true,
+                  key: Key('toprate_movies_lv'),
+                  itemKey: 'toprate_movies_item');
             } else {
               return Text('Failed');
             }
@@ -168,6 +185,7 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildSubHeading(
+            key: Key('ota_tv_more'),
             title: 'On The Air',
             onTap: () => Navigator.pushNamed(context, OTATVPage.ROUTE_NAME),
           ),
@@ -178,12 +196,14 @@ class _HomePageState extends State<HomePage> {
                 child: CircularProgressIndicator(),
               );
             } else if (state == RequestState.Loaded) {
-              return ItemList(data.onTheAirTVs);
+              return ItemList(data.onTheAirTVs,
+                  key: Key('ota_tv_lv'), itemKey: 'ota_tv_item');
             } else {
               return Text('Failed');
             }
           }),
           _buildSubHeading(
+            key: Key('popular_tv_more'),
             title: 'Popular',
             onTap: () => Navigator.pushNamed(context, PopularTVPage.ROUTE_NAME),
           ),
@@ -194,12 +214,14 @@ class _HomePageState extends State<HomePage> {
                 child: CircularProgressIndicator(),
               );
             } else if (state == RequestState.Loaded) {
-              return ItemList(data.popularTVs);
+              return ItemList(data.popularTVs,
+                  key: Key('popular_tv_lv'), itemKey: 'popular_tv_item');
             } else {
               return Text('Failed');
             }
           }),
           _buildSubHeading(
+            key: Key('toprate_tv_more'),
             title: 'Top Rated',
             onTap: () =>
                 Navigator.pushNamed(context, TopRatedTVPage.ROUTE_NAME),
@@ -211,7 +233,8 @@ class _HomePageState extends State<HomePage> {
                 child: CircularProgressIndicator(),
               );
             } else if (state == RequestState.Loaded) {
-              return ItemList(data.topRatedTVs);
+              return ItemList(data.topRatedTVs,
+                  key: Key('toprate_tv_lv'), itemKey: 'toprate_tv_item');
             } else {
               return Text('Failed');
             }
@@ -221,7 +244,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Row _buildSubHeading({required String title, required Function() onTap}) {
+  Row _buildSubHeading(
+      {required String title, required Function() onTap, Key? key}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -230,6 +254,7 @@ class _HomePageState extends State<HomePage> {
           style: kHeading6,
         ),
         InkWell(
+          key: key,
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -246,20 +271,24 @@ class _HomePageState extends State<HomePage> {
 class ItemList extends StatelessWidget {
   final List<dynamic> items;
   final bool isMovies;
+  final Key? key;
+  final String? itemKey;
 
-  ItemList(this.items, {this.isMovies = false});
+  ItemList(this.items, {this.isMovies = false, this.key, this.itemKey});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 200,
       child: ListView.builder(
+        key: key,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           final item = items[index];
           return Container(
             padding: const EdgeInsets.all(8),
             child: InkWell(
+              key: Key((itemKey ?? 'item') + '_' + index.toString()),
               onTap: () {
                 Navigator.pushNamed(
                   context,

@@ -27,6 +27,13 @@ class _WatchlistPageState extends State<WatchlistPage> {
         child: Scaffold(
           appBar: AppBar(
             title: Text('Watchlist'),
+            leading: IconButton(
+              key: Key('back_button'),
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
             bottom: const TabBar(
               indicatorColor: Colors.yellowAccent,
               tabs: [
@@ -54,7 +61,10 @@ class _WatchlistPageState extends State<WatchlistPage> {
           return ListView.builder(
             itemBuilder: (context, index) {
               final movie = data.watchlistMovies[index];
-              return ItemCard(movie, isMovies: true,);
+              return ItemCard(
+                movie,
+                isMovies: true,
+              );
             },
             itemCount: data.watchlistMovies.length,
           );
