@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:ditonton/data/models/tv_detail_episodes_model.dart';
-import 'package:ditonton/data/models/tv_seasons_model.dart';
 import 'package:ditonton/domain/entities/tv_detail_episodes.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -26,7 +25,7 @@ void main() {
     stillPath: "stillPath",
   );
 
-  test('should be a subclass of the entity', () async {
+  test('should be a subclass of its entity', () async {
     final result = tModel.toEntity();
     expect(result, tEntities);
   });

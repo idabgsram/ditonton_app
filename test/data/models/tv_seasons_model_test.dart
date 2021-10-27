@@ -69,7 +69,7 @@ void main() {
     posterPath: null,
   );
 
-  test('should be a subclass of Movie entity', () async {
+  test('should be a subclass of TV entity', () async {
     final result = tTVSeasonsModel.toEntity();
     expect(result, tTVSeasons);
   });

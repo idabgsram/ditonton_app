@@ -281,7 +281,7 @@ void main() {
           .thenThrow(ServerException());
       // act
       final result = await repository.getMovieRecommendations(tId);
-      // assertbuild runner
+      // assert
       verify(mockRemoteDataSource.getMovieRecommendations(tId));
       expect(result, equals(Left(ServerFailure(''))));
     });

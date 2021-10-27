@@ -27,24 +27,26 @@ void main() {
       ),
     );
   }
-testWidgets('Detail should show loading first',
-      (WidgetTester tester) async {
+
+  testWidgets('Detail should show loading first', (WidgetTester tester) async {
     when(mockNotifier.tvState).thenReturn(RequestState.Loading);
     when(mockNotifier.tvData).thenReturn(testTVDetail);
     when(mockNotifier.recommendationState).thenReturn(RequestState.Loading);
     when(mockNotifier.tvRecommendations).thenReturn(<TV>[]);
     when(mockNotifier.isAddedToWatchlist).thenReturn(false);
-    
+
     final centerFinder = find.byType(Center);
     final progressBarFinder = find.byType(CircularProgressIndicator);
 
-    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id:1,)));
+    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(
+      id: 1,
+    )));
 
     expect(centerFinder, findsOneWidget);
     expect(progressBarFinder, findsOneWidget);
   });
   testWidgets(
-      'Watchlist button should display add icon when movie not added to watchlist',
+      'Watchlist button should display add icon when tv not added to watchlist',
       (WidgetTester tester) async {
     when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
     when(mockNotifier.tvData).thenReturn(testTVDetail);
@@ -60,7 +62,7 @@ testWidgets('Detail should show loading first',
   });
 
   testWidgets(
-      'Watchlist button should dispay check icon when movie is added to wathclist',
+      'Watchlist button should dispay check icon when tv is added to wathclist',
       (WidgetTester tester) async {
     when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
     when(mockNotifier.tvData).thenReturn(testTVDetail);
@@ -128,7 +130,8 @@ testWidgets('Detail should show loading first',
     when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
     when(mockNotifier.tvRecommendations).thenReturn(<TV>[]);
     when(mockNotifier.isAddedToWatchlist).thenReturn(true);
-    when(mockNotifier.tvWatchlistMessage).thenReturn('Removed from TV Watchlist');
+    when(mockNotifier.tvWatchlistMessage)
+        .thenReturn('Removed from TV Watchlist');
 
     final watchlistButton = find.byType(ElevatedButton);
 
@@ -142,25 +145,26 @@ testWidgets('Detail should show loading first',
     expect(find.byType(SnackBar), findsOneWidget);
     expect(find.text('Removed from TV Watchlist'), findsOneWidget);
   });
-testWidgets('Recommendation should display loading first when its come to load',
+  testWidgets(
+      'Recommendation should display loading first when its come to load',
       (WidgetTester tester) async {
     when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
     when(mockNotifier.tvData).thenReturn(testTVDetail);
     when(mockNotifier.recommendationState).thenReturn(RequestState.Loading);
     when(mockNotifier.tvRecommendations).thenReturn(<TV>[]);
     when(mockNotifier.isAddedToWatchlist).thenReturn(false);
-    
+
     final centerFinder = find.byKey(Key('recommendations_center'));
     final progressBarFinder = find.byKey(Key('recommendations_loading'));
 
-    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id:1,)));
+    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(
+      id: 1,
+    )));
 
     expect(centerFinder, findsOneWidget);
     expect(progressBarFinder, findsOneWidget);
   });
-testWidgets(
-      'Recommendation shows when exists',
-      (WidgetTester tester) async {
+  testWidgets('Recommendation shows when exists', (WidgetTester tester) async {
     when(mockNotifier.tvState).thenReturn(RequestState.Loaded);
     when(mockNotifier.tvData).thenReturn(testTVDetail);
     when(mockNotifier.recommendationState).thenReturn(RequestState.Loaded);
@@ -183,7 +187,8 @@ testWidgets(
     when(mockNotifier.isAddedToWatchlist).thenReturn(false);
 
     final listViewFinder = find.byType(ListView);
-    final noRecommendationText = find.text('No similar recommendation currently');
+    final noRecommendationText =
+        find.text('No similar recommendation currently');
 
     await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id: 1)));
 
@@ -198,10 +203,12 @@ testWidgets(
     when(mockNotifier.tvRecommendations).thenReturn(<TV>[]);
     when(mockNotifier.message).thenReturn('Error message');
     when(mockNotifier.isAddedToWatchlist).thenReturn(false);
-    
+
     final textFinder = find.byKey(Key('recommendation_message'));
 
-    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id:1,)));
+    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(
+      id: 1,
+    )));
 
     expect(textFinder, findsOneWidget);
   });
@@ -212,7 +219,9 @@ testWidgets(
 
     final textFinder = find.byKey(Key('provider_message'));
 
-    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(id:1,)));
+    await tester.pumpWidget(_makeTestableWidget(TVDetailPage(
+      id: 1,
+    )));
 
     expect(textFinder, findsOneWidget);
   });

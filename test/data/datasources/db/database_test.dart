@@ -26,7 +26,7 @@ void main() {
   });
 
   group('Database function test', () {
-    test('check TV main function is working', () async {
+    test('check TV-related function is working', () async {
       // arrange
       dbSource.setDatabase(await openDatabase(inMemoryDatabasePath, version: 2,
           onCreate: (db, version) async {
@@ -53,7 +53,7 @@ void main() {
       expect(testRemove, 1);
     });
 
-    test('check Movies main function is working', () async {
+    test('check Movies-related function is working', () async {
       // arrange
       dbSource.setDatabase(await openDatabase(inMemoryDatabasePath, version: 2,
           onCreate: (db, version) async {

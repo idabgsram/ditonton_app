@@ -31,7 +31,7 @@ void main() {
   final tId = 1;
 
   void _arrangeUsecase() {
-    when(mockGetTVSeasonsDetail.execute(tId,tId))
+    when(mockGetTVSeasonsDetail.execute(tId, tId))
         .thenAnswer((_) async => Right(testTVSeasonsDetail));
   }
 
@@ -40,16 +40,16 @@ void main() {
       // arrange
       _arrangeUsecase();
       // act
-      await provider.fetchTVSeasonsDetail(tId,tId);
+      await provider.fetchTVSeasonsDetail(tId, tId);
       // assert
-      verify(mockGetTVSeasonsDetail.execute(tId,tId));
+      verify(mockGetTVSeasonsDetail.execute(tId, tId));
     });
 
     test('should change state to Loading when usecase is called', () {
       // arrange
       _arrangeUsecase();
       // act
-      provider.fetchTVSeasonsDetail(tId,tId);
+      provider.fetchTVSeasonsDetail(tId, tId);
       // assert
       expect(provider.tvSeasonsState, RequestState.Loading);
       expect(listenerCallCount, 1);
@@ -59,7 +59,7 @@ void main() {
       // arrange
       _arrangeUsecase();
       // act
-      await provider.fetchTVSeasonsDetail(tId,tId);
+      await provider.fetchTVSeasonsDetail(tId, tId);
       // assert
       expect(provider.tvSeasonsState, RequestState.Loaded);
       expect(provider.tvSeasonsData, testTVSeasonsDetail);
@@ -70,10 +70,10 @@ void main() {
   group('on Error', () {
     test('should return error when data is unsuccessful', () async {
       // arrange
-      when(mockGetTVSeasonsDetail.execute(tId,tId))
+      when(mockGetTVSeasonsDetail.execute(tId, tId))
           .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
       // act
-      await provider.fetchTVSeasonsDetail(tId,tId);
+      await provider.fetchTVSeasonsDetail(tId, tId);
       // assert
       expect(provider.tvSeasonsState, RequestState.Error);
       expect(provider.message, 'Server Failure');

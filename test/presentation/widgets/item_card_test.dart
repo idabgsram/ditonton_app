@@ -38,8 +38,7 @@ void main() {
     );
   }
 
-  testWidgets('Widgets ', (WidgetTester tester) async {
-    // final imageFinder = find.byType(CachedNetworkImage);
+  testWidgets('Check if ItemCard should show properly', (WidgetTester tester) async {
     final cardFinder = find.byType(Card);
     await tester.pumpWidget(_makeTestableWidget(ItemCard(
       movieData,
@@ -48,6 +47,5 @@ void main() {
     final textFinder = find.text('Spider-Man');
     expect(textFinder, findsOneWidget);
     expect(cardFinder, findsOneWidget);
-    // expect(imageFinder, findsOneWidget);
   });
 }

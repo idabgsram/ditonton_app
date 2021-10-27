@@ -446,7 +446,7 @@ void main() {
           .thenThrow(ServerException());
       // act
       final result = await repository.getTVRecommendations(tId);
-      // assertbuild runner
+      // assert
       verify(mockRemoteDataSource.getTVRecommendations(tId));
       expect(result, equals(Left(ServerFailure(''))));
     });

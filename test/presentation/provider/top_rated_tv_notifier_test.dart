@@ -45,8 +45,7 @@ void main() {
 
   test('should change tv state to loading when usecase is called', () async {
     // arrange
-    when(mockGetTopRatedTVs.execute())
-        .thenAnswer((_) async => Right(tTVList));
+    when(mockGetTopRatedTVs.execute()).thenAnswer((_) async => Right(tTVList));
     // act
     notifier.fetchTopRatedTV();
     // assert
@@ -56,8 +55,7 @@ void main() {
 
   test('should change tv data when data is gotten successfully', () async {
     // arrange
-    when(mockGetTopRatedTVs.execute())
-        .thenAnswer((_) async => Right(tTVList));
+    when(mockGetTopRatedTVs.execute()).thenAnswer((_) async => Right(tTVList));
     // act
     await notifier.fetchTopRatedTV();
     // assert

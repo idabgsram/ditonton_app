@@ -22,7 +22,6 @@ void main() {
     overview: 'overview',
   );
 
-
   test('should be a subclass of the entity', () async {
     final result = tTVModel.toEntity();
     expect(result, tTV);

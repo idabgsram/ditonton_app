@@ -11,7 +11,7 @@ import 'package:mockito/mockito.dart';
 import '../../dummy_data/dummy_objects.dart';
 import 'watchlist_notifier_test.mocks.dart';
 
-@GenerateMocks([GetWatchlistMovies,GetWatchlistTV])
+@GenerateMocks([GetWatchlistMovies, GetWatchlistTV])
 void main() {
   late WatchlistNotifier provider;
   late MockGetWatchlistMovies mockGetWatchlistMovies;

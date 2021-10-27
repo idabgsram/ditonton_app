@@ -35,14 +35,15 @@ void main() {
           profilePath: null)
     ],
     name: "A Mountain of Problems",
-    overview: "Nino isn't happy that Futaro is beginning to get along with her sisters, so she takes matters into her own hands.",
+    overview:
+        "Nino isn't happy that Futaro is beginning to get along with her sisters, so she takes matters into her own hands.",
     id: 1659817,
     seasonNumber: 1,
     stillPath: "/vkuYEpktTjfZTZcl8XcChR0CN71.jpg",
   );
 
   final tTVEpisodes = TVEpisodes(
-airDate: "2019-01-25",
+    airDate: "2019-01-25",
     crew: [
       Crew(
           job: "Animation Director",
@@ -67,7 +68,8 @@ airDate: "2019-01-25",
           profilePath: null)
     ],
     name: "A Mountain of Problems",
-    overview: "Nino isn't happy that Futaro is beginning to get along with her sisters, so she takes matters into her own hands.",
+    overview:
+        "Nino isn't happy that Futaro is beginning to get along with her sisters, so she takes matters into her own hands.",
     id: 1659817,
     seasonNumber: 1,
     stillPath: "/vkuYEpktTjfZTZcl8XcChR0CN71.jpg",

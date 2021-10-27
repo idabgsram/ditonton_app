@@ -31,7 +31,7 @@ void main() {
   final tId = 1;
 
   void _arrangeUsecase() {
-    when(mockGetTVEpisodesDetail.execute(tId,tId,tId))
+    when(mockGetTVEpisodesDetail.execute(tId, tId, tId))
         .thenAnswer((_) async => Right(testTVEpisodesDetail));
   }
 
@@ -40,16 +40,16 @@ void main() {
       // arrange
       _arrangeUsecase();
       // act
-      await provider.fetchTVEpisodesDetail(tId,tId,tId);
+      await provider.fetchTVEpisodesDetail(tId, tId, tId);
       // assert
-      verify(mockGetTVEpisodesDetail.execute(tId,tId,tId));
+      verify(mockGetTVEpisodesDetail.execute(tId, tId, tId));
     });
 
     test('should change state to Loading when usecase is called', () {
       // arrange
       _arrangeUsecase();
       // act
-      provider.fetchTVEpisodesDetail(tId,tId,tId);
+      provider.fetchTVEpisodesDetail(tId, tId, tId);
       // assert
       expect(provider.tvEpisodesState, RequestState.Loading);
       expect(listenerCallCount, 1);
@@ -59,7 +59,7 @@ void main() {
       // arrange
       _arrangeUsecase();
       // act
-      await provider.fetchTVEpisodesDetail(tId,tId,tId);
+      await provider.fetchTVEpisodesDetail(tId, tId, tId);
       // assert
       expect(provider.tvEpisodesState, RequestState.Loaded);
       expect(provider.tvEpisodesData, testTVEpisodesDetail);
@@ -70,10 +70,10 @@ void main() {
   group('on Error', () {
     test('should return error when data is unsuccessful', () async {
       // arrange
-      when(mockGetTVEpisodesDetail.execute(tId,tId,tId))
+      when(mockGetTVEpisodesDetail.execute(tId, tId, tId))
           .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
       // act
-      await provider.fetchTVEpisodesDetail(tId,tId,tId);
+      await provider.fetchTVEpisodesDetail(tId, tId, tId);
       // assert
       expect(provider.tvEpisodesState, RequestState.Error);
       expect(provider.message, 'Server Failure');

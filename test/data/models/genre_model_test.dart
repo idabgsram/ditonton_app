@@ -7,17 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../json_reader.dart';
 
 void main() {
-  final tGenreModel = GenreModel(
-    id: 1,
-    name: "name"
-  );
+  final tGenreModel = GenreModel(id: 1, name: "name");
 
-  final tGenre = Genre(
-    id: 1,
-    name: "name"
-  );
+  final tGenre = Genre(id: 1, name: "name");
 
-  test('should be a subclass of entity', () async {
+  test('should be a subclass of its entity', () async {
     final result = tGenreModel.toEntity();
     expect(result, tGenre);
   });
@@ -37,10 +31,7 @@ void main() {
   group('check toJson', () {
     test('should return a JSON map containing proper data', () async {
       // arrange
-      final expectedJsonMap = {
-        "id" : 1,
-        "name": "name"
-      };
+      final expectedJsonMap = {"id": 1, "name": "name"};
       // act
       final result = tGenreModel.toJson();
       // assert

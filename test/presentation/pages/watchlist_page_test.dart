@@ -1,7 +1,6 @@
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/tv.dart';
-import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_page.dart';
 import 'package:ditonton/presentation/provider/watchlist_notifier.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
@@ -11,7 +10,6 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
-import '../../dummy_data/dummy_objects.dart';
 import 'watchlist_page_test.mocks.dart';
 
 @GenerateMocks([WatchlistNotifier])
@@ -113,7 +111,7 @@ void main() {
 
     expect(movieConsumerFinder, findsOneWidget);
   });
-  
+
   testWidgets('Page should display ListView when data is loaded',
       (WidgetTester tester) async {
     when(mockNotifier.watchlistState).thenReturn(RequestState.Loaded);
@@ -145,7 +143,7 @@ void main() {
     await tester.pumpWidget(_makeTestableWidget(WatchlistPage()));
     final TabController controller =
         DefaultTabController.of(tester.element(find.text('TV Shows')))!;
-        controller.index = 1;
+    controller.index = 1;
     await tester.pumpAndSettle();
 
     final tvConsumerFinder = find.byKey(Key('consumer_tv'));

@@ -23,7 +23,7 @@ void main() {
     profilePath: "profilePath",
   );
 
-  test('should be a subclass of Movie entity', () async {
+  test('should be a subclass of Crew entity', () async {
     final result = tCrewModel.toEntity();
     expect(result, tCrew);
   });
