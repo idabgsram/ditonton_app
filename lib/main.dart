@@ -128,13 +128,20 @@ class MyApp extends StatelessWidget {
             case TVSeasonsDetailPage.ROUTE_NAME:
               final arguments = settings.arguments as Map<String, int>;
               return MaterialPageRoute(
-                builder: (_) => TVSeasonsDetailPage(id: arguments['id']!, seasonNumber: arguments['seasonNumber']!,),
+                builder: (_) => TVSeasonsDetailPage(
+                  id: arguments['id']!,
+                  seasonNumber: arguments['seasonNumber']!,
+                ),
                 settings: settings,
               );
             case TVEpisodesDetailPage.ROUTE_NAME:
               final arguments = settings.arguments as Map<String, int>;
               return MaterialPageRoute(
-                builder: (_) => TVEpisodesDetailPage(id: arguments['id']!, seasonNumber: arguments['seasonNumber']!,epsNumber: arguments['epsNumber']!,),
+                builder: (_) => TVEpisodesDetailPage(
+                  id: arguments['id']!,
+                  seasonNumber: arguments['seasonNumber']!,
+                  epsNumber: arguments['epsNumber']!,
+                ),
                 settings: settings,
               );
             case SearchPage.ROUTE_NAME:

@@ -21,7 +21,7 @@ class DatabaseHelper {
     return _database;
   }
 
-  setDatabase (Database database){
+  setDatabase(Database database) {
     _database = database;
   }
 
@@ -97,7 +97,7 @@ class DatabaseHelper {
       return null;
     }
   }
-  
+
   Future<Map<String, dynamic>?> getTVById(int id) async {
     final db = await database;
     final results = await db!.query(

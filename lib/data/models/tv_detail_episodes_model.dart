@@ -11,7 +11,7 @@ class TVDetailEpisodesModel extends Equatable {
     required this.stillPath,
   });
 
-  final String airDate;
+  final String? airDate;
   final int episodeNumber;
   final int id;
   final String name;

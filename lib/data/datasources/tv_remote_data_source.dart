@@ -15,7 +15,8 @@ abstract class TVRemoteDataSource {
   Future<TVDetailResponse> getTVDetail(int id);
   Future<List<TVModel>> getTVRecommendations(int id);
   Future<TVSeasonsResponse> getTVSeasonsDetail(int tvId, int seasonNumber);
-  Future<TVEpisodesModel> getTVEpisodesDetail(int tvId, int seasonNumber, int epsNumber);
+  Future<TVEpisodesModel> getTVEpisodesDetail(
+      int tvId, int seasonNumber, int epsNumber);
   Future<List<TVModel>> searchTV(String query);
 }
 
@@ -41,8 +42,7 @@ class TVRemoteDataSourceImpl implements TVRemoteDataSource {
 
   @override
   Future<TVDetailResponse> getTVDetail(int id) async {
-    final response =
-        await client.get(Uri.parse('$BASE_URL/tv/$id?$API_KEY'));
+    final response = await client.get(Uri.parse('$BASE_URL/tv/$id?$API_KEY'));
 
     if (response.statusCode == 200) {
       return TVDetailResponse.fromJson(json.decode(response.body));
@@ -88,23 +88,25 @@ class TVRemoteDataSourceImpl implements TVRemoteDataSource {
   }
 
   @override
-  Future<TVSeasonsResponse> getTVSeasonsDetail(int tvId, int seasonNumber) async {
-    final response =
-        await client.get(Uri.parse('$BASE_URL/tv/$tvId/season/$seasonNumber?$API_KEY'));
+  Future<TVSeasonsResponse> getTVSeasonsDetail(
+      int tvId, int seasonNumber) async {
+    final response = await client
+        .get(Uri.parse('$BASE_URL/tv/$tvId/season/$seasonNumber?$API_KEY'));
     if (response.statusCode == 200) {
       return TVSeasonsResponse.fromJson(json.decode(response.body));
-      } else {
+    } else {
       throw ServerException();
     }
   }
 
   @override
-  Future<TVEpisodesModel> getTVEpisodesDetail(int tvId, int seasonNumber, int epsNumber) async {
-    final response =
-        await client.get(Uri.parse('$BASE_URL/tv/$tvId/season/$seasonNumber/episode/$epsNumber?$API_KEY'));
+  Future<TVEpisodesModel> getTVEpisodesDetail(
+      int tvId, int seasonNumber, int epsNumber) async {
+    final response = await client.get(Uri.parse(
+        '$BASE_URL/tv/$tvId/season/$seasonNumber/episode/$epsNumber?$API_KEY'));
     if (response.statusCode == 200) {
       return TVEpisodesModel.fromJson(json.decode(response.body));
-      } else {
+    } else {
       throw ServerException();
     }
   }

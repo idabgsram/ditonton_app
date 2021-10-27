@@ -46,7 +46,7 @@ class _TVSeasonsDetailPageState extends State<TVSeasonsDetailPage> {
                   DetailContent(tvSeasonsData, widget.id, widget.seasonNumber),
             );
           } else {
-            return Text(provider.message,key: Key('provider_message'));
+            return Text(provider.message, key: Key('provider_message'));
           }
         },
       ),
@@ -163,7 +163,8 @@ class DetailContent extends StatelessWidget {
               tvSeasonsData.name,
               style: kHeading5,
             ),
-            if (tvSeasonsData.airDate!=null && tvSeasonsData.airDate!.length > 0)
+            if (tvSeasonsData.airDate != null &&
+                tvSeasonsData.airDate!.length > 0)
               Text('Aired on ${tvSeasonsData.airDate}'),
             SizedBox(height: 8),
             Container(
@@ -267,7 +268,8 @@ class DetailContent extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                      if (episodeData.airDate.length > 0)
+                      if (episodeData.airDate != null &&
+                          episodeData.airDate!.length > 0)
                         Text(
                           'Aired on ${episodeData.airDate}',
                           maxLines: 2,

@@ -22,12 +22,12 @@ class SearchNotifier extends ChangeNotifier {
   String get currentSelection => _currentSelection;
 
   void setCurrentSelection(String? selection) {
-     _searchResult = [];
+    _searchResult = [];
     _currentSelection = selection ?? 'Movies';
     notifyListeners();
   }
 
-  bool get isMovies{
+  bool get isMovies {
     return _currentSelection == 'Movies';
   }
 

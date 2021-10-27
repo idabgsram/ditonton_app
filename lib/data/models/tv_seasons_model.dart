@@ -23,7 +23,8 @@ class TVSeasonsResponse extends Equatable {
   final String? posterPath;
   final int seasonNumber;
 
-  factory TVSeasonsResponse.fromJson(Map<String, dynamic> json) => TVSeasonsResponse(
+  factory TVSeasonsResponse.fromJson(Map<String, dynamic> json) =>
+      TVSeasonsResponse(
         itemId: json["_id"],
         airDate: json["air_date"],
         episodes: List<TVEpisodesModel>.from(

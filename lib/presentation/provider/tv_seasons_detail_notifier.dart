@@ -1,4 +1,3 @@
-
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv_seasons.dart';
 import 'package:ditonton/domain/usecases/get_tv_seasons_detail.dart';
@@ -8,9 +7,7 @@ import 'package:flutter/material.dart';
 class TVSeasonsDetailNotifier extends ChangeNotifier {
   final GetTVSeasonsDetail getTVSeasonsDetail;
 
-  TVSeasonsDetailNotifier({
-    required this.getTVSeasonsDetail
-  });
+  TVSeasonsDetailNotifier({required this.getTVSeasonsDetail});
 
   late TVSeasons _tvSeasonsData;
   TVSeasons get tvSeasonsData => _tvSeasonsData;
@@ -38,5 +35,4 @@ class TVSeasonsDetailNotifier extends ChangeNotifier {
       },
     );
   }
-
 }

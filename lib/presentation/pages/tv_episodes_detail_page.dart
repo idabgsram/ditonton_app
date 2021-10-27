@@ -45,7 +45,7 @@ class _TVEpisodesDetailPageState extends State<TVEpisodesDetailPage> {
               child: DetailContent(tvEpisodesData),
             );
           } else {
-            return Text(provider.message,key: Key('provider_message') );
+            return Text(provider.message, key: Key('provider_message'));
           }
         },
       ),

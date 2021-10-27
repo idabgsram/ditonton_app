@@ -15,7 +15,7 @@ class TVEpisodes extends Equatable {
     required this.stillPath,
   });
 
-  final String airDate;
+  final String? airDate;
   final List<Crew> crew;
   final int episodeNumber;
   final List<Crew> guestStars;

@@ -82,9 +82,11 @@ class TVRepositoryImpl implements TVRepository {
   }
 
   @override
-  Future<Either<Failure, TVSeasons>> getTVSeasonsDetail(int tvId, int seasonNumber) async {
+  Future<Either<Failure, TVSeasons>> getTVSeasonsDetail(
+      int tvId, int seasonNumber) async {
     try {
-      final result = await remoteDataSource.getTVSeasonsDetail(tvId, seasonNumber);
+      final result =
+          await remoteDataSource.getTVSeasonsDetail(tvId, seasonNumber);
       return Right(result.toEntity());
     } on ServerException {
       return Left(ServerFailure(''));
@@ -94,9 +96,11 @@ class TVRepositoryImpl implements TVRepository {
   }
 
   @override
-  Future<Either<Failure, TVEpisodes>> getTVEpisodesDetail(int tvId, int seasonNumber, int epsNumber) async {
+  Future<Either<Failure, TVEpisodes>> getTVEpisodesDetail(
+      int tvId, int seasonNumber, int epsNumber) async {
     try {
-      final result = await remoteDataSource.getTVEpisodesDetail(tvId, seasonNumber, epsNumber);
+      final result = await remoteDataSource.getTVEpisodesDetail(
+          tvId, seasonNumber, epsNumber);
       return Right(result.toEntity());
     } on ServerException {
       return Left(ServerFailure(''));

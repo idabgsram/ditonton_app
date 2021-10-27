@@ -45,7 +45,6 @@ import 'package:ditonton/presentation/provider/top_rated_tv_notifier.dart';
 import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
 
-
 final locator = GetIt.instance;
 
 void init() {
@@ -83,7 +82,7 @@ void init() {
     ),
   );
 
-locator.registerFactory(
+  locator.registerFactory(
     () => TVListNotifier(
       getOnTheAirTVs: locator(),
       getPopularTVs: locator(),
@@ -143,7 +142,7 @@ locator.registerFactory(
   locator.registerLazySingleton(() => SaveWatchlist(locator()));
   locator.registerLazySingleton(() => RemoveWatchlist(locator()));
   locator.registerLazySingleton(() => GetWatchlistMovies(locator()));
-  
+
   locator.registerLazySingleton(() => GetOnTheAirTV(locator()));
   locator.registerLazySingleton(() => GetPopularTV(locator()));
   locator.registerLazySingleton(() => GetTopRatedTV(locator()));

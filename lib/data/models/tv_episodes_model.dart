@@ -15,7 +15,7 @@ class TVEpisodesModel extends Equatable {
     required this.stillPath,
   });
 
-  final String airDate;
+  final String? airDate;
   final List<CrewModel> crew;
   final int episodeNumber;
   final List<CrewModel> guestStars;
@@ -42,7 +42,7 @@ class TVEpisodesModel extends Equatable {
 
   Map<String, dynamic> toJson() => {
         "air_date": airDate,
-        "crew": List<dynamic>.from(crew.map((x) => x.toJson())),
+        "crew":List<dynamic>.from(crew.map((x) => x.toJson())),
         "episode_number": episodeNumber,
         "guest_stars": List<dynamic>.from(guestStars.map((x) => x.toJson())),
         "name": name,
