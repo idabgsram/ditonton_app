@@ -25,6 +25,7 @@ import 'package:ditonton/presentation/provider/tv_episodes_detail_notifier.dart'
 import 'package:ditonton/presentation/provider/tv_list_notifier.dart';
 import 'package:ditonton/presentation/provider/tv_seasons_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/watchlist_notifier.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
