@@ -410,6 +410,9 @@ class MockDatabaseHelper extends _i1.Mock implements _i26.DatabaseHelper {
               returnValue: Future<_i27.Database?>.value())
           as _i9.Future<_i27.Database?>);
   @override
+  dynamic setDatabase(_i27.Database? database) =>
+      super.noSuchMethod(Invocation.method(#setDatabase, [database]));
+  @override
   _i9.Future<int> insertWatchlist(_i16.MovieTable? movie) =>
       (super.noSuchMethod(Invocation.method(#insertWatchlist, [movie]),
           returnValue: Future<int>.value(0)) as _i9.Future<int>);
