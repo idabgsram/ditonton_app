@@ -32,7 +32,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:ditonton/injection.dart' as di;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   di.init();
   LicenseRegistry.addLicense(() async* {
     final license = await rootBundle.loadString('assets/google_fonts/OFL.txt');
