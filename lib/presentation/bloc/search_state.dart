@@ -21,10 +21,14 @@ class SearchError extends SearchState {
 }
  
 class SearchHasData extends SearchState {
-  final List<Movie> result;
+  final List<dynamic> result;
  
   SearchHasData(this.result);
  
   @override
   List<Object> get props => [result];
 }
+
+class SearchMoviesState extends SearchState {}
+
+class SearchTVState extends SearchState {}

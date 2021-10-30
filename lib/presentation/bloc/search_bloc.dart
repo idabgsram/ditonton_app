@@ -1,5 +1,6 @@
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/usecases/search_movies.dart';
+import 'package:ditonton/domain/usecases/search_tv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
@@ -9,9 +10,13 @@ part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchMovies _searchMovies;
+  final SearchTVs _searchTVs;
 
-  SearchBloc(this._searchMovies) : super(SearchEmpty());
+  SearchBloc(this._searchMovies, this._searchTVs) : super(SearchEmpty());
 
+  String _currentSelection = 'Movies';
+  String get currentSelection => _currentSelection;
+  
   @override
   Stream<SearchState> mapEventToState(
     SearchEvent event,
@@ -20,7 +25,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       final query = event.query;
 
       yield SearchLoading();
-      final result = await _searchMovies.execute(query);
+      final result = _currentSelection == 'Movies'?await _searchMovies.execute(query):await _searchTVs.execute(query);
 
       yield* result.fold(
         (failure) async* {
@@ -30,6 +35,9 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
           yield SearchHasData(data);
         },
       );
+    }
+    if (event is SetCurrentSelection) {
+      _currentSelection = event.selection;
     }
   }
 

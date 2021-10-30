@@ -15,3 +15,12 @@ class OnQueryChanged extends SearchEvent {
   @override
   List<Object> get props => [query];
 }
+
+class SetCurrentSelection extends SearchEvent {
+  final String selection;
+ 
+  SetCurrentSelection(this.selection);
+ 
+  @override
+  List<Object> get props => [selection];
+}

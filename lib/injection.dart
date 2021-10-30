@@ -135,6 +135,7 @@ void init() {
   locator.registerFactory(
     () => SearchBloc(
       locator(),
+      locator(),
     ),
   );
 

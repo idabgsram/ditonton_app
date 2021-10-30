@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:ditonton/common/failure.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/usecases/search_movies.dart';
+import 'package:ditonton/domain/usecases/search_tv.dart';
 import 'package:ditonton/presentation/bloc/search_bloc.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -10,14 +11,16 @@ import 'package:test/test.dart';
 
 import 'search_bloc_test.mocks.dart';
 
-@GenerateMocks([SearchMovies])
+@GenerateMocks([SearchMovies, SearchTVs])
 void main() {
   late SearchBloc searchBloc;
   late MockSearchMovies mockSearchMovies;
+  late MockSearchTVs mockSearchTVs;
 
   setUp(() {
     mockSearchMovies = MockSearchMovies();
-    searchBloc = SearchBloc(mockSearchMovies);
+    mockSearchTVs = MockSearchTVs();
+    searchBloc = SearchBloc(mockSearchMovies, mockSearchTVs);
   });
 
   test('initial state should be empty', () {

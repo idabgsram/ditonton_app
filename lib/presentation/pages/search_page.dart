@@ -26,7 +26,7 @@ class SearchPage extends StatelessWidget {
                 context.read<SearchBloc>().add(OnQueryChanged(query));
               },
               decoration: InputDecoration(
-                hintText: 'Search title',
+                hintText: 'Searchs title',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
@@ -35,7 +35,8 @@ class SearchPage extends StatelessWidget {
             SizedBox(height: 16),
             DropdownButton<String>(
                 //TODO: fix it later
-                value: "Movies", //Provider.of<SearchNotifier>(context, listen: true).currentSelection,
+                value: 
+                context.read<SearchBloc>().currentSelection,//Provider.of<SearchNotifier>(context, listen: true).currentSelection,
                 icon: const Icon(Icons.arrow_downward),
                 iconSize: 24,
                 elevation: 16,
@@ -45,10 +46,9 @@ class SearchPage extends StatelessWidget {
                   color: Colors.yellowAccent,
                 ),
                 //TODO: fix it later
-                // onChanged: (String? newValue) {
-                //   Provider.of<SearchNotifier>(context, listen: false)
-                //       .setCurrentSelection(newValue);
-                // },
+                onChanged: (String? newValue) {
+                  context.read<SearchBloc>().add(SetCurrentSelection(newValue??'Movies'));
+                },
                 items: <String>['Movies', 'TV Shows']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
