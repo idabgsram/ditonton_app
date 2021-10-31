@@ -30,6 +30,7 @@ import 'package:ditonton/domain/usecases/get_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/remove_tv_watchlist.dart';
 import 'package:ditonton/domain/usecases/save_tv_watchlist.dart';
 import 'package:ditonton/presentation/bloc/search_bloc.dart';
+import 'package:ditonton/presentation/bloc/search_type_bloc.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/ota_tv_notifier.dart';
@@ -139,6 +140,10 @@ void init() {
     ),
   );
 
+  locator.registerFactory(
+    () => SearchTypeBloc(),
+  );
+
   // use case
   locator.registerLazySingleton(() => GetNowPlayingMovies(locator()));
   locator.registerLazySingleton(() => GetPopularMovies(locator()));
@@ -180,11 +185,11 @@ void init() {
 
   // data sources
   locator.registerLazySingleton<MovieRemoteDataSource>(
-      () => MovieRemoteDataSourceImpl(client: locator()));
+      () => MovieRemoteDataSourceImpl());
   locator.registerLazySingleton<MovieLocalDataSource>(
       () => MovieLocalDataSourceImpl(databaseHelper: locator()));
   locator.registerLazySingleton<TVRemoteDataSource>(
-      () => TVRemoteDataSourceImpl(client: locator()));
+      () => TVRemoteDataSourceImpl());
   locator.registerLazySingleton<TVLocalDataSource>(
       () => TVLocalDataSourceImpl(databaseHelper: locator()));
 

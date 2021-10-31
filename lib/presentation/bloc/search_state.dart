@@ -28,7 +28,3 @@ class SearchHasData extends SearchState {
   @override
   List<Object> get props => [result];
 }
-
-class SearchMoviesState extends SearchState {}
-
-class SearchTVState extends SearchState {}

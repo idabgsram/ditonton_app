@@ -14,18 +14,19 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   SearchBloc(this._searchMovies, this._searchTVs) : super(SearchEmpty());
 
-  String _currentSelection = 'Movies';
-  String get currentSelection => _currentSelection;
-  
+  String _searchQuery = '';
   @override
   Stream<SearchState> mapEventToState(
     SearchEvent event,
   ) async* {
     if (event is OnQueryChanged) {
-      final query = event.query;
+      _searchQuery = event.query;
+      final searchType = event.searchType;
 
       yield SearchLoading();
-      final result = _currentSelection == 'Movies'?await _searchMovies.execute(query):await _searchTVs.execute(query);
+      final result = searchType == 'Movies'
+          ? await _searchMovies.execute(_searchQuery)
+          : await _searchTVs.execute(_searchQuery);
 
       yield* result.fold(
         (failure) async* {
@@ -36,8 +37,22 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         },
       );
     }
-    if (event is SetCurrentSelection) {
-      _currentSelection = event.selection;
+    if (event is OnRefreshChanged) {
+      final searchType = event.searchType;
+      
+      yield SearchLoading();
+      final result = searchType == 'Movies'
+          ? await _searchMovies.execute(_searchQuery)
+          : await _searchTVs.execute(_searchQuery);
+
+      yield* result.fold(
+        (failure) async* {
+          yield SearchError(failure.message);
+        },
+        (data) async* {
+          yield SearchHasData(data);
+        },
+      );
     }
   }
 

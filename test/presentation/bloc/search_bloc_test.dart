@@ -53,7 +53,7 @@ void main() {
           .thenAnswer((_) async => Right(tMovieList));
       return searchBloc;
     },
-    act: (bloc) => bloc.add(OnQueryChanged(tQuery)),
+    act: (bloc) => bloc.add(OnQueryChanged(tQuery,'Movies')),
     wait: const Duration(milliseconds: 500),
     expect: () => [
       SearchLoading(),
@@ -71,7 +71,7 @@ void main() {
           .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
       return searchBloc;
     },
-    act: (bloc) => bloc.add(OnQueryChanged(tQuery)),
+    act: (bloc) => bloc.add(OnQueryChanged(tQuery,'Movies')),
     wait: const Duration(milliseconds: 500),
     expect: () => [
       SearchLoading(),

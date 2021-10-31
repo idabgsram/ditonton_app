@@ -8,19 +8,19 @@ abstract class SearchEvent extends Equatable {
 }
  
 class OnQueryChanged extends SearchEvent {
-  final String query;
+  final String query, searchType;
  
-  OnQueryChanged(this.query);
+  OnQueryChanged(this.query, this.searchType);
  
   @override
-  List<Object> get props => [query];
+  List<Object> get props => [query,searchType];
 }
 
-class SetCurrentSelection extends SearchEvent {
-  final String selection;
+class OnRefreshChanged extends SearchEvent {
+  final String searchType;
  
-  SetCurrentSelection(this.selection);
+  OnRefreshChanged(this.searchType);
  
   @override
-  List<Object> get props => [selection];
+  List<Object> get props => [searchType];
 }

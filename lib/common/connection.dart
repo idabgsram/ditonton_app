@@ -6,7 +6,7 @@ import 'package:http/io_client.dart';
 
 class Connection {
   Future<SecurityContext> get _globalContext async {
-    final sslCert = await rootBundle.load('certificates/boomshakalaka');
+    final sslCert = await rootBundle.load('assets/cert/tmdb.cer');
     SecurityContext securityContext = SecurityContext(withTrustedRoots: false);
     securityContext.setTrustedCertificatesBytes(sslCert.buffer.asInt8List());
     return securityContext;
