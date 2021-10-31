@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:ditonton/common/connection.dart';
 import 'package:ditonton/data/datasources/tv_remote_data_source.dart';
 import 'package:ditonton/common/exception.dart';
 import 'package:ditonton/data/models/tv_detail_model.dart';
@@ -18,10 +19,10 @@ void main() {
   const BASE_URL = 'https://api.themoviedb.org/3';
 
   late TVRemoteDataSourceImpl dataSource;
-  late MockHttpClient mockHttpClient;
+  late Connection mockHttpClient;
 
   setUp(() {
-    mockHttpClient = MockHttpClient();
+    mockHttpClient = Connection();
     dataSource = TVRemoteDataSourceImpl(client: mockHttpClient);
   });
 
