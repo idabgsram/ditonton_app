@@ -29,6 +29,7 @@ import 'package:ditonton/domain/usecases/get_tv_watchlist_status.dart';
 import 'package:ditonton/domain/usecases/get_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/remove_tv_watchlist.dart';
 import 'package:ditonton/domain/usecases/save_tv_watchlist.dart';
+import 'package:ditonton/presentation/bloc/popular_movies_bloc.dart';
 import 'package:ditonton/presentation/bloc/search_bloc.dart';
 import 'package:ditonton/presentation/bloc/search_type_bloc.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
@@ -69,6 +70,11 @@ void init() {
   );
   locator.registerFactory(
     () => PopularMoviesNotifier(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => PopularMoviesBloc(
       locator(),
     ),
   );
