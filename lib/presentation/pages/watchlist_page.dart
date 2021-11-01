@@ -1,8 +1,11 @@
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/common/utils.dart';
+import 'package:ditonton/presentation/bloc/watchlist_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/watchlist_tv_bloc.dart';
 import 'package:ditonton/presentation/provider/watchlist_notifier.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class WatchlistPage extends StatefulWidget {
@@ -17,10 +20,10 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
   void initState() {
     super.initState();
     Future.microtask(() =>
-        Provider.of<WatchlistNotifier>(context, listen: false)
-            .fetchWatchlist());
+        context.read<WatchlistMoviesBloc>().add(GetWatchlistMoviesData()));
+    Future.microtask(
+        () => context.read<WatchlistTVBloc>().add(GetWatchlistTVData()));
   }
-
 
   @override
   void didChangeDependencies() {
@@ -29,8 +32,8 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
   }
 
   void didPopNext() {
-    Provider.of<WatchlistNotifier>(context, listen: false)
-        .fetchWatchlist();
+    context.read<WatchlistMoviesBloc>().add(GetWatchlistMoviesData());
+    context.read<WatchlistTVBloc>().add(GetWatchlistTVData());
   }
 
   @override
@@ -63,28 +66,33 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
   }
 
   Widget _buildMoviesBody() {
-    return Consumer<WatchlistNotifier>(
-      key: Key('consumer_movies'),
-      builder: (context, data, child) {
-        if (data.watchlistState == RequestState.Loading) {
+    return BlocBuilder<WatchlistMoviesBloc, WatchlistMoviesState>(
+      key: Key('bloc_movies'),
+      builder: (context, state) {
+        if (state is DataLoading) {
           return Center(
             child: CircularProgressIndicator(),
           );
-        } else if (data.watchlistState == RequestState.Loaded) {
+        } else if (state is DataAvailable) {
           return ListView.builder(
             itemBuilder: (context, index) {
-              final movie = data.watchlistMovies[index];
+              final movie = state.result[index];
               return ItemCard(
                 movie,
                 isMovies: true,
               );
             },
-            itemCount: data.watchlistMovies.length,
+            itemCount: state.result.length,
+          );
+        } else if (state is DataError) {
+          return Center(
+            key: Key('error_message'),
+            child: Text(state.message),
           );
         } else {
           return Center(
-            key: Key('error_message'),
-            child: Text(data.message),
+            key: Key('empty_image'),
+            child: Text('Empty'),
           );
         }
       },
@@ -92,25 +100,30 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
   }
 
   Widget _buildTVsBody() {
-    return Consumer<WatchlistNotifier>(
+    return BlocBuilder<WatchlistTVBloc, WatchlistTVState>(
       key: Key('consumer_tv'),
-      builder: (context, data, child) {
-        if (data.watchlistState == RequestState.Loading) {
+      builder: (context, state) {
+        if (state is DataTVLoading) {
           return Center(
             child: CircularProgressIndicator(),
           );
-        } else if (data.watchlistState == RequestState.Loaded) {
+        } else if (state is DataTVAvailable) {
           return ListView.builder(
             itemBuilder: (context, index) {
-              final tv = data.watchlistTVs[index];
+              final tv = state.tvResult[index];
               return ItemCard(tv);
             },
-            itemCount: data.watchlistTVs.length,
+            itemCount: state.tvResult.length,
+          );
+        } else if (state is DataTVError) {
+          return Center(
+            key: Key('error_message'),
+            child: Text(state.tvMessage),
           );
         } else {
           return Center(
-            key: Key('error_message'),
-            child: Text(data.message),
+            key: Key('empty_image'),
+            child: Text('Empty'),
           );
         }
       },

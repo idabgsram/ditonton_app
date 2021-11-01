@@ -1,5 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
+import 'package:ditonton/presentation/bloc/home_now_playing_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_ota_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_popular_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_popular_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_top_rated_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_top_rated_tv_bloc.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/pages/ota_tv_page.dart';
@@ -10,12 +16,10 @@ import 'package:ditonton/presentation/pages/top_rated_movies_page.dart';
 import 'package:ditonton/presentation/pages/top_rated_tv_page.dart';
 import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_page.dart';
-import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/tv_list_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,15 +31,18 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    Future.microtask(() => context
+        .read<HomeNowPlayingMoviesBloc>()
+        .add(FetchNowPlayingMoviesData()));
+    Future.microtask(() =>
+        context.read<HomePopularMoviesBloc>().add(FetchPopularMoviesData()));
+    Future.microtask(() =>
+        context.read<HomeTopRatedMoviesBloc>().add(FetchTopRatedMoviesData()));
+    Future.microtask(() => context.read<HomeOTATVBloc>().add(FetchOTATVData()));
     Future.microtask(
-        () => Provider.of<MovieListNotifier>(context, listen: false)
-          ..fetchNowPlayingMovies()
-          ..fetchPopularMovies()
-          ..fetchTopRatedMovies());
-    Future.microtask(() => Provider.of<TVListNotifier>(context, listen: false)
-      ..fetchOnTheAirTVs()
-      ..fetchPopularTVs()
-      ..fetchTopRatedTVs());
+        () => context.read<HomePopularTVBloc>().add(FetchPopularTVData()));
+    Future.microtask(
+        () => context.read<HomeTopRatedTVBloc>().add(FetchTopRatedTVData()));
   }
 
   @override
@@ -117,14 +124,14 @@ class _HomePageState extends State<HomePage> {
             'Now Playing',
             style: kHeading6,
           ),
-          Consumer<MovieListNotifier>(builder: (context, data, child) {
-            final state = data.nowPlayingState;
-            if (state == RequestState.Loading) {
+          BlocBuilder<HomeNowPlayingMoviesBloc, HomeNowPlayingMoviesState>(
+              builder: (context, state) {
+            if (state is DataNowPlayingMoviesLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state == RequestState.Loaded) {
-              return ItemList(data.nowPlayingMovies,
+            } else if (state is DataNowPlayingMoviesAvailable) {
+              return ItemList(state.nowPlayingMoviesResult,
                   isMovies: true,
                   key: Key('nowpl_movies_lv'),
                   itemKey: 'nowpl_movies_item');
@@ -138,14 +145,14 @@ class _HomePageState extends State<HomePage> {
             onTap: () =>
                 Navigator.pushNamed(context, PopularMoviesPage.ROUTE_NAME),
           ),
-          Consumer<MovieListNotifier>(builder: (context, data, child) {
-            final state = data.popularMoviesState;
-            if (state == RequestState.Loading) {
+          BlocBuilder<HomePopularMoviesBloc, HomePopularMoviesState>(
+              builder: (context, state) {
+            if (state is DataPopularMoviesLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state == RequestState.Loaded) {
-              return ItemList(data.popularMovies,
+            } else if (state is DataPopularMoviesAvailable) {
+              return ItemList(state.popularMoviesResult,
                   isMovies: true,
                   key: Key('popular_movies_lv'),
                   itemKey: 'popular_movies_item');
@@ -159,14 +166,14 @@ class _HomePageState extends State<HomePage> {
             onTap: () =>
                 Navigator.pushNamed(context, TopRatedMoviesPage.ROUTE_NAME),
           ),
-          Consumer<MovieListNotifier>(builder: (context, data, child) {
-            final state = data.topRatedMoviesState;
-            if (state == RequestState.Loading) {
+          BlocBuilder<HomeTopRatedMoviesBloc, HomeTopRatedMoviesState>(
+              builder: (context, state) {
+            if (state is DataTopRatedMoviesLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state == RequestState.Loaded) {
-              return ItemList(data.topRatedMovies,
+            } else if (state is DataTopRatedMoviesAvailable) {
+              return ItemList(state.topRatedMoviesResult,
                   isMovies: true,
                   key: Key('toprate_movies_lv'),
                   itemKey: 'toprate_movies_item');
@@ -189,14 +196,13 @@ class _HomePageState extends State<HomePage> {
             title: 'On The Air',
             onTap: () => Navigator.pushNamed(context, OTATVPage.ROUTE_NAME),
           ),
-          Consumer<TVListNotifier>(builder: (context, data, child) {
-            final state = data.onTheAirState;
-            if (state == RequestState.Loading) {
+          BlocBuilder<HomeOTATVBloc, HomeOTATVState>(builder: (context, state) {
+            if (state is DataOTATVLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state == RequestState.Loaded) {
-              return ItemList(data.onTheAirTVs,
+            } else if (state is DataOTATVAvailable) {
+              return ItemList(state.otaTVResult,
                   key: Key('ota_tv_lv'), itemKey: 'ota_tv_item');
             } else {
               return Text('Failed');
@@ -207,14 +213,14 @@ class _HomePageState extends State<HomePage> {
             title: 'Popular',
             onTap: () => Navigator.pushNamed(context, PopularTVPage.ROUTE_NAME),
           ),
-          Consumer<TVListNotifier>(builder: (context, data, child) {
-            final state = data.popularTVsState;
-            if (state == RequestState.Loading) {
+          BlocBuilder<HomePopularTVBloc, HomePopularTVState>(
+              builder: (context, state) {
+            if (state is DataPopularTVLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state == RequestState.Loaded) {
-              return ItemList(data.popularTVs,
+            } else if (state is DataPopularTVAvailable) {
+              return ItemList(state.popularTVResult,
                   key: Key('popular_tv_lv'), itemKey: 'popular_tv_item');
             } else {
               return Text('Failed');
@@ -226,14 +232,14 @@ class _HomePageState extends State<HomePage> {
             onTap: () =>
                 Navigator.pushNamed(context, TopRatedTVPage.ROUTE_NAME),
           ),
-          Consumer<TVListNotifier>(builder: (context, data, child) {
-            final state = data.topRatedTVsState;
-            if (state == RequestState.Loading) {
+          BlocBuilder<HomeTopRatedTVBloc, HomeTopRatedTVState>(
+              builder: (context, state) {
+            if (state is DataTopRatedTVLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (state == RequestState.Loaded) {
-              return ItemList(data.topRatedTVs,
+            } else if (state is DataTopRatedTVAvailable) {
+              return ItemList(state.topRatedTVResult,
                   key: Key('toprate_tv_lv'), itemKey: 'toprate_tv_item');
             } else {
               return Text('Failed');

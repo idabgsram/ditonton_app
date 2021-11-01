@@ -1,11 +1,22 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/utils.dart';
+import 'package:ditonton/presentation/bloc/home_now_playing_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_ota_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_popular_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_popular_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_top_rated_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/home_top_rated_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/ota_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/popular_movies_bloc.dart';
 import 'package:ditonton/presentation/bloc/popular_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/search_bloc.dart';
 import 'package:ditonton/presentation/bloc/search_type_bloc.dart';
 import 'package:ditonton/presentation/bloc/top_rated_movies_bloc.dart';
 import 'package:ditonton/presentation/bloc/top_rated_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv_episodes_detail_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv_seasons_detail_bloc.dart';
+import 'package:ditonton/presentation/bloc/watchlist_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/watchlist_tv_bloc.dart';
 import 'package:ditonton/presentation/pages/about_page.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/pages/home_page.dart';
@@ -57,56 +68,56 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieListNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<HomeTopRatedMoviesBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<HomePopularMoviesBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<HomeNowPlayingMoviesBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<HomeTopRatedTVBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<HomePopularTVBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<HomeOTATVBloc>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<MovieDetailNotifier>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedMoviesNotifier>(),
-        ),
         BlocProvider(
           create: (_) => di.locator<TopRatedMoviesBloc>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<PopularMoviesNotifier>(),
         ),
         BlocProvider(
           create: (_) => di.locator<PopularMoviesBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<WatchlistNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<WatchlistMoviesBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<SearchNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TVListNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<WatchlistTVBloc>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<TVDetailNotifier>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TopRatedTVNotifier>(),
-        ),
         BlocProvider(
           create: (_) => di.locator<TopRatedTVBloc>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<PopularTVNotifier>(),
         ),
         BlocProvider(
           create: (_) => di.locator<PopularTVBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<OTATVNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<OTATVBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TVSeasonsDetailNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<TVSeasonsDetailBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TVEpisodesDetailNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<TVEpisodesDetailBloc>(),
         ),
         BlocProvider(
           create: (_) => di.locator<SearchBloc>(),

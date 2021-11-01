@@ -3,9 +3,11 @@ import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/crew.dart';
 import 'package:ditonton/domain/entities/tv_episodes.dart';
 import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/presentation/bloc/tv_episodes_detail_bloc.dart';
 import 'package:ditonton/presentation/provider/tv_episodes_detail_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class TVEpisodesDetailPage extends StatefulWidget {
@@ -23,29 +25,32 @@ class _TVEpisodesDetailPageState extends State<TVEpisodesDetailPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      Provider.of<TVEpisodesDetailNotifier>(context, listen: false)
-          .fetchTVEpisodesDetail(
-              widget.id, widget.seasonNumber, widget.epsNumber);
-    });
+    Future.microtask(() => context
+        .read<TVEpisodesDetailBloc>()
+        .add(FetchData(widget.id, widget.seasonNumber, widget.epsNumber)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<TVEpisodesDetailNotifier>(
-        builder: (context, provider, child) {
-          if (provider.tvEpisodesState == RequestState.Loading) {
+      body: BlocBuilder<TVEpisodesDetailBloc, TVEpisodesDetailState>(
+        builder: (context, state) {
+          if (state is DataLoading) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (provider.tvEpisodesState == RequestState.Loaded) {
-            final tvEpisodesData = provider.tvEpisodesData;
+          } else if (state is DataAvailable) {
+            final tvEpisodesData = state.result;
             return SafeArea(
               child: DetailContent(tvEpisodesData),
             );
+          } else if (state is DataError) {
+            return Text(state.message, key: Key('provider_message'));
           } else {
-            return Text(provider.message, key: Key('provider_message'));
+            return Center(
+              key: Key('empty_image'),
+              child: Text('Empty'),
+            );
           }
         },
       ),

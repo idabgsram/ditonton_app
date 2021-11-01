@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/domain/entities/tv_episodes.dart';
 import 'package:ditonton/domain/entities/tv_seasons.dart';
+import 'package:ditonton/presentation/bloc/tv_seasons_detail_bloc.dart';
 import 'package:ditonton/presentation/pages/tv_episodes_detail_page.dart';
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/presentation/provider/tv_seasons_detail_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class TVSeasonsDetailPage extends StatefulWidget {
@@ -24,29 +24,33 @@ class _TVSeasonsDetailPageState extends State<TVSeasonsDetailPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      Provider.of<TVSeasonsDetailNotifier>(context, listen: false)
-          .fetchTVSeasonsDetail(widget.id, widget.seasonNumber);
-    });
+    Future.microtask(() => context
+        .read<TVSeasonsDetailBloc>()
+        .add(FetchData(widget.id, widget.seasonNumber)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Consumer<TVSeasonsDetailNotifier>(
-        builder: (context, provider, child) {
-          if (provider.tvSeasonsState == RequestState.Loading) {
+      body: BlocBuilder<TVSeasonsDetailBloc, TVSeasonsDetailState>(
+        builder: (context, state) {
+          if (state is DataLoading) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          } else if (provider.tvSeasonsState == RequestState.Loaded) {
-            final tvSeasonsData = provider.tvSeasonsData;
+          } else if (state is DataAvailable) {
+            final tvSeasonsData = state.result;
             return SafeArea(
               child:
                   DetailContent(tvSeasonsData, widget.id, widget.seasonNumber),
             );
+          } else if (state is DataError) {
+            return Text(state.message, key: Key('provider_message'));
           } else {
-            return Text(provider.message, key: Key('provider_message'));
+            return Center(
+              key: Key('empty_image'),
+              child: Text('Empty'),
+            );
           }
         },
       ),
