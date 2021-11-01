@@ -17,10 +17,7 @@ class _PopularMoviesPageState extends State<PopularMoviesPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() => context.read<PopularMoviesBloc>().add(FetchData())
-        // Provider.of<PopularMoviesNotifier>(context, listen: false)
-        //     .fetchPopularMovies()
-            );
+    Future.microtask(() => context.read<PopularMoviesBloc>().add(FetchData()));
   }
 
   @override
@@ -48,18 +45,23 @@ class _PopularMoviesPageState extends State<PopularMoviesPage> {
               return ListView.builder(
                 key: Key('popular_movies_lv'),
                 itemBuilder: (context, index) {
-                  final movie = state.result.movies[index];
+                  final movie = state.result[index];
                   return ItemCard(
                     movie,
                     isMovies: true,
                   );
                 },
-                itemCount: data.movies.length,
+                itemCount: state.result.length,
               );
-            } else {
+            } else if (state is DataError) {
               return Center(
                 key: Key('error_message'),
-                child: Text(data.message),
+                child: Text(state.message),
+              );
+            }else{
+              return Center(
+                key: Key('empty_image'),
+                child: Text('Empty'),
               );
             }
           },

@@ -30,8 +30,11 @@ import 'package:ditonton/domain/usecases/get_watchlist_tv.dart';
 import 'package:ditonton/domain/usecases/remove_tv_watchlist.dart';
 import 'package:ditonton/domain/usecases/save_tv_watchlist.dart';
 import 'package:ditonton/presentation/bloc/popular_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/popular_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/search_bloc.dart';
 import 'package:ditonton/presentation/bloc/search_type_bloc.dart';
+import 'package:ditonton/presentation/bloc/top_rated_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/top_rated_tv_bloc.dart';
 import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
 import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
 import 'package:ditonton/presentation/provider/ota_tv_notifier.dart';
@@ -84,6 +87,11 @@ void init() {
     ),
   );
   locator.registerFactory(
+    () => TopRatedMoviesBloc(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
     () => WatchlistNotifier(
       getWatchlistMovies: locator(),
       getWatchlistTVs: locator(),
@@ -112,6 +120,11 @@ void init() {
     ),
   );
   locator.registerFactory(
+    () => PopularTVBloc(
+      locator(),
+    ),
+  );
+  locator.registerFactory(
     () => OTATVNotifier(
       locator(),
     ),
@@ -119,6 +132,11 @@ void init() {
   locator.registerFactory(
     () => TopRatedTVNotifier(
       getTopRatedTV: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => TopRatedTVBloc(
+      locator(),
     ),
   );
   locator.registerFactory(

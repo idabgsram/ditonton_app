@@ -1,7 +1,9 @@
 import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/presentation/bloc/top_rated_tv_bloc.dart';
 import 'package:ditonton/presentation/provider/top_rated_tv_notifier.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class TopRatedTVPage extends StatefulWidget {
@@ -15,9 +17,7 @@ class _TopRatedTVPageState extends State<TopRatedTVPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<TopRatedTVNotifier>(context, listen: false)
-            .fetchTopRatedTV());
+    Future.microtask(() => context.read<TopRatedTVBloc>().add(FetchData()));
   }
 
   @override
@@ -28,24 +28,29 @@ class _TopRatedTVPageState extends State<TopRatedTVPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Consumer<TopRatedTVNotifier>(
-          builder: (context, data, child) {
-            if (data.state == RequestState.Loading) {
+        child: BlocBuilder<TopRatedTVBloc, TopRatedTVState>(
+          builder: (context, state) {
+            if (state is DataLoading) {
               return Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (data.state == RequestState.Loaded) {
+            } else if (state is DataAvailable) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final tv = data.tvList[index];
+                  final tv = state.result[index];
                   return ItemCard(tv);
                 },
-                itemCount: data.tvList.length,
+                itemCount: state.result.length,
+              );
+            } else if (state is DataError) {
+              return Center(
+                key: Key('error_message'),
+                child: Text(state.message),
               );
             } else {
               return Center(
-                key: Key('error_message'),
-                child: Text(data.message),
+                key: Key('empty_image'),
+                child: Text('Empty'),
               );
             }
           },
