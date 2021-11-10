@@ -6,6 +6,10 @@ import 'package:ditonton/presentation/bloc/home_popular_movies_bloc.dart';
 import 'package:ditonton/presentation/bloc/home_popular_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/home_top_rated_movies_bloc.dart';
 import 'package:ditonton/presentation/bloc/home_top_rated_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie_detail_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie_detail_recommendations_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie_detail_watchlist_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie_detail_watchlist_status_bloc.dart';
 import 'package:ditonton/presentation/bloc/ota_tv_bloc.dart';
 import 'package:ditonton/presentation/bloc/popular_movies_bloc.dart';
 import 'package:ditonton/presentation/bloc/popular_tv_bloc.dart';
@@ -86,8 +90,17 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => di.locator<HomeOTATVBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<MovieDetailNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<MovieDetailBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<MovieDetailRecommendationsBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<MovieDetailWatchlistBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<MovieDetailWatchlistStatusBloc>(),
         ),
         BlocProvider(
           create: (_) => di.locator<TopRatedMoviesBloc>(),
