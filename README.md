@@ -1,4 +1,4 @@
-# Ditonton
+# Ditonton v1.0.1
 
 a Dicoding's a199-flutter-expert-project
 Improved by Ida Bagus Rama Mahendra
