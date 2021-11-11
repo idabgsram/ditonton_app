@@ -29,11 +29,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   FutureOr<void> _onQueryChanged(
       OnQueryChanged event, Emitter<SearchState> emit) async {
     _searchQuery = event.query;
+
     emit(SearchLoading());
     final result = _searchType == 'Movies'
         ? await _searchMovies.execute(_searchQuery)
         : await _searchTVs.execute(_searchQuery);
-
+    if (_searchQuery.length < 1) {
+      emit(SearchEmpty());
+      return;
+    }
     result.fold(
       (failure) {
         emit(SearchError(failure.message));
@@ -47,12 +51,15 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   FutureOr<void> _onRefreshChanged(
       OnRefreshChanged event, Emitter<SearchState> emit) async {
     _searchType = event.searchType;
-
     emit(SearchLoading());
     final result = _searchType == 'Movies'
         ? await _searchMovies.execute(_searchQuery)
         : await _searchTVs.execute(_searchQuery);
 
+    if (_searchQuery.length < 1) {
+      emit(SearchEmpty());
+      return;
+    }
     result.fold(
       (failure) {
         emit(SearchError(failure.message));
@@ -62,5 +69,4 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       },
     );
   }
-
 }

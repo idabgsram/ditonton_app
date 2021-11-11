@@ -80,18 +80,26 @@ class SearchPage extends StatelessWidget {
                         } else if (state is SearchHasData) {
                           final result = state.result;
                           return Expanded(
-                            child: ListView.builder(
-                              padding: const EdgeInsets.all(8),
-                              itemBuilder: (context, index) {
-                                final item = result[index];
-                                return ItemCard(
-                                  item,
-                                  isMovies: searchType.type ==
-                                      'Movies', //data.isMovies,
-                                );
-                              },
-                              itemCount: result.length,
-                            ),
+                            child: result.length < 1
+                                ? Center(
+                                    child: Text(
+                                      'Nggak ketemu nih,\ncoba yang lain?',
+                                      style: kHeading6,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    padding: const EdgeInsets.all(8),
+                                    itemBuilder: (context, index) {
+                                      final item = result[index];
+                                      return ItemCard(
+                                        item,
+                                        isMovies: searchType.type ==
+                                            'Movies', //data.isMovies,
+                                      );
+                                    },
+                                    itemCount: result.length,
+                                  ),
                           );
                         } else if (state is SearchError) {
                           return Expanded(
@@ -101,7 +109,13 @@ class SearchPage extends StatelessWidget {
                           );
                         } else {
                           return Expanded(
-                            child: Container(),
+                            child: Center(
+                              child: Text(
+                                'Mau cari apa nih?',
+                                textAlign: TextAlign.center,
+                                style: kHeading6,
+                              ),
+                            ),
                           );
                         }
                       },

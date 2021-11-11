@@ -1,3 +1,4 @@
+import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/presentation/bloc/watchlist_movies_bloc.dart';
@@ -74,16 +75,25 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
             child: CircularProgressIndicator(),
           );
         } else if (state is DataAvailable) {
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              final movie = state.result[index];
-              return ItemCard(
-                movie,
-                isMovies: true,
-              );
-            },
-            itemCount: state.result.length,
-          );
+          return state.result.length < 1
+              ? Center(
+                  key: Key('empty_list'),
+                  child: Text(
+                    'Masih kosong nih..',
+                    style: kHeading6,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : ListView.builder(
+                  itemBuilder: (context, index) {
+                    final movie = state.result[index];
+                    return ItemCard(
+                      movie,
+                      isMovies: true,
+                    );
+                  },
+                  itemCount: state.result.length,
+                );
         } else if (state is DataError) {
           return Center(
             key: Key('error_message'),
@@ -108,13 +118,22 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
             child: CircularProgressIndicator(),
           );
         } else if (state is DataTVAvailable) {
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              final tv = state.tvResult[index];
-              return ItemCard(tv);
-            },
-            itemCount: state.tvResult.length,
-          );
+          return state.tvResult.length < 1
+              ? Center(
+                  key: Key('empty_tv_list'),
+                  child: Text(
+                    'Masih kosong nih..',
+                    style: kHeading6,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              : ListView.builder(
+                  itemBuilder: (context, index) {
+                    final tv = state.tvResult[index];
+                    return ItemCard(tv);
+                  },
+                  itemCount: state.tvResult.length,
+                );
         } else if (state is DataTVError) {
           return Center(
             key: Key('error_message'),

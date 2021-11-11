@@ -16,6 +16,9 @@ import 'package:ditonton/presentation/bloc/search_bloc.dart';
 import 'package:ditonton/presentation/bloc/search_type_bloc.dart';
 import 'package:ditonton/presentation/bloc/top_rated_movies_bloc.dart';
 import 'package:ditonton/presentation/bloc/top_rated_tv_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv_detail_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv_detail_recommendations_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv_detail_watchlist_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv_episodes_detail_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv_seasons_detail_bloc.dart';
 import 'package:ditonton/presentation/bloc/watchlist_movies_bloc.dart';
@@ -33,19 +36,6 @@ import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:ditonton/presentation/pages/tv_seasons_detail_page.dart';
 import 'package:ditonton/presentation/pages/tv_episodes_detail_page.dart';
 import 'package:ditonton/presentation/pages/watchlist_page.dart';
-import 'package:ditonton/presentation/provider/movie_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/movie_list_notifier.dart';
-import 'package:ditonton/presentation/provider/ota_tv_notifier.dart';
-import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/popular_tv_notifier.dart';
-import 'package:ditonton/presentation/provider/search_notifier.dart';
-import 'package:ditonton/presentation/provider/top_rated_movies_notifier.dart';
-import 'package:ditonton/presentation/provider/top_rated_tv_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_episodes_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_list_notifier.dart';
-import 'package:ditonton/presentation/provider/tv_seasons_detail_notifier.dart';
-import 'package:ditonton/presentation/provider/watchlist_notifier.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -110,8 +100,14 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (_) => di.locator<WatchlistTVBloc>(),
         ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<TVDetailNotifier>(),
+        BlocProvider(
+          create: (_) => di.locator<TVDetailBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<TVDetailRecommendationsBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.locator<TVDetailWatchlistBloc>(),
         ),
         BlocProvider(
           create: (_) => di.locator<TopRatedTVBloc>(),
