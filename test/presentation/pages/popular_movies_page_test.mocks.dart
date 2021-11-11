@@ -2,14 +2,10 @@
 // in ditonton/test/presentation/pages/popular_movies_page_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i6;
-import 'dart:ui' as _i7;
+import 'dart:async' as _i3;
 
-import 'package:ditonton/common/state_enum.dart' as _i4;
-import 'package:ditonton/domain/entities/movie.dart' as _i5;
-import 'package:ditonton/domain/usecases/get_popular_movies.dart' as _i2;
-import 'package:ditonton/presentation/provider/popular_movies_notifier.dart'
-    as _i3;
+import 'package:ditonton/presentation/bloc/popular_movies_bloc.dart' as _i2;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -21,55 +17,118 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-class _FakeGetPopularMovies_0 extends _i1.Fake implements _i2.GetPopularMovies {
-}
+class _FakePopularMoviesState_0 extends _i1.Fake
+    implements _i2.PopularMoviesState {}
 
-/// A class which mocks [PopularMoviesNotifier].
+class _FakeStreamSubscription_1<T> extends _i1.Fake
+    implements _i3.StreamSubscription<T> {}
+
+/// A class which mocks [PopularMoviesBloc].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPopularMoviesNotifier extends _i1.Mock
-    implements _i3.PopularMoviesNotifier {
-  MockPopularMoviesNotifier() {
+class MockPopularMoviesBloc extends _i1.Mock implements _i2.PopularMoviesBloc {
+  MockPopularMoviesBloc() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.GetPopularMovies get getPopularMovies =>
-      (super.noSuchMethod(Invocation.getter(#getPopularMovies),
-          returnValue: _FakeGetPopularMovies_0()) as _i2.GetPopularMovies);
+  _i2.PopularMoviesState get state =>
+      (super.noSuchMethod(Invocation.getter(#state),
+          returnValue: _FakePopularMoviesState_0()) as _i2.PopularMoviesState);
   @override
-  _i4.RequestState get state => (super.noSuchMethod(Invocation.getter(#state),
-      returnValue: _i4.RequestState.Empty) as _i4.RequestState);
+  _i3.Stream<_i2.PopularMoviesState> get stream =>
+      (super.noSuchMethod(Invocation.getter(#stream),
+              returnValue: Stream<_i2.PopularMoviesState>.empty())
+          as _i3.Stream<_i2.PopularMoviesState>);
   @override
-  List<_i5.Movie> get movies => (super.noSuchMethod(Invocation.getter(#movies),
-      returnValue: <_i5.Movie>[]) as List<_i5.Movie>);
-  @override
-  String get message =>
-      (super.noSuchMethod(Invocation.getter(#message), returnValue: '')
-          as String);
-  @override
-  bool get hasListeners =>
-      (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
           as bool);
   @override
-  _i6.Future<void> fetchPopularMovies() =>
-      (super.noSuchMethod(Invocation.method(#fetchPopularMovies, []),
-          returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
-  @override
-  void addListener(_i7.VoidCallback? listener) =>
-      super.noSuchMethod(Invocation.method(#addListener, [listener]),
+  void add(_i2.PopularMoviesEvent? event) =>
+      super.noSuchMethod(Invocation.method(#add, [event]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i7.VoidCallback? listener) =>
-      super.noSuchMethod(Invocation.method(#removeListener, [listener]),
+  void onEvent(_i2.PopularMoviesEvent? event) =>
+      super.noSuchMethod(Invocation.method(#onEvent, [event]),
           returnValueForMissingStub: null);
   @override
-  void dispose() => super.noSuchMethod(Invocation.method(#dispose, []),
-      returnValueForMissingStub: null);
+  _i3.Stream<_i4.Transition<_i2.PopularMoviesEvent, _i2.PopularMoviesState>>
+      transformEvents(
+              _i3.Stream<_i2.PopularMoviesEvent>? events,
+              _i4.TransitionFunction<_i2.PopularMoviesEvent, _i2.PopularMoviesState>?
+                  transitionFn) =>
+          (super.noSuchMethod(
+                  Invocation.method(#transformEvents, [events, transitionFn]),
+                  returnValue:
+                      Stream<_i4.Transition<_i2.PopularMoviesEvent, _i2.PopularMoviesState>>.empty())
+              as _i3.Stream<
+                  _i4.Transition<_i2.PopularMoviesEvent, _i2.PopularMoviesState>>);
   @override
-  void notifyListeners() =>
-      super.noSuchMethod(Invocation.method(#notifyListeners, []),
+  void emit(_i2.PopularMoviesState? state) =>
+      super.noSuchMethod(Invocation.method(#emit, [state]),
+          returnValueForMissingStub: null);
+  @override
+  void on<E extends _i2.PopularMoviesEvent>(
+          _i4.EventHandler<E, _i2.PopularMoviesState>? handler,
+          {_i4.EventTransformer<E>? transformer}) =>
+      super.noSuchMethod(
+          Invocation.method(#on, [handler], {#transformer: transformer}),
+          returnValueForMissingStub: null);
+  @override
+  _i3.Stream<_i2.PopularMoviesState> mapEventToState(
+          _i2.PopularMoviesEvent? event) =>
+      (super.noSuchMethod(Invocation.method(#mapEventToState, [event]),
+              returnValue: Stream<_i2.PopularMoviesState>.empty())
+          as _i3.Stream<_i2.PopularMoviesState>);
+  @override
+  void onTransition(
+          _i4.Transition<_i2.PopularMoviesEvent, _i2.PopularMoviesState>?
+              transition) =>
+      super.noSuchMethod(Invocation.method(#onTransition, [transition]),
+          returnValueForMissingStub: null);
+  @override
+  _i3.Stream<_i4.Transition<_i2.PopularMoviesEvent, _i2.PopularMoviesState>>
+      transformTransitions(
+              _i3.Stream<_i4.Transition<_i2.PopularMoviesEvent, _i2.PopularMoviesState>>?
+                  transitions) =>
+          (super.noSuchMethod(
+                  Invocation.method(#transformTransitions, [transitions]),
+                  returnValue:
+                      Stream<_i4.Transition<_i2.PopularMoviesEvent, _i2.PopularMoviesState>>.empty())
+              as _i3.Stream<
+                  _i4.Transition<_i2.PopularMoviesEvent, _i2.PopularMoviesState>>);
+  @override
+  _i3.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
+  @override
+  _i3.StreamSubscription<_i2.PopularMoviesState> listen(
+          void Function(_i2.PopularMoviesState)? onData,
+          {Function? onError,
+          void Function()? onDone,
+          bool? cancelOnError}) =>
+      (super.noSuchMethod(
+              Invocation.method(#listen, [
+                onData
+              ], {
+                #onError: onError,
+                #onDone: onDone,
+                #cancelOnError: cancelOnError
+              }),
+              returnValue: _FakeStreamSubscription_1<_i2.PopularMoviesState>())
+          as _i3.StreamSubscription<_i2.PopularMoviesState>);
+  @override
+  void onChange(_i4.Change<_i2.PopularMoviesState>? change) =>
+      super.noSuchMethod(Invocation.method(#onChange, [change]),
+          returnValueForMissingStub: null);
+  @override
+  void addError(Object? error, [StackTrace? stackTrace]) =>
+      super.noSuchMethod(Invocation.method(#addError, [error, stackTrace]),
+          returnValueForMissingStub: null);
+  @override
+  void onError(Object? error, StackTrace? stackTrace) =>
+      super.noSuchMethod(Invocation.method(#onError, [error, stackTrace]),
           returnValueForMissingStub: null);
   @override
   String toString() => super.toString();

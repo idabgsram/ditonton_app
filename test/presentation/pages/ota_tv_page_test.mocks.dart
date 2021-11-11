@@ -2,13 +2,10 @@
 // in ditonton/test/presentation/pages/ota_tv_page_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i6;
-import 'dart:ui' as _i7;
+import 'dart:async' as _i3;
 
-import 'package:ditonton/common/state_enum.dart' as _i4;
-import 'package:ditonton/domain/entities/tv.dart' as _i5;
-import 'package:ditonton/domain/usecases/get_on_the_air_tv.dart' as _i2;
-import 'package:ditonton/presentation/provider/ota_tv_notifier.dart' as _i3;
+import 'package:ditonton/presentation/bloc/ota_tv_bloc.dart' as _i2;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -20,54 +17,111 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-class _FakeGetOnTheAirTV_0 extends _i1.Fake implements _i2.GetOnTheAirTV {}
+class _FakeOTATVState_0 extends _i1.Fake implements _i2.OTATVState {}
 
-/// A class which mocks [OTATVNotifier].
+class _FakeStreamSubscription_1<T> extends _i1.Fake
+    implements _i3.StreamSubscription<T> {}
+
+/// A class which mocks [OTATVBloc].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockOTATVNotifier extends _i1.Mock implements _i3.OTATVNotifier {
-  MockOTATVNotifier() {
+class MockOTATVBloc extends _i1.Mock implements _i2.OTATVBloc {
+  MockOTATVBloc() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.GetOnTheAirTV get getOTATV =>
-      (super.noSuchMethod(Invocation.getter(#getOTATV),
-          returnValue: _FakeGetOnTheAirTV_0()) as _i2.GetOnTheAirTV);
+  _i2.OTATVState get state => (super.noSuchMethod(Invocation.getter(#state),
+      returnValue: _FakeOTATVState_0()) as _i2.OTATVState);
   @override
-  _i4.RequestState get state => (super.noSuchMethod(Invocation.getter(#state),
-      returnValue: _i4.RequestState.Empty) as _i4.RequestState);
+  _i3.Stream<_i2.OTATVState> get stream =>
+      (super.noSuchMethod(Invocation.getter(#stream),
+              returnValue: Stream<_i2.OTATVState>.empty())
+          as _i3.Stream<_i2.OTATVState>);
   @override
-  List<_i5.TV> get tvList =>
-      (super.noSuchMethod(Invocation.getter(#tvList), returnValue: <_i5.TV>[])
-          as List<_i5.TV>);
-  @override
-  String get message =>
-      (super.noSuchMethod(Invocation.getter(#message), returnValue: '')
-          as String);
-  @override
-  bool get hasListeners =>
-      (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
           as bool);
   @override
-  _i6.Future<void> fetchOTATV() =>
-      (super.noSuchMethod(Invocation.method(#fetchOTATV, []),
-          returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
-  @override
-  void addListener(_i7.VoidCallback? listener) =>
-      super.noSuchMethod(Invocation.method(#addListener, [listener]),
+  void add(_i2.OTATVEvent? event) =>
+      super.noSuchMethod(Invocation.method(#add, [event]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i7.VoidCallback? listener) =>
-      super.noSuchMethod(Invocation.method(#removeListener, [listener]),
+  void onEvent(_i2.OTATVEvent? event) =>
+      super.noSuchMethod(Invocation.method(#onEvent, [event]),
           returnValueForMissingStub: null);
   @override
-  void dispose() => super.noSuchMethod(Invocation.method(#dispose, []),
-      returnValueForMissingStub: null);
+  _i3.Stream<_i4.Transition<_i2.OTATVEvent, _i2.OTATVState>> transformEvents(
+          _i3.Stream<_i2.OTATVEvent>? events,
+          _i4.TransitionFunction<_i2.OTATVEvent, _i2.OTATVState>?
+              transitionFn) =>
+      (super.noSuchMethod(
+              Invocation.method(#transformEvents, [events, transitionFn]),
+              returnValue: Stream<
+                  _i4.Transition<_i2.OTATVEvent, _i2.OTATVState>>.empty())
+          as _i3.Stream<_i4.Transition<_i2.OTATVEvent, _i2.OTATVState>>);
   @override
-  void notifyListeners() =>
-      super.noSuchMethod(Invocation.method(#notifyListeners, []),
+  void emit(_i2.OTATVState? state) =>
+      super.noSuchMethod(Invocation.method(#emit, [state]),
+          returnValueForMissingStub: null);
+  @override
+  void on<E extends _i2.OTATVEvent>(
+          _i4.EventHandler<E, _i2.OTATVState>? handler,
+          {_i4.EventTransformer<E>? transformer}) =>
+      super.noSuchMethod(
+          Invocation.method(#on, [handler], {#transformer: transformer}),
+          returnValueForMissingStub: null);
+  @override
+  _i3.Stream<_i2.OTATVState> mapEventToState(_i2.OTATVEvent? event) =>
+      (super.noSuchMethod(Invocation.method(#mapEventToState, [event]),
+              returnValue: Stream<_i2.OTATVState>.empty())
+          as _i3.Stream<_i2.OTATVState>);
+  @override
+  void onTransition(
+          _i4.Transition<_i2.OTATVEvent, _i2.OTATVState>? transition) =>
+      super.noSuchMethod(Invocation.method(#onTransition, [transition]),
+          returnValueForMissingStub: null);
+  @override
+  _i3.Stream<_i4.Transition<_i2.OTATVEvent, _i2.OTATVState>>
+      transformTransitions(
+              _i3.Stream<_i4.Transition<_i2.OTATVEvent, _i2.OTATVState>>?
+                  transitions) =>
+          (super.noSuchMethod(
+                  Invocation.method(#transformTransitions, [transitions]),
+                  returnValue: Stream<
+                      _i4.Transition<_i2.OTATVEvent, _i2.OTATVState>>.empty())
+              as _i3.Stream<_i4.Transition<_i2.OTATVEvent, _i2.OTATVState>>);
+  @override
+  _i3.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
+  @override
+  _i3.StreamSubscription<_i2.OTATVState> listen(
+          void Function(_i2.OTATVState)? onData,
+          {Function? onError,
+          void Function()? onDone,
+          bool? cancelOnError}) =>
+      (super.noSuchMethod(
+              Invocation.method(#listen, [
+                onData
+              ], {
+                #onError: onError,
+                #onDone: onDone,
+                #cancelOnError: cancelOnError
+              }),
+              returnValue: _FakeStreamSubscription_1<_i2.OTATVState>())
+          as _i3.StreamSubscription<_i2.OTATVState>);
+  @override
+  void onChange(_i4.Change<_i2.OTATVState>? change) =>
+      super.noSuchMethod(Invocation.method(#onChange, [change]),
+          returnValueForMissingStub: null);
+  @override
+  void addError(Object? error, [StackTrace? stackTrace]) =>
+      super.noSuchMethod(Invocation.method(#addError, [error, stackTrace]),
+          returnValueForMissingStub: null);
+  @override
+  void onError(Object? error, StackTrace? stackTrace) =>
+      super.noSuchMethod(Invocation.method(#onError, [error, stackTrace]),
           returnValueForMissingStub: null);
   @override
   String toString() => super.toString();

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/presentation/bloc/tv_seasons_detail_bloc.dart';
 import 'package:ditonton/presentation/pages/tv_seasons_detail_page.dart';
-import 'package:ditonton/presentation/provider/tv_seasons_detail_notifier.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import '../../dummy_data/dummy_objects.dart';
 import 'tv_seasons_detail_page_test.mocks.dart';
 
-@GenerateMocks([TVSeasonsDetailNotifier])
+@GenerateMocks([TVSeasonsDetailBloc])
 void main() {
   late MockTVSeasonsDetailNotifier mockNotifier;
 

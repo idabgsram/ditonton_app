@@ -1,5 +1,6 @@
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv.dart';
+import 'package:ditonton/presentation/bloc/ota_tv_bloc.dart';
 import 'package:ditonton/presentation/pages/ota_tv_page.dart';
 import 'package:ditonton/presentation/provider/ota_tv_notifier.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
@@ -11,12 +12,12 @@ import 'package:provider/provider.dart';
 
 import 'ota_tv_page_test.mocks.dart';
 
-@GenerateMocks([OTATVNotifier])
+@GenerateMocks([OTATVBloc])
 void main() {
-  late MockOTATVNotifier mockNotifier;
+  late MockOTATVBloc mockBloc;
 
   setUp(() {
-    mockNotifier = MockOTATVNotifier();
+    mockBloc = MockOTATVBloc();
   });
 
   Widget _makeTestableWidget(Widget body) {

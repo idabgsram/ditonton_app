@@ -1,7 +1,7 @@
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv.dart';
+import 'package:ditonton/presentation/bloc/popular_tv_bloc.dart';
 import 'package:ditonton/presentation/pages/popular_tv_page.dart';
-import 'package:ditonton/presentation/provider/popular_tv_notifier.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 import 'popular_tv_page_test.mocks.dart';
 
-@GenerateMocks([PopularTVNotifier])
+@GenerateMocks([PopularTVBloc])
 void main() {
   late MockPopularTVNotifier mockNotifier;
 

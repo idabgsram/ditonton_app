@@ -2,14 +2,10 @@
 // in ditonton/test/presentation/pages/tv_seasons_detail_page_test.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i6;
-import 'dart:ui' as _i7;
+import 'dart:async' as _i3;
 
-import 'package:ditonton/common/state_enum.dart' as _i5;
-import 'package:ditonton/domain/entities/tv_seasons.dart' as _i3;
-import 'package:ditonton/domain/usecases/get_tv_seasons_detail.dart' as _i2;
-import 'package:ditonton/presentation/provider/tv_seasons_detail_notifier.dart'
-    as _i4;
+import 'package:ditonton/presentation/bloc/tv_seasons_detail_bloc.dart' as _i2;
+import 'package:flutter_bloc/flutter_bloc.dart' as _i4;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: avoid_redundant_argument_values
@@ -21,60 +17,120 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-class _FakeGetTVSeasonsDetail_0 extends _i1.Fake
-    implements _i2.GetTVSeasonsDetail {}
+class _FakeTVSeasonsDetailState_0 extends _i1.Fake
+    implements _i2.TVSeasonsDetailState {}
 
-class _FakeTVSeasons_1 extends _i1.Fake implements _i3.TVSeasons {}
+class _FakeStreamSubscription_1<T> extends _i1.Fake
+    implements _i3.StreamSubscription<T> {}
 
-/// A class which mocks [TVSeasonsDetailNotifier].
+/// A class which mocks [TVSeasonsDetailBloc].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockTVSeasonsDetailNotifier extends _i1.Mock
-    implements _i4.TVSeasonsDetailNotifier {
-  MockTVSeasonsDetailNotifier() {
+class MockTVSeasonsDetailBloc extends _i1.Mock
+    implements _i2.TVSeasonsDetailBloc {
+  MockTVSeasonsDetailBloc() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.GetTVSeasonsDetail get getTVSeasonsDetail =>
-      (super.noSuchMethod(Invocation.getter(#getTVSeasonsDetail),
-          returnValue: _FakeGetTVSeasonsDetail_0()) as _i2.GetTVSeasonsDetail);
+  _i2.TVSeasonsDetailState get state => (super.noSuchMethod(
+      Invocation.getter(#state),
+      returnValue: _FakeTVSeasonsDetailState_0()) as _i2.TVSeasonsDetailState);
   @override
-  _i3.TVSeasons get tvSeasonsData =>
-      (super.noSuchMethod(Invocation.getter(#tvSeasonsData),
-          returnValue: _FakeTVSeasons_1()) as _i3.TVSeasons);
+  _i3.Stream<_i2.TVSeasonsDetailState> get stream =>
+      (super.noSuchMethod(Invocation.getter(#stream),
+              returnValue: Stream<_i2.TVSeasonsDetailState>.empty())
+          as _i3.Stream<_i2.TVSeasonsDetailState>);
   @override
-  _i5.RequestState get tvSeasonsState =>
-      (super.noSuchMethod(Invocation.getter(#tvSeasonsState),
-          returnValue: _i5.RequestState.Empty) as _i5.RequestState);
-  @override
-  String get message =>
-      (super.noSuchMethod(Invocation.getter(#message), returnValue: '')
-          as String);
-  @override
-  bool get hasListeners =>
-      (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
+  bool get isClosed =>
+      (super.noSuchMethod(Invocation.getter(#isClosed), returnValue: false)
           as bool);
   @override
-  _i6.Future<void> fetchTVSeasonsDetail(int? id, int? seasonNumber) =>
+  void add(_i2.TVSeasonsDetailEvent? event) =>
+      super.noSuchMethod(Invocation.method(#add, [event]),
+          returnValueForMissingStub: null);
+  @override
+  void onEvent(_i2.TVSeasonsDetailEvent? event) =>
+      super.noSuchMethod(Invocation.method(#onEvent, [event]),
+          returnValueForMissingStub: null);
+  @override
+  _i3.Stream<_i4.Transition<_i2.TVSeasonsDetailEvent, _i2.TVSeasonsDetailState>>
+      transformEvents(
+              _i3.Stream<_i2.TVSeasonsDetailEvent>? events,
+              _i4.TransitionFunction<_i2.TVSeasonsDetailEvent,
+                      _i2.TVSeasonsDetailState>?
+                  transitionFn) =>
+          (super.noSuchMethod(
+              Invocation.method(#transformEvents, [events, transitionFn]),
+              returnValue:
+                  Stream<_i4.Transition<_i2.TVSeasonsDetailEvent, _i2.TVSeasonsDetailState>>.empty()) as _i3
+              .Stream<_i4.Transition<_i2.TVSeasonsDetailEvent, _i2.TVSeasonsDetailState>>);
+  @override
+  void emit(_i2.TVSeasonsDetailState? state) =>
+      super.noSuchMethod(Invocation.method(#emit, [state]),
+          returnValueForMissingStub: null);
+  @override
+  void on<E extends _i2.TVSeasonsDetailEvent>(
+          _i4.EventHandler<E, _i2.TVSeasonsDetailState>? handler,
+          {_i4.EventTransformer<E>? transformer}) =>
+      super.noSuchMethod(
+          Invocation.method(#on, [handler], {#transformer: transformer}),
+          returnValueForMissingStub: null);
+  @override
+  _i3.Stream<_i2.TVSeasonsDetailState> mapEventToState(
+          _i2.TVSeasonsDetailEvent? event) =>
+      (super.noSuchMethod(Invocation.method(#mapEventToState, [event]),
+              returnValue: Stream<_i2.TVSeasonsDetailState>.empty())
+          as _i3.Stream<_i2.TVSeasonsDetailState>);
+  @override
+  void onTransition(
+          _i4.Transition<_i2.TVSeasonsDetailEvent, _i2.TVSeasonsDetailState>?
+              transition) =>
+      super.noSuchMethod(Invocation.method(#onTransition, [transition]),
+          returnValueForMissingStub: null);
+  @override
+  _i3.Stream<_i4.Transition<_i2.TVSeasonsDetailEvent, _i2.TVSeasonsDetailState>>
+      transformTransitions(
+              _i3.Stream<_i4.Transition<_i2.TVSeasonsDetailEvent, _i2.TVSeasonsDetailState>>?
+                  transitions) =>
+          (super.noSuchMethod(
+                  Invocation.method(#transformTransitions, [transitions]),
+                  returnValue:
+                      Stream<_i4.Transition<_i2.TVSeasonsDetailEvent, _i2.TVSeasonsDetailState>>.empty())
+              as _i3.Stream<
+                  _i4.Transition<_i2.TVSeasonsDetailEvent, _i2.TVSeasonsDetailState>>);
+  @override
+  _i3.Future<void> close() => (super.noSuchMethod(Invocation.method(#close, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i3.Future<void>);
+  @override
+  _i3.StreamSubscription<_i2.TVSeasonsDetailState> listen(
+          void Function(_i2.TVSeasonsDetailState)? onData,
+          {Function? onError,
+          void Function()? onDone,
+          bool? cancelOnError}) =>
       (super.noSuchMethod(
-          Invocation.method(#fetchTVSeasonsDetail, [id, seasonNumber]),
-          returnValue: Future<void>.value(),
-          returnValueForMissingStub: Future<void>.value()) as _i6.Future<void>);
+              Invocation.method(#listen, [
+                onData
+              ], {
+                #onError: onError,
+                #onDone: onDone,
+                #cancelOnError: cancelOnError
+              }),
+              returnValue:
+                  _FakeStreamSubscription_1<_i2.TVSeasonsDetailState>())
+          as _i3.StreamSubscription<_i2.TVSeasonsDetailState>);
   @override
-  void addListener(_i7.VoidCallback? listener) =>
-      super.noSuchMethod(Invocation.method(#addListener, [listener]),
+  void onChange(_i4.Change<_i2.TVSeasonsDetailState>? change) =>
+      super.noSuchMethod(Invocation.method(#onChange, [change]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i7.VoidCallback? listener) =>
-      super.noSuchMethod(Invocation.method(#removeListener, [listener]),
+  void addError(Object? error, [StackTrace? stackTrace]) =>
+      super.noSuchMethod(Invocation.method(#addError, [error, stackTrace]),
           returnValueForMissingStub: null);
   @override
-  void dispose() => super.noSuchMethod(Invocation.method(#dispose, []),
-      returnValueForMissingStub: null);
-  @override
-  void notifyListeners() =>
-      super.noSuchMethod(Invocation.method(#notifyListeners, []),
+  void onError(Object? error, StackTrace? stackTrace) =>
+      super.noSuchMethod(Invocation.method(#onError, [error, stackTrace]),
           returnValueForMissingStub: null);
   @override
   String toString() => super.toString();
