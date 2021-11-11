@@ -1,6 +1,4 @@
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/bloc/popular_tv_bloc.dart';
-import 'package:ditonton/presentation/provider/popular_tv_notifier.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

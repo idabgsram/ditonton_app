@@ -10,7 +10,7 @@ part 'top_rated_tv_state.dart';
 
 class TopRatedTVBloc extends Bloc<TopRatedTVEvent, TopRatedTVState> {
   final GetTopRatedTV _getTopRatedTV;
-  TopRatedTVBloc(this._getTopRatedTV) : super(DataEmpty()){
+  TopRatedTVBloc(this._getTopRatedTV) : super(DataEmpty()) {
     on<FetchData>(_onFetchEvent);
   }
 

@@ -10,12 +10,12 @@ part 'home_ota_tv_state.dart';
 
 class HomeOTATVBloc extends Bloc<HomeOTATVEvent, HomeOTATVState> {
   final GetOnTheAirTV _getOnTheAirTV;
-  HomeOTATVBloc(this._getOnTheAirTV) : super(DataOTATVEmpty()){
+  HomeOTATVBloc(this._getOnTheAirTV) : super(DataOTATVEmpty()) {
     on<FetchOTATVData>(_onFetchEvent);
   }
 
-  FutureOr<void> _onFetchEvent(FetchOTATVData event,
-      Emitter<HomeOTATVState> emit) async {
+  FutureOr<void> _onFetchEvent(
+      FetchOTATVData event, Emitter<HomeOTATVState> emit) async {
     emit(DataOTATVLoading());
     final result = await _getOnTheAirTV.execute();
 

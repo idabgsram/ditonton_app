@@ -8,8 +8,8 @@ import 'package:equatable/equatable.dart';
 part 'tv_detail_recommendations_event.dart';
 part 'tv_detail_recommendations_state.dart';
 
-class TVDetailRecommendationsBloc extends Bloc<
-    TVDetailRecommendationsEvent, TVDetailRecommendationsState> {
+class TVDetailRecommendationsBloc
+    extends Bloc<TVDetailRecommendationsEvent, TVDetailRecommendationsState> {
   final GetTVRecommendations _getTVRecommendations;
   TVDetailRecommendationsBloc(this._getTVRecommendations)
       : super(DataRecommendationsEmpty()) {

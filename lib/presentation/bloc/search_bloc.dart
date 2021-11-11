@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/usecases/search_movies.dart';
 import 'package:ditonton/domain/usecases/search_tv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

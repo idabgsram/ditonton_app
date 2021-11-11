@@ -123,7 +123,6 @@ class TVDetailResponse extends Equatable {
   }
 
   @override
-  // TODO: implement props
   List<Object?> get props => [
         backdropPath,
         episodeRunTime,

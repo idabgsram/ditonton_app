@@ -1,6 +1,4 @@
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/presentation/bloc/popular_movies_bloc.dart';
-import 'package:ditonton/presentation/provider/popular_movies_notifier.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +56,7 @@ class _PopularMoviesPageState extends State<PopularMoviesPage> {
                 key: Key('error_message'),
                 child: Text(state.message),
               );
-            }else{
+            } else {
               return Center(
                 key: Key('empty_image'),
                 child: Text('Empty'),
