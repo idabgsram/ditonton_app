@@ -7,13 +7,13 @@ abstract class SearchTypeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class SetCurrentSelection extends SearchTypeEvent {
+class SetSearchType extends SearchTypeEvent {
   final String selection;
  
-  SetCurrentSelection(this.selection);
+  SetSearchType(this.selection);
  
   @override
   List<Object> get props => [selection];
 }
 
-class GetCurrentSelection extends SearchTypeEvent {}
+class GetSearchType extends SearchTypeEvent {}

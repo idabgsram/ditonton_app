@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/usecases/search_movies.dart';
 import 'package:ditonton/domain/usecases/search_tv.dart';
@@ -12,58 +14,53 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchMovies _searchMovies;
   final SearchTVs _searchTVs;
 
-  SearchBloc(this._searchMovies, this._searchTVs) : super(SearchEmpty());
-
   String _searchQuery = '';
-  @override
-  Stream<SearchState> mapEventToState(
-    SearchEvent event,
-  ) async* {
-    if (event is OnQueryChanged) {
-      _searchQuery = event.query;
-      final searchType = event.searchType;
+  String _searchType = 'Movies';
 
-      yield SearchLoading();
-      final result = searchType == 'Movies'
-          ? await _searchMovies.execute(_searchQuery)
-          : await _searchTVs.execute(_searchQuery);
-
-      yield* result.fold(
-        (failure) async* {
-          yield SearchError(failure.message);
-        },
-        (data) async* {
-          yield SearchHasData(data);
-        },
-      );
-    }
-    if (event is OnRefreshChanged) {
-      final searchType = event.searchType;
-      
-      yield SearchLoading();
-      final result = searchType == 'Movies'
-          ? await _searchMovies.execute(_searchQuery)
-          : await _searchTVs.execute(_searchQuery);
-
-      yield* result.fold(
-        (failure) async* {
-          yield SearchError(failure.message);
-        },
-        (data) async* {
-          yield SearchHasData(data);
-        },
-      );
-    }
+  SearchBloc(this._searchMovies, this._searchTVs) : super(SearchEmpty()) {
+    on<OnQueryChanged>(_onQueryChanged,
+        transformer: debounce(const Duration(milliseconds: 300)));
+    on<OnRefreshChanged>(_onRefreshChanged);
+  }
+  EventTransformer<MyEvent> debounce<MyEvent>(Duration duration) {
+    return (events, mapper) => events.debounceTime(duration).flatMap(mapper);
   }
 
-  @override
-  Stream<Transition<SearchEvent, SearchState>> transformEvents(
-    Stream<SearchEvent> events,
-    TransitionFunction<SearchEvent, SearchState> transitionFn,
-  ) {
-    return super.transformEvents(
-      events.debounceTime(const Duration(milliseconds: 500)),
-      transitionFn,
+  FutureOr<void> _onQueryChanged(
+      OnQueryChanged event, Emitter<SearchState> emit) async {
+    _searchQuery = event.query;
+    emit(SearchLoading());
+    final result = _searchType == 'Movies'
+        ? await _searchMovies.execute(_searchQuery)
+        : await _searchTVs.execute(_searchQuery);
+
+    result.fold(
+      (failure) {
+        emit(SearchError(failure.message));
+      },
+      (data) {
+        emit(SearchHasData(data));
+      },
     );
   }
+
+  FutureOr<void> _onRefreshChanged(
+      OnRefreshChanged event, Emitter<SearchState> emit) async {
+    _searchType = event.searchType;
+
+    emit(SearchLoading());
+    final result = _searchType == 'Movies'
+        ? await _searchMovies.execute(_searchQuery)
+        : await _searchTVs.execute(_searchQuery);
+
+    result.fold(
+      (failure) {
+        emit(SearchError(failure.message));
+      },
+      (data) {
+        emit(SearchHasData(data));
+      },
+    );
+  }
+
 }

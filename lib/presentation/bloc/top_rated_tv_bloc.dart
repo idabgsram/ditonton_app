@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/domain/usecases/get_top_rated_tv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,24 +10,22 @@ part 'top_rated_tv_state.dart';
 
 class TopRatedTVBloc extends Bloc<TopRatedTVEvent, TopRatedTVState> {
   final GetTopRatedTV _getTopRatedTV;
-  TopRatedTVBloc(this._getTopRatedTV) : super(DataEmpty());
+  TopRatedTVBloc(this._getTopRatedTV) : super(DataEmpty()){
+    on<FetchData>(_onFetchEvent);
+  }
 
-  @override
-  Stream<TopRatedTVState> mapEventToState(
-    TopRatedTVEvent event,
-  ) async* {
-    if (event is FetchData) {
-      yield DataLoading();
-      final result = await _getTopRatedTV.execute();
+  FutureOr<void> _onFetchEvent(
+      FetchData event, Emitter<TopRatedTVState> emit) async {
+    emit(DataLoading());
+    final result = await _getTopRatedTV.execute();
 
-      yield* result.fold(
-        (failure) async* {
-          yield DataError(failure.message);
-        },
-        (data) async* {
-          yield DataAvailable(data);
-        },
-      );
-    }
+    result.fold(
+      (failure) {
+        emit(DataError(failure.message));
+      },
+      (data) {
+        emit(DataAvailable(data));
+      },
+    );
   }
 }

@@ -21,3 +21,11 @@ class RemoveFromWatchlist extends MovieDetailWatchlistEvent {
   @override
   List<Object> get props => [movie];
 }
+
+class LoadWatchlistStatus extends MovieDetailWatchlistEvent {
+  final int id;
+ 
+  LoadWatchlistStatus(this.id);
+  @override
+  List<Object> get props => [id];
+}

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/domain/usecases/get_on_the_air_tv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,24 +10,22 @@ part 'ota_tv_state.dart';
 
 class OTATVBloc extends Bloc<OTATVEvent, OTATVState> {
   final GetOnTheAirTV _getOnTheAirTV;
-  OTATVBloc(this._getOnTheAirTV) : super(DataEmpty());
+  OTATVBloc(this._getOnTheAirTV) : super(DataEmpty()) {
+    on<FetchData>(_onFetchEvent);
+  }
 
-  @override
-  Stream<OTATVState> mapEventToState(
-    OTATVEvent event,
-  ) async* {
-    if (event is FetchData) {
-      yield DataLoading();
-      final result = await _getOnTheAirTV.execute();
+  FutureOr<void> _onFetchEvent(
+      FetchData event, Emitter<OTATVState> emit) async {
+    emit(DataLoading());
+    final result = await _getOnTheAirTV.execute();
 
-      yield* result.fold(
-        (failure) async* {
-          yield DataError(failure.message);
-        },
-        (data) async* {
-          yield DataAvailable(data);
-        },
-      );
-    }
+    result.fold(
+      (failure) {
+        emit(DataError(failure.message));
+      },
+      (data) {
+        emit(DataAvailable(data));
+      },
+    );
   }
 }

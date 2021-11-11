@@ -20,56 +20,56 @@ class SearchPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            BlocBuilder<SearchTypeBloc, String>(
-                builder: (context, searchType) => TextField(
-                      onChanged: (query) {
-                        context
-                            .read<SearchBloc>()
-                            .add(OnQueryChanged(query, searchType));
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Search title',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(),
-                      ),
-                      textInputAction: TextInputAction.search,
-                    )),
+            TextField(
+              onChanged: (query) {
+                context.read<SearchBloc>().add(OnQueryChanged(query));
+              },
+              decoration: InputDecoration(
+                hintText: 'Search title',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
+              ),
+              textInputAction: TextInputAction.search,
+            ),
             SizedBox(height: 16),
-            BlocBuilder<SearchTypeBloc, String>(
-                builder: (context, searchType) => DropdownButton<String>(
-                    value: searchType,
-                    icon: const Icon(Icons.arrow_downward),
-                    iconSize: 24,
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.white),
-                    underline: Container(
-                      height: 2,
-                      color: Colors.yellowAccent,
+            BlocBuilder<SearchTypeBloc, SearchTypeState>(
+                builder: (context, state) {
+              return DropdownButton<String>(
+                value: state.type,
+                icon: const Icon(Icons.arrow_downward),
+                iconSize: 24,
+                elevation: 16,
+                style: const TextStyle(color: Colors.white),
+                underline: Container(
+                  height: 2,
+                  color: Colors.yellowAccent,
+                ),
+                onChanged: (String? newValue) {
+                  context
+                      .read<SearchTypeBloc>()
+                      .add(SetSearchType(newValue ?? 'Movies'));
+                  context
+                      .read<SearchBloc>()
+                      .add(OnRefreshChanged(newValue ?? 'Movies'));
+                },
+                items: <String>['Movies', 'TV Shows']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value,
+                      style: TextStyle(color: Colors.white),
                     ),
-                    onChanged: (String? newValue) {
-                      context
-                          .read<SearchBloc>()
-                          .add(OnRefreshChanged(newValue ?? 'Movies'));
-                      context
-                          .read<SearchTypeBloc>()
-                          .add(SetCurrentSelection(newValue ?? 'Movies'));
-                    },
-                    items: <String>['Movies', 'TV Shows']
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }).toList())),
+                  );
+                }).toList(),
+              );
+            }),
             SizedBox(height: 16),
             Text(
               'Search Result',
               style: kHeading6,
             ),
-            BlocBuilder<SearchTypeBloc, String>(
+            BlocBuilder<SearchTypeBloc, SearchTypeState>(
                 builder: (context, searchType) =>
                     BlocBuilder<SearchBloc, SearchState>(
                       builder: (context, state) {
@@ -86,8 +86,8 @@ class SearchPage extends StatelessWidget {
                                 final item = result[index];
                                 return ItemCard(
                                   item,
-                                  isMovies:
-                                      searchType == 'Movies', //data.isMovies,
+                                  isMovies: searchType.type ==
+                                      'Movies', //data.isMovies,
                                 );
                               },
                               itemCount: result.length,

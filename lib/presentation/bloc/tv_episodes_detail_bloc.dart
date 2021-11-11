@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ditonton/domain/entities/tv_episodes.dart';
 import 'package:ditonton/domain/usecases/get_tv_episodes_detail.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,28 +11,26 @@ part 'tv_episodes_detail_state.dart';
 class TVEpisodesDetailBloc
     extends Bloc<TVEpisodesDetailEvent, TVEpisodesDetailState> {
   final GetTVEpisodesDetail _getTVEpisodesDetail;
-  TVEpisodesDetailBloc(this._getTVEpisodesDetail) : super(DataEmpty());
+  TVEpisodesDetailBloc(this._getTVEpisodesDetail) : super(DataEmpty()) {
+    on<FetchData>(_onFetchEvent);
+  }
 
-  @override
-  Stream<TVEpisodesDetailState> mapEventToState(
-    TVEpisodesDetailEvent event,
-  ) async* {
-    if (event is FetchData) {
-      final id = event.id;
-      final seasonNumber = event.seasonNumber;
-      final epsNumber = event.epsNumber;
-      yield DataLoading();
-      final result =
-          await _getTVEpisodesDetail.execute(id, seasonNumber, epsNumber);
+  FutureOr<void> _onFetchEvent(
+      FetchData event, Emitter<TVEpisodesDetailState> emit) async {
+    final id = event.id;
+    final seasonNumber = event.seasonNumber;
+    final epsNumber = event.epsNumber;
+    emit(DataLoading());
+    final result =
+        await _getTVEpisodesDetail.execute(id, seasonNumber, epsNumber);
 
-      yield* result.fold(
-        (failure) async* {
-          yield DataError(failure.message);
-        },
-        (data) async* {
-          yield DataAvailable(data);
-        },
-      );
-    }
+    result.fold(
+      (failure) {
+        emit(DataError(failure.message));
+      },
+      (data) {
+        emit(DataAvailable(data));
+      },
+    );
   }
 }

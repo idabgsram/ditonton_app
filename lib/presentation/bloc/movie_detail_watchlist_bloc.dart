@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/entities/movie_detail.dart';
 import 'package:ditonton/domain/usecases/get_watchlist_movies.dart';
@@ -8,44 +10,58 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
 part 'movie_detail_watchlist_event.dart';
+part 'movie_detail_watchlist_state.dart';
 
 class MovieDetailWatchlistBloc
-    extends Bloc<MovieDetailWatchlistEvent, String> {
+    extends Bloc<MovieDetailWatchlistEvent, MovieDetailWatchlistState> {
   final SaveWatchlist _saveWatchlist;
   final RemoveWatchlist _removeWatchlist;
-  MovieDetailWatchlistBloc( this._saveWatchlist, this._removeWatchlist)
-      : super('');
+  final GetWatchListStatus _getWatchlistStatus;
+  MovieDetailWatchlistBloc(
+      this._saveWatchlist, this._removeWatchlist, this._getWatchlistStatus)
+      : super(StatusReceived(false, '')) {
+    on<AddWatchlist>(_addWatchlist);
+    on<RemoveFromWatchlist>(_removeFromWatchlist);
+    on<LoadWatchlistStatus>(_onFetchEvent);
+  }
+
+  bool _isAddedtoWatchlist = false;
   static const watchlistAddSuccessMessage = 'Added to Watchlist';
   static const watchlistRemoveSuccessMessage = 'Removed from Watchlist';
+  FutureOr<void> _addWatchlist(
+      AddWatchlist event, Emitter<MovieDetailWatchlistState> emit) async {
+    final result = await _saveWatchlist.execute(event.movie);
 
-  @override
-  Stream<String> mapEventToState(
-    MovieDetailWatchlistEvent event,
-  ) async* {
-    if (event is AddWatchlist) {
-      final result = await _saveWatchlist.execute(event.movie);
+    result.fold(
+      (failure) {
+        emit(StatusReceived(_isAddedtoWatchlist, failure.message));
+      },
+      (successMessage) {
+        _isAddedtoWatchlist = true;
+        emit(StatusReceived(true, successMessage));
+      },
+    );
+  }
 
-      yield* result.fold(
-        (failure) async* {
-          yield failure.message;
-        },
-        (successMessage) async* {
-          yield successMessage;
-        },
-      );
-    }
-    if (event is RemoveFromWatchlist) {
-      final result = await _removeWatchlist.execute(event.movie);
+  FutureOr<void> _removeFromWatchlist(RemoveFromWatchlist event,
+      Emitter<MovieDetailWatchlistState> emit) async {
+    final result = await _removeWatchlist.execute(event.movie);
 
-      yield* result.fold(
-        (failure) async* {
-          yield failure.message;
-        },
-        (successMessage) async* {
-          yield successMessage;
-        },
-      );
-    }
-    
+    result.fold(
+      (failure) {
+        emit(StatusReceived(_isAddedtoWatchlist, failure.message));
+      },
+      (successMessage) {
+        _isAddedtoWatchlist = false;
+        emit(StatusReceived(false, successMessage));
+      },
+    );
+  }
+
+  FutureOr<void> _onFetchEvent(LoadWatchlistStatus event,
+      Emitter<MovieDetailWatchlistState> emit) async {
+    final statusResult = await _getWatchlistStatus.execute(event.id);
+    _isAddedtoWatchlist = statusResult;
+    emit(StatusReceived(_isAddedtoWatchlist, ''));
   }
 }

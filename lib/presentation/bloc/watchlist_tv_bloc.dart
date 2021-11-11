@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/domain/usecases/get_watchlist_tv.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,24 +10,22 @@ part 'watchlist_tv_state.dart';
 
 class WatchlistTVBloc extends Bloc<WatchlistTVEvent, WatchlistTVState> {
   final GetWatchlistTV _getWatchlistTV;
-  WatchlistTVBloc(this._getWatchlistTV) : super(DataTVEmpty());
+  WatchlistTVBloc(this._getWatchlistTV) : super(DataTVEmpty()) {
+    on<GetWatchlistTVData>(_onFetchEvent);
+  }
 
-  @override
-  Stream<WatchlistTVState> mapEventToState(
-    WatchlistTVEvent event,
-  ) async* {
-    if (event is GetWatchlistTVData) {
-      yield DataTVLoading();
-      final result = await _getWatchlistTV.execute();
+  FutureOr<void> _onFetchEvent(
+      GetWatchlistTVData event, Emitter<WatchlistTVState> emit) async {
+    emit(DataTVLoading());
+    final result = await _getWatchlistTV.execute();
 
-      yield* result.fold(
-        (failure) async* {
-          yield DataTVError(failure.message);
-        },
-        (data) async* {
-          yield DataTVAvailable(data);
-        },
-      );
-    }
+    result.fold(
+      (failure) {
+        emit(DataTVError(failure.message));
+      },
+      (data) {
+        emit(DataTVAvailable(data));
+      },
+    );
   }
 }
