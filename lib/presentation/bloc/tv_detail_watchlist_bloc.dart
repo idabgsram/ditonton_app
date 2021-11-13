@@ -28,11 +28,12 @@ class TVDetailWatchlistBloc
   static const watchlistRemoveSuccessMessage = 'Removed from TV Watchlist';
   FutureOr<void> _addWatchlist(
       AddWatchlist event, Emitter<TVDetailWatchlistState> emit) async {
-    final result = await _saveWatchlist.execute(event.movie);
+    emit(StatusLoading());
+    final result = await _saveWatchlist.execute(event.tv);
 
     result.fold(
       (failure) {
-        emit(StatusReceived(_isAddedtoWatchlist, failure.message));
+        emit(StatusError(failure.message));
       },
       (successMessage) {
         _isAddedtoWatchlist = true;
@@ -43,11 +44,12 @@ class TVDetailWatchlistBloc
 
   FutureOr<void> _removeFromWatchlist(
       RemoveFromWatchlist event, Emitter<TVDetailWatchlistState> emit) async {
-    final result = await _removeWatchlist.execute(event.movie);
+    emit(StatusLoading());
+    final result = await _removeWatchlist.execute(event.tv);
 
     result.fold(
       (failure) {
-        emit(StatusReceived(_isAddedtoWatchlist, failure.message));
+        emit(StatusError(failure.message));
       },
       (successMessage) {
         _isAddedtoWatchlist = false;

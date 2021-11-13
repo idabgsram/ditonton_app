@@ -1,3 +1,4 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/common/failure.dart';
@@ -6,14 +7,15 @@ import 'package:ditonton/domain/usecases/get_tv_recommendations.dart';
 import 'package:ditonton/domain/usecases/get_tv_watchlist_status.dart';
 import 'package:ditonton/domain/usecases/remove_tv_watchlist.dart';
 import 'package:ditonton/domain/usecases/save_tv_watchlist.dart';
-import 'package:ditonton/presentation/provider/tv_detail_notifier.dart';
-import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/presentation/bloc/tv_detail_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv_detail_recommendations_bloc.dart';
+import 'package:ditonton/presentation/bloc/tv_detail_watchlist_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../dummy_data/dummy_objects.dart';
-import 'tv_detail_notifier_test.mocks.dart';
+import 'tv_detail_bloc_test.mocks.dart';
 
 @GenerateMocks([
   GetTVDetail,
@@ -23,30 +25,25 @@ import 'tv_detail_notifier_test.mocks.dart';
   RemoveTVWatchlist,
 ])
 void main() {
-  late TVDetailNotifier provider;
+  late TVDetailBloc bloc;
+  late TVDetailRecommendationsBloc recommendationsBloc;
+  late TVDetailWatchlistBloc watchlistBloc;
   late MockGetTVDetail mockGetTVDetail;
   late MockGetTVRecommendations mockGetTVRecommendations;
   late MockGetTVWatchListStatus mockGetWatchlistStatus;
   late MockSaveTVWatchlist mockSaveWatchlist;
   late MockRemoveTVWatchlist mockRemoveWatchlist;
-  late int listenerCallCount;
 
   setUp(() {
-    listenerCallCount = 0;
     mockGetTVDetail = MockGetTVDetail();
     mockGetTVRecommendations = MockGetTVRecommendations();
     mockGetWatchlistStatus = MockGetTVWatchListStatus();
     mockSaveWatchlist = MockSaveTVWatchlist();
     mockRemoveWatchlist = MockRemoveTVWatchlist();
-    provider = TVDetailNotifier(
-      getTVDetail: mockGetTVDetail,
-      getTVRecommendations: mockGetTVRecommendations,
-      getTVWatchListStatus: mockGetWatchlistStatus,
-      saveTVWatchlist: mockSaveWatchlist,
-      removeTVWatchlist: mockRemoveWatchlist,
-    )..addListener(() {
-        listenerCallCount += 1;
-      });
+    bloc = TVDetailBloc(mockGetTVDetail);
+    recommendationsBloc = TVDetailRecommendationsBloc(mockGetTVRecommendations);
+    watchlistBloc = TVDetailWatchlistBloc(
+        mockSaveWatchlist, mockRemoveWatchlist, mockGetWatchlistStatus);
   });
 
   final tId = 1;
@@ -68,185 +65,177 @@ void main() {
   );
   final tTVs = <TV>[tTV];
 
-  void _arrangeUsecase() {
-    when(mockGetTVDetail.execute(tId))
-        .thenAnswer((_) async => Right(testTVDetail));
-    when(mockGetTVRecommendations.execute(tId))
-        .thenAnswer((_) async => Right(tTVs));
-  }
-
   group('Get TV Detail', () {
-    test('should get data from the usecase', () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchTVDetail(tId);
-      // assert
-      verify(mockGetTVDetail.execute(tId));
-      verify(mockGetTVRecommendations.execute(tId));
+    test('initial state should be empty', () {
+      expect(bloc.state, DataEmpty());
+      expect(FetchDetailData(tId).props, [tId]);
     });
 
-    test('should change state to Loading when usecase is called', () {
-      // arrange
-      _arrangeUsecase();
-      // act
-      provider.fetchTVDetail(tId);
-      // assert
-      expect(provider.tvState, RequestState.Loading);
-      expect(listenerCallCount, 1);
-    });
+    blocTest<TVDetailBloc, TVDetailState>(
+      'Should emit [Loading, Available] when data is gotten successfully',
+      build: () {
+        when(mockGetTVDetail.execute(tId))
+            .thenAnswer((_) async => Right(testTVDetail));
+        return bloc;
+      },
+      act: (bloc) => bloc.add(FetchDetailData(tId)),
+      expect: () => [
+        DataLoading(),
+        DataAvailable(testTVDetail),
+      ],
+      verify: (bloc) {
+        verify(mockGetTVDetail.execute(tId));
+      },
+    );
 
-    test('should change tv when data is gotten successfully', () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchTVDetail(tId);
-      // assert
-      expect(provider.tvState, RequestState.Loaded);
-      expect(provider.tvData, testTVDetail);
-      expect(listenerCallCount, 3);
-    });
-
-    test('should change recommendation tv when data is gotten successfully',
-        () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchTVDetail(tId);
-      // assert
-      expect(provider.tvState, RequestState.Loaded);
-      expect(provider.tvRecommendations, tTVs);
-    });
+    blocTest<TVDetailBloc, TVDetailState>(
+      'Should emit [Loading, Error] when get data is unsuccessful',
+      build: () {
+        when(mockGetTVDetail.execute(tId))
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        return bloc;
+      },
+      act: (bloc) => bloc.add(FetchDetailData(tId)),
+      expect: () => [
+        DataLoading(),
+        DataError('Server Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockGetTVDetail.execute(tId));
+      },
+    );
   });
 
   group('Get TV Recommendations', () {
-    test('should get data from the usecase', () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchTVDetail(tId);
-      // assert
-      verify(mockGetTVRecommendations.execute(tId));
-      expect(provider.tvRecommendations, tTVs);
+    test('initial state should be empty', () {
+      expect(recommendationsBloc.state, DataRecommendationsEmpty());
+      expect(FetchRecommendationsData(tId).props, [tId]);
     });
 
-    test('should update recommendation state when data is gotten successfully',
-        () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchTVDetail(tId);
-      // assert
-      expect(provider.recommendationState, RequestState.Loaded);
-      expect(provider.tvRecommendations, tTVs);
-    });
+    blocTest<TVDetailRecommendationsBloc, TVDetailRecommendationsState>(
+      'Should emit [Loading, Available] when data is gotten successfully',
+      build: () {
+        when(mockGetTVRecommendations.execute(tId))
+            .thenAnswer((_) async => Right(tTVs));
+        return recommendationsBloc;
+      },
+      act: (bloc) => bloc.add(FetchRecommendationsData(tId)),
+      expect: () => [
+        DataRecommendationsLoading(),
+        DataRecommendationsAvailable(tTVs),
+      ],
+      verify: (bloc) {
+        verify(mockGetTVRecommendations.execute(tId));
+      },
+    );
 
-    test('should update error message when request in successful', () async {
-      // arrange
-      when(mockGetTVDetail.execute(tId))
-          .thenAnswer((_) async => Right(testTVDetail));
-      when(mockGetTVRecommendations.execute(tId))
-          .thenAnswer((_) async => Left(ServerFailure('Failed')));
-      // act
-      await provider.fetchTVDetail(tId);
-      // assert
-      expect(provider.recommendationState, RequestState.Error);
-      expect(provider.message, 'Failed');
-    });
+    blocTest<TVDetailRecommendationsBloc, TVDetailRecommendationsState>(
+      'Should emit [Loading, Error] when get data is unsuccessful',
+      build: () {
+        when(mockGetTVRecommendations.execute(tId))
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        return recommendationsBloc;
+      },
+      act: (bloc) => bloc.add(FetchRecommendationsData(tId)),
+      expect: () => [
+        DataRecommendationsLoading(),
+        DataRecommendationsError('Server Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockGetTVRecommendations.execute(tId));
+      },
+    );
   });
 
   group('Watchlist', () {
-    test('should get the watchlist status', () async {
-      // arrange
-      when(mockGetWatchlistStatus.execute(1)).thenAnswer((_) async => true);
-      // act
-      await provider.loadTVWatchlistStatus(1);
-      // assert
-      expect(provider.isAddedToWatchlist, true);
+    test('initial state should be empty', () {
+      expect(watchlistBloc.state, StatusReceived(false, ''));
+      expect(AddWatchlist(testTVDetail).props, [testTVDetail]);
+      expect(RemoveFromWatchlist(testTVDetail).props, [testTVDetail]);
+      expect(LoadWatchlistStatus(tId).props, [tId]);
     });
 
-    test('should execute save watchlist when function called', () async {
-      // arrange
-      when(mockSaveWatchlist.execute(testTVDetail))
-          .thenAnswer((_) async => Right('Success'));
-      when(mockGetWatchlistStatus.execute(testTVDetail.id))
-          .thenAnswer((_) async => true);
-      // act
-      await provider.addTVWatchlist(testTVDetail);
-      // assert
-      verify(mockSaveWatchlist.execute(testTVDetail));
-    });
+    blocTest<TVDetailWatchlistBloc, TVDetailWatchlistState>(
+      'Should emit [Received] when data is saved successfully',
+      build: () {
+        when(mockSaveWatchlist.execute(testTVDetail)).thenAnswer((_) async =>
+            Right(TVDetailWatchlistBloc.watchlistAddSuccessMessage));
+        return watchlistBloc;
+      },
+      act: (bloc) => bloc.add(AddWatchlist(testTVDetail)),
+      expect: () => [
+        StatusLoading(),
+        StatusReceived(true, TVDetailWatchlistBloc.watchlistAddSuccessMessage),
+      ],
+      verify: (bloc) {
+        verify(mockSaveWatchlist.execute(testTVDetail));
+      },
+    );
 
-    test('should execute remove watchlist when function called', () async {
-      // arrange
-      when(mockRemoveWatchlist.execute(testTVDetail))
-          .thenAnswer((_) async => Right('Removed'));
-      when(mockGetWatchlistStatus.execute(testTVDetail.id))
-          .thenAnswer((_) async => false);
-      // act
-      await provider.removeFromTVWatchlist(testTVDetail);
-      // assert
-      verify(mockRemoveWatchlist.execute(testTVDetail));
-    });
+    blocTest<TVDetailWatchlistBloc, TVDetailWatchlistState>(
+      'Should emit [Error] when save data is unsuccessful',
+      build: () {
+        when(mockSaveWatchlist.execute(testTVDetail))
+            .thenAnswer((_) async => Left(DatabaseFailure('Database Failure')));
+        return watchlistBloc;
+      },
+      act: (bloc) => bloc.add(AddWatchlist(testTVDetail)),
+      expect: () => [
+        StatusLoading(),
+        StatusError('Database Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockSaveWatchlist.execute(testTVDetail));
+      },
+    );
 
-    test('should update watchlist status when add watchlist success', () async {
-      // arrange
-      when(mockSaveWatchlist.execute(testTVDetail)).thenAnswer(
-          (_) async => Right(TVDetailNotifier.watchlistAddSuccessMessage));
-      when(mockGetWatchlistStatus.execute(testTVDetail.id))
-          .thenAnswer((_) async => true);
-      // act
-      await provider.addTVWatchlist(testTVDetail);
-      // assert
-      verify(mockGetWatchlistStatus.execute(testTVDetail.id));
-      expect(provider.isAddedToWatchlist, true);
-      expect(provider.tvWatchlistMessage,
-          TVDetailNotifier.watchlistAddSuccessMessage);
-      expect(listenerCallCount, 1);
-    });
+    blocTest<TVDetailWatchlistBloc, TVDetailWatchlistState>(
+      'Should emit [Received] when data is removed successfully',
+      build: () {
+        when(mockRemoveWatchlist.execute(testTVDetail)).thenAnswer((_) async =>
+            Right(TVDetailWatchlistBloc.watchlistRemoveSuccessMessage));
+        return watchlistBloc;
+      },
+      act: (bloc) => bloc.add(RemoveFromWatchlist(testTVDetail)),
+      expect: () => [
+        StatusLoading(),
+        StatusReceived(
+            false, TVDetailWatchlistBloc.watchlistRemoveSuccessMessage),
+      ],
+      verify: (bloc) {
+        verify(mockRemoveWatchlist.execute(testTVDetail));
+      },
+    );
 
-    test('should update remove watchlist when remove watchlist success',
-        () async {
-      // arrange
-      when(mockRemoveWatchlist.execute(testTVDetail)).thenAnswer(
-          (_) async => Right(TVDetailNotifier.watchlistRemoveSuccessMessage));
-      when(mockGetWatchlistStatus.execute(testTVDetail.id))
-          .thenAnswer((_) async => false);
-      // act
-      await provider.removeFromTVWatchlist(testTVDetail);
-      // assert
-      expect(provider.tvWatchlistMessage,
-          TVDetailNotifier.watchlistRemoveSuccessMessage);
-      verify(mockRemoveWatchlist.execute(testTVDetail));
-    });
-
-    test('should update watchlist message when add watchlist failed', () async {
-      // arrange
-      when(mockSaveWatchlist.execute(testTVDetail))
-          .thenAnswer((_) async => Left(DatabaseFailure('Failed')));
-      when(mockGetWatchlistStatus.execute(testTVDetail.id))
-          .thenAnswer((_) async => false);
-      // act
-      await provider.addTVWatchlist(testTVDetail);
-      // assert
-      expect(provider.tvWatchlistMessage, 'Failed');
-      expect(listenerCallCount, 1);
-    });
-  });
-
-  group('on Error', () {
-    test('should return error when data is unsuccessful', () async {
-      // arrange
-      when(mockGetTVDetail.execute(tId))
-          .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
-      when(mockGetTVRecommendations.execute(tId))
-          .thenAnswer((_) async => Right(tTVs));
-      // act
-      await provider.fetchTVDetail(tId);
-      // assert
-      expect(provider.tvState, RequestState.Error);
-      expect(provider.message, 'Server Failure');
-      expect(listenerCallCount, 2);
-    });
+    blocTest<TVDetailWatchlistBloc, TVDetailWatchlistState>(
+      'Should emit [Error] when remove data is unsuccessful',
+      build: () {
+        when(mockRemoveWatchlist.execute(testTVDetail))
+            .thenAnswer((_) async => Left(DatabaseFailure('Database Failure')));
+        return watchlistBloc;
+      },
+      act: (bloc) => bloc.add(RemoveFromWatchlist(testTVDetail)),
+      expect: () => [
+        StatusLoading(),
+        StatusError('Database Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockRemoveWatchlist.execute(testTVDetail));
+      },
+    );
+    blocTest<TVDetailWatchlistBloc, TVDetailWatchlistState>(
+      'Should emit [Received] when get status',
+      build: () {
+        when(mockGetWatchlistStatus.execute(tId)).thenAnswer((_) async => true);
+        return watchlistBloc;
+      },
+      act: (bloc) => bloc.add(LoadWatchlistStatus(tId)),
+      expect: () => [
+        StatusReceived(true, ''),
+      ],
+      verify: (bloc) {
+        verify(mockGetWatchlistStatus.execute(tId));
+      },
+    );
   });
 }

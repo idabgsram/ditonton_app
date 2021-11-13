@@ -138,7 +138,12 @@ class DetailContent extends StatelessWidget {
                                   ),
                                 BlocBuilder<TVDetailWatchlistBloc,
                                         TVDetailWatchlistState>(
-                                    builder: (context, state) {
+                                    buildWhen: (prev, cur) {
+                                  if (cur is StatusError) {
+                                    return false;
+                                  }
+                                  return true;
+                                }, builder: (context, state) {
                                   if (state is StatusReceived) {
                                     return ElevatedButton(
                                       key: Key('watchlist_btn'),

@@ -1,3 +1,4 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:ditonton/domain/entities/movie.dart';
 import 'package:ditonton/domain/usecases/get_movie_detail.dart';
@@ -7,7 +8,8 @@ import 'package:ditonton/domain/usecases/get_watchlist_status.dart';
 import 'package:ditonton/domain/usecases/remove_watchlist.dart';
 import 'package:ditonton/domain/usecases/save_watchlist.dart';
 import 'package:ditonton/presentation/bloc/movie_detail_bloc.dart';
-import 'package:ditonton/common/state_enum.dart';
+import 'package:ditonton/presentation/bloc/movie_detail_recommendations_bloc.dart';
+import 'package:ditonton/presentation/bloc/movie_detail_watchlist_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -24,29 +26,25 @@ import 'movie_detail_bloc_test.mocks.dart';
 ])
 void main() {
   late MovieDetailBloc bloc;
+  late MovieDetailRecommendationsBloc recommendationsBloc;
+  late MovieDetailWatchlistBloc watchlistBloc;
   late MockGetMovieDetail mockGetMovieDetail;
   late MockGetMovieRecommendations mockGetMovieRecommendations;
   late MockGetWatchListStatus mockGetWatchlistStatus;
   late MockSaveWatchlist mockSaveWatchlist;
   late MockRemoveWatchlist mockRemoveWatchlist;
-  late int listenerCallCount;
 
   setUp(() {
-    listenerCallCount = 0;
     mockGetMovieDetail = MockGetMovieDetail();
     mockGetMovieRecommendations = MockGetMovieRecommendations();
     mockGetWatchlistStatus = MockGetWatchListStatus();
     mockSaveWatchlist = MockSaveWatchlist();
     mockRemoveWatchlist = MockRemoveWatchlist();
-    provider = MovieDetailNotifier(
-      getMovieDetail: mockGetMovieDetail,
-      getMovieRecommendations: mockGetMovieRecommendations,
-      getWatchListStatus: mockGetWatchlistStatus,
-      saveWatchlist: mockSaveWatchlist,
-      removeWatchlist: mockRemoveWatchlist,
-    )..addListener(() {
-        listenerCallCount += 1;
-      });
+    bloc = MovieDetailBloc(mockGetMovieDetail);
+    recommendationsBloc =
+        MovieDetailRecommendationsBloc(mockGetMovieRecommendations);
+    watchlistBloc = MovieDetailWatchlistBloc(
+        mockSaveWatchlist, mockRemoveWatchlist, mockGetWatchlistStatus);
   });
 
   final tId = 1;
@@ -68,185 +66,179 @@ void main() {
   );
   final tMovies = <Movie>[tMovie];
 
-  void _arrangeUsecase() {
-    when(mockGetMovieDetail.execute(tId))
-        .thenAnswer((_) async => Right(testMovieDetail));
-    when(mockGetMovieRecommendations.execute(tId))
-        .thenAnswer((_) async => Right(tMovies));
-  }
-
   group('Get Movie Detail', () {
-    test('should get data from the usecase', () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchMovieDetail(tId);
-      // assert
-      verify(mockGetMovieDetail.execute(tId));
-      verify(mockGetMovieRecommendations.execute(tId));
+    test('initial state should be empty', () {
+      expect(bloc.state, DataEmpty());
+      expect(FetchDetailData(tId).props, [tId]);
     });
 
-    test('should change state to Loading when usecase is called', () {
-      // arrange
-      _arrangeUsecase();
-      // act
-      provider.fetchMovieDetail(tId);
-      // assert
-      expect(provider.movieState, RequestState.Loading);
-      expect(listenerCallCount, 1);
-    });
+    blocTest<MovieDetailBloc, MovieDetailState>(
+      'Should emit [Loading, Available] when data is gotten successfully',
+      build: () {
+        when(mockGetMovieDetail.execute(tId))
+            .thenAnswer((_) async => Right(testMovieDetail));
+        return bloc;
+      },
+      act: (bloc) => bloc.add(FetchDetailData(tId)),
+      expect: () => [
+        DataLoading(),
+        DataAvailable(testMovieDetail),
+      ],
+      verify: (bloc) {
+        verify(mockGetMovieDetail.execute(tId));
+      },
+    );
 
-    test('should change movie when data is gotten successfully', () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchMovieDetail(tId);
-      // assert
-      expect(provider.movieState, RequestState.Loaded);
-      expect(provider.movie, testMovieDetail);
-      expect(listenerCallCount, 3);
-    });
-
-    test('should change recommendation movies when data is gotten successfully',
-        () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchMovieDetail(tId);
-      // assert
-      expect(provider.movieState, RequestState.Loaded);
-      expect(provider.movieRecommendations, tMovies);
-    });
+    blocTest<MovieDetailBloc, MovieDetailState>(
+      'Should emit [Loading, Error] when get data is unsuccessful',
+      build: () {
+        when(mockGetMovieDetail.execute(tId))
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        return bloc;
+      },
+      act: (bloc) => bloc.add(FetchDetailData(tId)),
+      expect: () => [
+        DataLoading(),
+        DataError('Server Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockGetMovieDetail.execute(tId));
+      },
+    );
   });
 
   group('Get Movie Recommendations', () {
-    test('should get data from the usecase', () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchMovieDetail(tId);
-      // assert
-      verify(mockGetMovieRecommendations.execute(tId));
-      expect(provider.movieRecommendations, tMovies);
+    test('initial state should be empty', () {
+      expect(recommendationsBloc.state, DataRecommendationsEmpty());
+      expect(FetchRecommendationsData(tId).props, [tId]);
     });
 
-    test('should update recommendation state when data is gotten successfully',
-        () async {
-      // arrange
-      _arrangeUsecase();
-      // act
-      await provider.fetchMovieDetail(tId);
-      // assert
-      expect(provider.recommendationState, RequestState.Loaded);
-      expect(provider.movieRecommendations, tMovies);
-    });
+    blocTest<MovieDetailRecommendationsBloc, MovieDetailRecommendationsState>(
+      'Should emit [Loading, Available] when data is gotten successfully',
+      build: () {
+        when(mockGetMovieRecommendations.execute(tId))
+            .thenAnswer((_) async => Right(tMovies));
+        return recommendationsBloc;
+      },
+      act: (bloc) => bloc.add(FetchRecommendationsData(tId)),
+      expect: () => [
+        DataRecommendationsLoading(),
+        DataRecommendationsAvailable(tMovies),
+      ],
+      verify: (bloc) {
+        verify(mockGetMovieRecommendations.execute(tId));
+      },
+    );
 
-    test('should update error message when request in successful', () async {
-      // arrange
-      when(mockGetMovieDetail.execute(tId))
-          .thenAnswer((_) async => Right(testMovieDetail));
-      when(mockGetMovieRecommendations.execute(tId))
-          .thenAnswer((_) async => Left(ServerFailure('Failed')));
-      // act
-      await provider.fetchMovieDetail(tId);
-      // assert
-      expect(provider.recommendationState, RequestState.Error);
-      expect(provider.message, 'Failed');
-    });
+    blocTest<MovieDetailRecommendationsBloc, MovieDetailRecommendationsState>(
+      'Should emit [Loading, Error] when get data is unsuccessful',
+      build: () {
+        when(mockGetMovieRecommendations.execute(tId))
+            .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
+        return recommendationsBloc;
+      },
+      act: (bloc) => bloc.add(FetchRecommendationsData(tId)),
+      expect: () => [
+        DataRecommendationsLoading(),
+        DataRecommendationsError('Server Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockGetMovieRecommendations.execute(tId));
+      },
+    );
   });
 
   group('Watchlist', () {
-    test('should get the watchlist status', () async {
-      // arrange
-      when(mockGetWatchlistStatus.execute(1)).thenAnswer((_) async => true);
-      // act
-      await provider.loadWatchlistStatus(1);
-      // assert
-      expect(provider.isAddedToWatchlist, true);
+    test('initial state should be empty', () {
+      expect(watchlistBloc.state, StatusReceived(false, ''));
+      expect(AddWatchlist(testMovieDetail).props, [testMovieDetail]);
+      expect(RemoveFromWatchlist(testMovieDetail).props, [testMovieDetail]);
+      expect(LoadWatchlistStatus(tId).props, [tId]);
     });
 
-    test('should execute save watchlist when function called', () async {
-      // arrange
-      when(mockSaveWatchlist.execute(testMovieDetail))
-          .thenAnswer((_) async => Right('Success'));
-      when(mockGetWatchlistStatus.execute(testMovieDetail.id))
-          .thenAnswer((_) async => true);
-      // act
-      await provider.addWatchlist(testMovieDetail);
-      // assert
-      verify(mockSaveWatchlist.execute(testMovieDetail));
-    });
+    blocTest<MovieDetailWatchlistBloc, MovieDetailWatchlistState>(
+      'Should emit [Received] when data is saved successfully',
+      build: () {
+        when(mockSaveWatchlist.execute(testMovieDetail)).thenAnswer((_) async =>
+            Right(MovieDetailWatchlistBloc.watchlistAddSuccessMessage));
+        return watchlistBloc;
+      },
+      act: (bloc) => bloc.add(AddWatchlist(testMovieDetail)),
+      expect: () => [
+        StatusLoading(),
+        StatusReceived(
+            true, MovieDetailWatchlistBloc.watchlistAddSuccessMessage),
+      ],
+      verify: (bloc) {
+        verify(mockSaveWatchlist.execute(testMovieDetail));
+      },
+    );
 
-    test('should execute remove watchlist when function called', () async {
-      // arrange
-      when(mockRemoveWatchlist.execute(testMovieDetail))
-          .thenAnswer((_) async => Right('Removed'));
-      when(mockGetWatchlistStatus.execute(testMovieDetail.id))
-          .thenAnswer((_) async => false);
-      // act
-      await provider.removeFromWatchlist(testMovieDetail);
-      // assert
-      verify(mockRemoveWatchlist.execute(testMovieDetail));
-    });
+    blocTest<MovieDetailWatchlistBloc, MovieDetailWatchlistState>(
+      'Should emit [Error] when save data is unsuccessful',
+      build: () {
+        when(mockSaveWatchlist.execute(testMovieDetail))
+            .thenAnswer((_) async => Left(DatabaseFailure('Database Failure')));
+        return watchlistBloc;
+      },
+      act: (bloc) => bloc.add(AddWatchlist(testMovieDetail)),
+      expect: () => [
+        StatusLoading(),
+        StatusError('Database Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockSaveWatchlist.execute(testMovieDetail));
+      },
+    );
 
-    test('should update watchlist status when add watchlist success', () async {
-      // arrange
-      when(mockSaveWatchlist.execute(testMovieDetail)).thenAnswer(
-          (_) async => Right(MovieDetailNotifier.watchlistAddSuccessMessage));
-      when(mockGetWatchlistStatus.execute(testMovieDetail.id))
-          .thenAnswer((_) async => true);
-      // act
-      await provider.addWatchlist(testMovieDetail);
-      // assert
-      verify(mockGetWatchlistStatus.execute(testMovieDetail.id));
-      expect(provider.isAddedToWatchlist, true);
-      expect(provider.watchlistMessage,
-          MovieDetailNotifier.watchlistAddSuccessMessage);
-      expect(listenerCallCount, 1);
-    });
+    blocTest<MovieDetailWatchlistBloc, MovieDetailWatchlistState>(
+      'Should emit [Received] when data is removed successfully',
+      build: () {
+        when(mockRemoveWatchlist.execute(testMovieDetail)).thenAnswer(
+            (_) async =>
+                Right(MovieDetailWatchlistBloc.watchlistRemoveSuccessMessage));
+        return watchlistBloc;
+      },
+      act: (bloc) => bloc.add(RemoveFromWatchlist(testMovieDetail)),
+      expect: () => [
+        StatusLoading(),
+        StatusReceived(
+            false, MovieDetailWatchlistBloc.watchlistRemoveSuccessMessage),
+      ],
+      verify: (bloc) {
+        verify(mockRemoveWatchlist.execute(testMovieDetail));
+      },
+    );
 
-    test('should update remove watchlist when remove watchlist success',
-        () async {
-      // arrange
-      when(mockRemoveWatchlist.execute(testMovieDetail)).thenAnswer((_) async =>
-          Right(MovieDetailNotifier.watchlistRemoveSuccessMessage));
-      when(mockGetWatchlistStatus.execute(testTVDetail.id))
-          .thenAnswer((_) async => false);
-      // act
-      await provider.removeFromWatchlist(testMovieDetail);
-      // assert
-      expect(provider.watchlistMessage,
-          MovieDetailNotifier.watchlistRemoveSuccessMessage);
-      verify(mockRemoveWatchlist.execute(testMovieDetail));
-    });
-
-    test('should update watchlist message when add watchlist failed', () async {
-      // arrange
-      when(mockSaveWatchlist.execute(testMovieDetail))
-          .thenAnswer((_) async => Left(DatabaseFailure('Failed')));
-      when(mockGetWatchlistStatus.execute(testMovieDetail.id))
-          .thenAnswer((_) async => false);
-      // act
-      await provider.addWatchlist(testMovieDetail);
-      // assert
-      expect(provider.watchlistMessage, 'Failed');
-      expect(listenerCallCount, 1);
-    });
-  });
-
-  group('on Error', () {
-    test('should return error when data is unsuccessful', () async {
-      // arrange
-      when(mockGetMovieDetail.execute(tId))
-          .thenAnswer((_) async => Left(ServerFailure('Server Failure')));
-      when(mockGetMovieRecommendations.execute(tId))
-          .thenAnswer((_) async => Right(tMovies));
-      // act
-      await provider.fetchMovieDetail(tId);
-      // assert
-      expect(provider.movieState, RequestState.Error);
-      expect(provider.message, 'Server Failure');
-      expect(listenerCallCount, 2);
-    });
+    blocTest<MovieDetailWatchlistBloc, MovieDetailWatchlistState>(
+      'Should emit [Error] when remove data is unsuccessful',
+      build: () {
+        when(mockRemoveWatchlist.execute(testMovieDetail))
+            .thenAnswer((_) async => Left(DatabaseFailure('Database Failure')));
+        return watchlistBloc;
+      },
+      act: (bloc) => bloc.add(RemoveFromWatchlist(testMovieDetail)),
+      expect: () => [
+        StatusLoading(),
+        StatusError('Database Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockRemoveWatchlist.execute(testMovieDetail));
+      },
+    );
+    blocTest<MovieDetailWatchlistBloc, MovieDetailWatchlistState>(
+      'Should emit [Received] when get status',
+      build: () {
+        when(mockGetWatchlistStatus.execute(tId)).thenAnswer((_) async => true);
+        return watchlistBloc;
+      },
+      act: (bloc) => bloc.add(LoadWatchlistStatus(tId)),
+      expect: () => [
+        StatusReceived(true, ''),
+      ],
+      verify: (bloc) {
+        verify(mockGetWatchlistStatus.execute(tId));
+      },
+    );
   });
 }

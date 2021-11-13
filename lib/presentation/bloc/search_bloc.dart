@@ -13,8 +13,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchMovies _searchMovies;
   final SearchTVs _searchTVs;
 
-  String _searchQuery = '';
-  String _searchType = 'Movies';
+  String searchQuery = '';
+  String searchType = 'Movies';
 
   SearchBloc(this._searchMovies, this._searchTVs) : super(SearchEmpty()) {
     on<OnQueryChanged>(_onQueryChanged,
@@ -27,13 +27,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   FutureOr<void> _onQueryChanged(
       OnQueryChanged event, Emitter<SearchState> emit) async {
-    _searchQuery = event.query;
+    searchQuery = event.query;
 
     emit(SearchLoading());
-    final result = _searchType == 'Movies'
-        ? await _searchMovies.execute(_searchQuery)
-        : await _searchTVs.execute(_searchQuery);
-    if (_searchQuery.length < 1) {
+    final result = searchType == 'Movies'
+        ? await _searchMovies.execute(searchQuery)
+        : await _searchTVs.execute(searchQuery);
+    if (searchQuery.length < 1) {
       emit(SearchEmpty());
       return;
     }
@@ -49,13 +49,13 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   FutureOr<void> _onRefreshChanged(
       OnRefreshChanged event, Emitter<SearchState> emit) async {
-    _searchType = event.searchType;
+    searchType = event.searchType;
     emit(SearchLoading());
-    final result = _searchType == 'Movies'
-        ? await _searchMovies.execute(_searchQuery)
-        : await _searchTVs.execute(_searchQuery);
+    final result = searchType == 'Movies'
+        ? await _searchMovies.execute(searchQuery)
+        : await _searchTVs.execute(searchQuery);
 
-    if (_searchQuery.length < 1) {
+    if (searchQuery.length < 1) {
       emit(SearchEmpty());
       return;
     }

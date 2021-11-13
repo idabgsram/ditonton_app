@@ -1,61 +1,110 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:dartz/dartz.dart';
 import 'package:ditonton/common/failure.dart';
-import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/usecases/get_watchlist_movies.dart';
 import 'package:ditonton/domain/usecases/get_watchlist_tv.dart';
-import 'package:ditonton/presentation/provider/watchlist_notifier.dart';
+import 'package:ditonton/presentation/bloc/watchlist_movies_bloc.dart';
+import 'package:ditonton/presentation/bloc/watchlist_tv_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../dummy_data/dummy_objects.dart';
-import 'watchlist_notifier_test.mocks.dart';
+import 'watchlist_bloc_test.mocks.dart';
 
 @GenerateMocks([GetWatchlistMovies, GetWatchlistTV])
 void main() {
-  late WatchlistNotifier provider;
+  late WatchlistMoviesBloc movieBloc;
+  late WatchlistTVBloc tvBloc;
   late MockGetWatchlistMovies mockGetWatchlistMovies;
   late MockGetWatchlistTV mockGetWatchlistTVs;
-  late int listenerCallCount;
 
   setUp(() {
-    listenerCallCount = 0;
     mockGetWatchlistMovies = MockGetWatchlistMovies();
     mockGetWatchlistTVs = MockGetWatchlistTV();
-    provider = WatchlistNotifier(
-      getWatchlistMovies: mockGetWatchlistMovies,
-      getWatchlistTVs: mockGetWatchlistTVs,
-    )..addListener(() {
-        listenerCallCount += 1;
-      });
+    movieBloc = WatchlistMoviesBloc(mockGetWatchlistMovies);
+    tvBloc = WatchlistTVBloc(mockGetWatchlistTVs);
   });
 
-  test('should change data when data is gotten successfully', () async {
-    // arrange
-    when(mockGetWatchlistMovies.execute())
-        .thenAnswer((_) async => Right([testWatchlistMovie]));
-    when(mockGetWatchlistTVs.execute())
-        .thenAnswer((_) async => Right([testWatchlistTV]));
-    // act
-    await provider.fetchWatchlist();
-    // assert
-    expect(provider.watchlistState, RequestState.Loaded);
-    expect(provider.watchlistMovies, [testWatchlistMovie]);
-    expect(provider.watchlistTVs, [testWatchlistTV]);
-    expect(listenerCallCount, 3);
+  group('Watchlist Movies test', () {
+    test('initial state should be empty', () {
+      expect(movieBloc.state, DataEmpty());
+      expect(GetWatchlistMoviesData().props, []);
+    });
+
+    blocTest<WatchlistMoviesBloc, WatchlistMoviesState>(
+      'Should emit [Loading, Available] when data is gotten successfully',
+      build: () {
+        when(mockGetWatchlistMovies.execute())
+            .thenAnswer((_) async => Right([testWatchlistMovie]));
+        return movieBloc;
+      },
+      act: (bloc) => bloc.add(GetWatchlistMoviesData()),
+      expect: () => [
+        DataLoading(),
+        DataAvailable([testWatchlistMovie]),
+      ],
+      verify: (bloc) {
+        verify(mockGetWatchlistMovies.execute());
+      },
+    );
+
+    blocTest<WatchlistMoviesBloc, WatchlistMoviesState>(
+      'Should emit [Loading, Error] when get search is unsuccessful',
+      build: () {
+        when(mockGetWatchlistMovies.execute())
+            .thenAnswer((_) async => Left(DatabaseFailure('Database Failure')));
+        return movieBloc;
+      },
+      act: (bloc) => bloc.add(GetWatchlistMoviesData()),
+      expect: () => [
+        DataLoading(),
+        DataError('Database Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockGetWatchlistMovies.execute());
+      },
+    );
   });
 
-  test('should return error when data is unsuccessful', () async {
-    // arrange
-    when(mockGetWatchlistMovies.execute())
-        .thenAnswer((_) async => Left(DatabaseFailure("Can't get data")));
-    when(mockGetWatchlistTVs.execute())
-        .thenAnswer((_) async => Left(DatabaseFailure("Can't get data")));
-    // act
-    await provider.fetchWatchlist();
-    // assert
-    expect(provider.watchlistState, RequestState.Error);
-    expect(provider.message, "Can't get data");
-    expect(listenerCallCount, 3);
+  group('Watchlist TVs test', () {
+    test('initial state should be empty', () {
+      expect(tvBloc.state, DataTVEmpty());
+      expect(GetWatchlistTVData().props, []);
+    });
+
+    blocTest<WatchlistTVBloc, WatchlistTVState>(
+      'Should emit [Loading, Available] when data is gotten successfully',
+      build: () {
+        when(mockGetWatchlistTVs.execute())
+            .thenAnswer((_) async => Right([testWatchlistTV]));
+        return tvBloc;
+      },
+      act: (bloc) => bloc.add(GetWatchlistTVData()),
+      expect: () => [
+        DataTVLoading(),
+        DataTVAvailable([testWatchlistTV]),
+      ],
+      verify: (bloc) {
+        verify(mockGetWatchlistTVs.execute());
+      },
+    );
+
+    blocTest<WatchlistTVBloc, WatchlistTVState>(
+      'Should emit [Loading, Error] when get search is unsuccessful',
+      build: () {
+        when(mockGetWatchlistTVs.execute())
+            .thenAnswer((_) async => Left(DatabaseFailure('Database Failure')));
+        return tvBloc;
+      },
+      act: (bloc) => bloc.add(GetWatchlistTVData()),
+      expect: () => [
+        DataTVLoading(),
+        DataTVError('Database Failure'),
+      ],
+      verify: (bloc) {
+        verify(mockGetWatchlistTVs.execute());
+      },
+    );
   });
 }
