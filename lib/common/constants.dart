@@ -47,8 +47,8 @@ const kColorScheme = ColorScheme(
   brightness: Brightness.dark,
 );
 
-// putting cert to assets is kinda risky, they can easily replace them,
-// so hardcoding the cert might be better?
+/* putting cert to assets is kinda risky, they can easily replace them,
+ so hardcoding the cert might be better? */
 const sslCertificate = """-----BEGIN CERTIFICATE-----
 MIIF5zCCBM+gAwIBAgIQAdKnBRs48TrGZbcfFRKNgDANBgkqhkiG9w0BAQsFADBG
 MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRUwEwYDVQQLEwxTZXJ2ZXIg
