@@ -1,23 +1,33 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/services.dart';
-import 'package:http/http.dart';
 import 'package:http/io_client.dart';
+import 'package:http/http.dart' as http;
+
+import 'constants.dart';
 
 class Connection {
-  Future<SecurityContext> get _globalContext async {
-    final sslCert = await rootBundle.load('assets/cert/tmdb.cer');
+  static Future<SecurityContext> get _globalContext async {
     SecurityContext securityContext = SecurityContext(withTrustedRoots: false);
-    securityContext.setTrustedCertificatesBytes(sslCert.buffer.asInt8List());
+    securityContext.setTrustedCertificatesBytes(utf8.encode(sslCertificate));
     return securityContext;
   }
 
-  Future<Response> get(Uri uri) async {
+  static Future<http.Client> get getClient async {
     HttpClient client = HttpClient(context: await _globalContext);
     client.badCertificateCallback =
         (X509Certificate cert, String host, int port) => false;
     IOClient ioClient = IOClient(client);
-    final response = await ioClient.get(uri);
-    return response;
+    return ioClient;
+  }
+
+  static Future<http.Client> get _instance async =>
+      _clientInstance ??= await getClient;
+  static http.Client? _clientInstance;
+
+  static http.Client get client => _clientInstance ?? http.Client();
+
+  static Future<void> initClient() async {
+    _clientInstance = await _instance;
   }
 }
