@@ -53,6 +53,7 @@ class _OTATVPageState extends State<OTATVPage> {
                         arguments: tv.id,
                       );
                     },
+                    key: Key('item_$index'),
                   );
                 },
                 itemCount: state.result.length,

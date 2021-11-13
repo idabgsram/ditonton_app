@@ -10,6 +10,7 @@ import 'package:ditonton/domain/entities/tv_detail_episodes.dart';
 import 'package:ditonton/domain/entities/tv_detail_season.dart';
 import 'package:ditonton/domain/entities/tv_episodes.dart';
 import 'package:ditonton/domain/entities/tv_seasons.dart';
+import 'package:flutter/material.dart';
 
 final testMovie = Movie(
   adult: false,
@@ -243,6 +244,39 @@ final testTVEpisodesDetail = TVEpisodes(
   stillPath: "/vkuYEpktTjfZTZcl8XcChR0CN71.jpg",
 );
 
+final testTVEpisodesDetailNoPoster = TVEpisodes(
+  airDate: "2019-01-25",
+  crew: [
+    Crew(
+        job: "Animation Director",
+        character: "Basketball Captain (voice)",
+        name: "Huang Feng",
+        id: 2965969,
+        profilePath: null)
+  ],
+  episodeNumber: 3,
+  guestStars: [
+    Crew(
+        job: "Animation Director",
+        character: "Basketball Captain (voice)",
+        name: "Aina Suzuki",
+        id: 1661870,
+        profilePath: "/bRLwfft4yckDTpLenlbTrt3FRRN.jpg"),
+    Crew(
+        job: "Animation Director",
+        character: "Beard Man (voice)",
+        name: "Ryota Akazawa",
+        id: 3211842,
+        profilePath: null)
+  ],
+  name: "A Mountain of Problems",
+  overview:
+      "Nino isn't happy that Futaro is beginning to get along with her sisters, so she takes matters into her own hands.",
+  id: 1659817,
+  seasonNumber: 1,
+  stillPath: null,
+);
+
 final testWatchlistTV = TV.watchlist(
   id: 1,
   name: 'name',
@@ -287,3 +321,33 @@ final testTVFromCache = TV.watchlist(
   posterPath: '/wXthtEN5kdWA1bHz03lkuCJS6hA.jpg',
   name: 'Spider-Man',
 );
+
+class FakeHomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: ListTile(
+      key: Key('fake_tile'),
+      onTap: () {
+        Navigator.pushNamed(context, '/second');
+      },
+      title: Text('This is FaAke'),
+      leading: Icon(Icons.check),
+    ));
+  }
+}
+
+class FakeTargetPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: ListTile(
+      key: Key('fake_second_tile'),
+      onTap: () {
+        Navigator.pop(context);
+      },
+      title: Text('This is FaAake'),
+      leading: Icon(Icons.check),
+    ));
+  }
+}

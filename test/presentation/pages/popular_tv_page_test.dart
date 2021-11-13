@@ -1,92 +1,154 @@
-import 'package:ditonton/common/state_enum.dart';
-import 'package:ditonton/domain/entities/tv.dart';
+import 'package:bloc_test/bloc_test.dart';
 import 'package:ditonton/presentation/bloc/popular_tv_bloc.dart';
 import 'package:ditonton/presentation/pages/popular_tv_page.dart';
+import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
+import 'package:mocktail/mocktail.dart';
+import '../../dummy_data/dummy_objects.dart';
 
-import 'popular_tv_page_test.mocks.dart';
+class FakeEvent extends Fake implements PopularTVEvent {}
 
-@GenerateMocks([PopularTVBloc])
+class FakeState extends Fake implements PopularTVState {}
+
+class MockBlocProvider extends MockBloc<PopularTVEvent, PopularTVState>
+    implements PopularTVBloc {}
+
 void main() {
-  late MockPopularTVNotifier mockNotifier;
+  late MockBlocProvider mockBloc;
+  late Widget widgetToTest;
 
   setUp(() {
-    mockNotifier = MockPopularTVNotifier();
+    registerFallbackValue(FakeEvent());
+    registerFallbackValue(FakeState());
+    mockBloc = MockBlocProvider();
+    widgetToTest = PopularTVPage();
   });
 
   Widget _makeTestableWidget(Widget body) {
-    return ChangeNotifierProvider<PopularTVNotifier>.value(
-      value: mockNotifier,
+    return BlocProvider<PopularTVBloc>(
+      create: (c) => mockBloc,
       child: MaterialApp(
         home: body,
       ),
     );
   }
 
+  Widget _makeAnotherTestableWidget(Widget body) {
+    return BlocProvider<PopularTVBloc>(create: (c) => mockBloc, child: body);
+  }
+
+  final routes = <String, WidgetBuilder>{
+    '/': (BuildContext context) => FakeHomePage(),
+    TVDetailPage.ROUTE_NAME: (BuildContext context) => FakeTargetPage(),
+    '/second': (BuildContext context) =>
+        _makeAnotherTestableWidget(widgetToTest),
+  };
+
   testWidgets('Page should display progress bar when loading',
       (WidgetTester tester) async {
-    when(mockNotifier.state).thenReturn(RequestState.Loading);
+    when(() => mockBloc.state).thenReturn(DataLoading());
 
     final progressBarFinder = find.byType(CircularProgressIndicator);
 
-    await tester.pumpWidget(_makeTestableWidget(PopularTVPage()));
+    await tester.pumpWidget(_makeTestableWidget(widgetToTest));
 
     expect(progressBarFinder, findsOneWidget);
   });
 
+  testWidgets('Page should go back when onBack tapped',
+      (WidgetTester tester) async {
+    when(() => mockBloc.state).thenReturn(DataAvailable([]));
+
+    await tester.pumpWidget(MaterialApp(routes: routes));
+    expect(find.byKey(Key('fake_tile')), findsOneWidget);
+
+    await tester.tap(find.byKey(Key('fake_tile')));
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 10));
+    await tester.pump(const Duration(milliseconds: 10));
+    await tester.pump(const Duration(milliseconds: 10));
+    await tester.pump(const Duration(seconds: 1));
+
+    final listViewFinder = find.byType(ListView);
+    expect(listViewFinder, findsOneWidget);
+    expect(find.byKey(Key('fake_tile')), findsNothing);
+
+    await tester.tap(find.byKey(Key('back_button')));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 10));
+    await tester.pump(const Duration(milliseconds: 10));
+    await tester.pump(const Duration(milliseconds: 10));
+    await tester.pump(const Duration(seconds: 1));
+    expect(listViewFinder, findsNothing);
+  });
+
   testWidgets('Page should display ListView when data is loaded',
       (WidgetTester tester) async {
-    when(mockNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockNotifier.tvList).thenReturn(<TV>[]);
+    when(() => mockBloc.state).thenReturn(DataAvailable([]));
 
     final listViewFinder = find.byType(ListView);
 
-    await tester.pumpWidget(_makeTestableWidget(PopularTVPage()));
+    await tester.pumpWidget(_makeTestableWidget(widgetToTest));
 
     expect(listViewFinder, findsOneWidget);
   });
 
   testWidgets('List View should show item card', (WidgetTester tester) async {
-    when(mockNotifier.state).thenReturn(RequestState.Loaded);
-    when(mockNotifier.tvList).thenReturn(<TV>[
-      TV(
-        backdropPath: '/4QNBIgt5fwgNCN3OSU6BTFv0NGR.jpg',
-        genreIds: [16, 10759],
-        id: 888,
-        name: 'Spider-Man',
-        overview:
-            'Bitten by a radioactive spider, Peter Parker develops spider-like superpowers. He uses these to fight crime while trying to balance it with the struggles of his personal life.',
-        popularity: 82.967,
-        posterPath: '/wXthtEN5kdWA1bHz03lkuCJS6hA.jpg',
-        firstAirDate: '1994-11-19',
-        originalName: 'Spider-Man',
-        originalLanguage: "en",
-        voteAverage: 8.3,
-        voteCount: 633,
-        originCountry: ["US"],
-      ),
-    ]);
-
-    await tester.pumpWidget(_makeTestableWidget(PopularTVPage()));
+    when(() => mockBloc.state).thenReturn(DataAvailable([testTV]));
+    await tester.pumpWidget(_makeTestableWidget(widgetToTest));
 
     final itemCardFinder = find.byType(ItemCard);
 
     expect(itemCardFinder, findsOneWidget);
   });
 
+  testWidgets('Tapping on itemCard should go to detail page',
+      (WidgetTester tester) async {
+    when(() => mockBloc.state).thenReturn(DataAvailable([testTV]));
+
+    await tester.pumpWidget(MaterialApp(
+      routes: routes,
+    ));
+
+    expect(find.byKey(Key('fake_tile')), findsOneWidget);
+
+    await tester.tap(find.byKey(Key('fake_tile')));
+    for (int i = 0; i < 3; i++) {
+      await tester.pump(Duration(seconds: 1));
+    }
+
+    final itemCardFinder = find.byType(ItemCard);
+    expect(itemCardFinder, findsOneWidget);
+    expect(find.byKey(Key('fake_tile')), findsNothing);
+
+    await tester.tap(find.byKey(Key('item_0')));
+    for (int i = 0; i < 100; i++) {
+      await tester.pump(Duration(milliseconds: 10));
+    }
+    expect(itemCardFinder, findsNothing);
+  });
   testWidgets('Page should display text with message when Error',
       (WidgetTester tester) async {
-    when(mockNotifier.state).thenReturn(RequestState.Error);
-    when(mockNotifier.message).thenReturn('Error message');
+    when(() => mockBloc.state).thenReturn(DataError('Error message'));
 
     final textFinder = find.byKey(Key('error_message'));
 
-    await tester.pumpWidget(_makeTestableWidget(PopularTVPage()));
+    await tester.pumpWidget(_makeTestableWidget(widgetToTest));
+
+    expect(textFinder, findsOneWidget);
+  });
+
+  testWidgets('Page should display text with message when Empty',
+      (WidgetTester tester) async {
+    when(() => mockBloc.state).thenReturn(DataEmpty());
+
+    await tester.pumpWidget(_makeTestableWidget(widgetToTest));
+
+    final textFinder = find.byKey(Key('empty_image'));
 
     expect(textFinder, findsOneWidget);
   });

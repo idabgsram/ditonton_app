@@ -7,6 +7,7 @@ import 'package:ditonton/presentation/pages/tv_episodes_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
 
 class TVSeasonsDetailPage extends StatefulWidget {
@@ -14,7 +15,9 @@ class TVSeasonsDetailPage extends StatefulWidget {
 
   final int id;
   final int seasonNumber;
-  TVSeasonsDetailPage({required this.id, required this.seasonNumber});
+  final BaseCacheManager? cacheManager;
+  TVSeasonsDetailPage(
+      {required this.id, required this.seasonNumber, this.cacheManager});
 
   @override
   _TVSeasonsDetailPageState createState() => _TVSeasonsDetailPageState();
@@ -41,8 +44,9 @@ class _TVSeasonsDetailPageState extends State<TVSeasonsDetailPage> {
           } else if (state is DataAvailable) {
             final tvSeasonsData = state.result;
             return SafeArea(
-              child:
-                  DetailContent(tvSeasonsData, widget.id, widget.seasonNumber),
+              child: DetailContent(
+                  tvSeasonsData, widget.id, widget.seasonNumber,
+                  cacheManager: widget.cacheManager),
             );
           } else if (state is DataError) {
             return Text(state.message, key: Key('provider_message'));
@@ -61,8 +65,10 @@ class _TVSeasonsDetailPageState extends State<TVSeasonsDetailPage> {
 class DetailContent extends StatelessWidget {
   final TVSeasons tvSeasonsData;
   final int tvId, seasonNumber;
+  final BaseCacheManager? cacheManager;
 
-  DetailContent(this.tvSeasonsData, this.tvId, this.seasonNumber);
+  DetailContent(this.tvSeasonsData, this.tvId, this.seasonNumber,
+      {this.cacheManager});
 
   @override
   Widget build(BuildContext context) {
@@ -72,13 +78,16 @@ class DetailContent extends StatelessWidget {
         ? Stack(
             children: [
               CachedNetworkImage(
+                key: Key('cached_image_poster'),
+                cacheManager: cacheManager,
                 imageUrl:
                     'https://image.tmdb.org/t/p/w500${tvSeasonsData.posterPath}',
                 width: screenWidth,
                 placeholder: (context, url) => Center(
                   child: CircularProgressIndicator(),
                 ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+                errorWidget: (context, url, error) =>
+                    Icon(Icons.error, key: Key('cached_image_poster_error')),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 48 + 8),
@@ -122,6 +131,7 @@ class DetailContent extends StatelessWidget {
                   backgroundColor: kRichBlack,
                   foregroundColor: Colors.white,
                   child: IconButton(
+                    key: Key('back_button'),
                     icon: Icon(Icons.arrow_back),
                     onPressed: () {
                       Navigator.pop(context);
@@ -134,6 +144,7 @@ class DetailContent extends StatelessWidget {
         : Scaffold(
             appBar: AppBar(
               leading: IconButton(
+                key: Key('back_button_no_poster'),
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.pop(context);
@@ -216,6 +227,7 @@ class DetailContent extends StatelessWidget {
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         child: InkWell(
+          key: Key('episodes_item_tap'),
           onTap: () {
             Navigator.pushNamed(
               context,
@@ -239,6 +251,8 @@ class DetailContent extends StatelessWidget {
                 child: Row(children: [
                   ClipRRect(
                     child: CachedNetworkImage(
+                      key: Key('cached_image_crew'),
+                      cacheManager: cacheManager,
                       imageUrl: episodeData.stillPath != null
                           ? '$BASE_IMAGE_URL${episodeData.stillPath}'
                           : '$NO_IMAGE_URL',
@@ -247,6 +261,7 @@ class DetailContent extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       ),
                       errorWidget: (context, url, error) => Container(
+                          key: Key('cached_image_crew_error'),
                           height: 120,
                           color: Colors.black38,
                           child: Icon(Icons.error)),

@@ -6,14 +6,19 @@ import 'package:ditonton/presentation/bloc/tv_episodes_detail_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:provider/provider.dart';
 
 class TVEpisodesDetailPage extends StatefulWidget {
   static const ROUTE_NAME = '/tv-shows/seasons/episodes/detail';
 
   final int id, seasonNumber, epsNumber;
+  final BaseCacheManager? cacheManager;
   TVEpisodesDetailPage(
-      {required this.id, required this.seasonNumber, required this.epsNumber});
+      {required this.id,
+      required this.seasonNumber,
+      required this.epsNumber,
+      this.cacheManager});
 
   @override
   _TVEpisodesDetailPageState createState() => _TVEpisodesDetailPageState();
@@ -40,7 +45,8 @@ class _TVEpisodesDetailPageState extends State<TVEpisodesDetailPage> {
           } else if (state is DataAvailable) {
             final tvEpisodesData = state.result;
             return SafeArea(
-              child: DetailContent(tvEpisodesData),
+              child: DetailContent(tvEpisodesData,
+                  cacheManager: widget.cacheManager),
             );
           } else if (state is DataError) {
             return Text(state.message, key: Key('provider_message'));
@@ -58,10 +64,9 @@ class _TVEpisodesDetailPageState extends State<TVEpisodesDetailPage> {
 
 class DetailContent extends StatelessWidget {
   final TVEpisodes tvEpisodesData;
+  final BaseCacheManager? cacheManager;
 
-  DetailContent(
-    this.tvEpisodesData,
-  );
+  DetailContent(this.tvEpisodesData, {this.cacheManager});
 
   @override
   Widget build(BuildContext context) {
@@ -71,13 +76,16 @@ class DetailContent extends StatelessWidget {
         ? Stack(
             children: [
               CachedNetworkImage(
+                key: Key('cached_image_poster'),
+                cacheManager: cacheManager,
                 imageUrl:
                     'https://image.tmdb.org/t/p/w500${tvEpisodesData.stillPath}',
                 width: screenWidth,
                 placeholder: (context, url) => Center(
                   child: CircularProgressIndicator(),
                 ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+                errorWidget: (context, url, error) =>
+                    Icon(Icons.error, key: Key('cached_image_poster_error')),
               ),
               Container(
                 margin: const EdgeInsets.only(top: 48 + 8),
@@ -121,6 +129,7 @@ class DetailContent extends StatelessWidget {
                   backgroundColor: kRichBlack,
                   foregroundColor: Colors.white,
                   child: IconButton(
+                    key: Key('back_button'),
                     icon: Icon(Icons.arrow_back),
                     onPressed: () {
                       Navigator.pop(context);
@@ -133,6 +142,7 @@ class DetailContent extends StatelessWidget {
         : Scaffold(
             appBar: AppBar(
               leading: IconButton(
+                key: Key('back_button_no_poster'),
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
                   Navigator.pop(context);
@@ -282,6 +292,8 @@ class DetailContent extends StatelessWidget {
               ),
               child: ClipRRect(
                 child: CachedNetworkImage(
+                  key: Key('cached_image_crew'),
+                  cacheManager: cacheManager,
                   imageUrl: crewData.profilePath != null
                       ? '$BASE_IMAGE_URL${crewData.profilePath}'
                       : '$NO_IMAGE_URL',
@@ -290,6 +302,7 @@ class DetailContent extends StatelessWidget {
                     child: CircularProgressIndicator(),
                   ),
                   errorWidget: (context, url, error) => Container(
+                      key: Key('cached_image_crew_error'),
                       height: 120,
                       color: Colors.black38,
                       child: Icon(Icons.error)),

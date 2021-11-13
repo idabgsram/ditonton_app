@@ -72,6 +72,7 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
       builder: (context, state) {
         if (state is DataLoading) {
           return Center(
+            key: Key('loading_indicator'),
             child: CircularProgressIndicator(),
           );
         } else if (state is DataAvailable) {
@@ -91,12 +92,13 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
                       movie,
                       isMovies: true,
                       onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        MovieDetailPage.ROUTE_NAME,
-                        arguments: movie.id,
-                      );
-                    },
+                        Navigator.pushNamed(
+                          context,
+                          MovieDetailPage.ROUTE_NAME,
+                          arguments: movie.id,
+                        );
+                      },
+                      key: Key('item_$index'),
                     );
                   },
                   itemCount: state.result.length,
@@ -118,10 +120,11 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
 
   Widget _buildTVsBody() {
     return BlocBuilder<WatchlistTVBloc, WatchlistTVState>(
-      key: Key('consumer_tv'),
+      key: Key('bloc_tv'),
       builder: (context, state) {
         if (state is DataTVLoading) {
           return Center(
+            key: Key('loading_tv_indicator'),
             child: CircularProgressIndicator(),
           );
         } else if (state is DataTVAvailable) {
@@ -137,25 +140,28 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
               : ListView.builder(
                   itemBuilder: (context, index) {
                     final tv = state.tvResult[index];
-                    return ItemCard(tv,
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        TVDetailPage.ROUTE_NAME,
-                        arguments: tv.id,
-                      );
-                    },);
+                    return ItemCard(
+                      tv,
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          TVDetailPage.ROUTE_NAME,
+                          arguments: tv.id,
+                        );
+                      },
+                      key: Key('item_tv_$index'),
+                    );
                   },
                   itemCount: state.tvResult.length,
                 );
         } else if (state is DataTVError) {
           return Center(
-            key: Key('error_message'),
+            key: Key('error_tv_message'),
             child: Text(state.tvMessage),
           );
         } else {
           return Center(
-            key: Key('empty_image'),
+            key: Key('empty_tv_image'),
             child: Text('Empty'),
           );
         }

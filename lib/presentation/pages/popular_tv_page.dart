@@ -54,6 +54,7 @@ class _PopularTVPageState extends State<PopularTVPage> {
                         arguments: tv.id,
                       );
                     },
+                    key: Key('item_$index'),
                   );
                 },
                 itemCount: state.result.length,

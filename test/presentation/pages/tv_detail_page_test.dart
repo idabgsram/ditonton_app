@@ -1,3 +1,4 @@
+import 'package:bloc_test/bloc_test.dart';
 import 'package:ditonton/common/state_enum.dart';
 import 'package:ditonton/domain/entities/tv.dart';
 import 'package:ditonton/presentation/bloc/tv_detail_bloc.dart';
@@ -5,28 +6,82 @@ import 'package:ditonton/presentation/bloc/tv_detail_recommendations_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv_detail_watchlist_bloc.dart';
 import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:provider/provider.dart';
 
 import '../../dummy_data/dummy_objects.dart';
-import 'tv_detail_page_test.mocks.dart';
 
-@GenerateMocks([TVDetailBloc, TVDetailRecommendationsBloc, TVDetailWatchlistBloc])
+class FakeDetailEvent extends Fake implements TVDetailEvent {}
+
+class FakeRecommendationsEvent extends Fake
+    implements TVDetailRecommendationsEvent {}
+
+class FakeWatchlistEvent extends Fake implements TVDetailWatchlistEvent {}
+
+class FakeDetailState extends Fake implements TVDetailState {}
+
+class FakeRecommendationsState extends Fake
+    implements TVDetailRecommendationsState {}
+
+class FakeWatchlistState extends Fake implements TVDetailWatchlistState {}
+
+class MockBlocProvider extends MockBloc<TVDetailEvent, TVDetailState>
+    implements TVDetailBloc {}
+
+class MockRecommendationsBlocProvider
+    extends MockBloc<TVDetailRecommendationsEvent, TVDetailRecommendationsState>
+    implements TVDetailRecommendationsBloc {}
+
+class MockWatchlistBlocProvider
+    extends MockBloc<TVDetailWatchlistEvent, TVDetailWatchlistState>
+    implements TVDetailWatchlistBloc {}
+
 void main() {
-  late MockTVDetailNotifier mockNotifier;
+  late MockBlocProvider detailBloc;
+  late MockRecommendationsBlocProvider recommendationsBloc;
+  late MockWatchlistBlocProvider watchlistBloc;
+  late Widget widgetToTest;
+
+  final tId = 1;
 
   setUp(() {
-    mockNotifier = MockTVDetailNotifier();
+    registerFallbackValue(FakeDetailEvent());
+    registerFallbackValue(FakeRecommendationsEvent());
+    registerFallbackValue(FakeWatchlistEvent());
+    registerFallbackValue(FakeDetailState());
+    registerFallbackValue(FakeRecommendationsState());
+    registerFallbackValue(FakeWatchlistState());
+    detailBloc = MockBlocProvider();
+    recommendationsBloc = MockRecommendationsBlocProvider();
+    watchlistBloc = MockWatchlistBlocProvider();
+    widgetToTest = TVDetailPage(id: tId);
   });
 
   Widget _makeTestableWidget(Widget body) {
-    return ChangeNotifierProvider<TVDetailNotifier>.value(
-      value: mockNotifier,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TVDetailBloc>(create: (c) => detailBloc),
+        BlocProvider<TVDetailRecommendationsBloc>(
+            create: (c) => recommendationsBloc),
+        BlocProvider<TVDetailWatchlistBloc>(create: (c) => watchlistBloc)
+      ],
       child: MaterialApp(
         home: body,
       ),
+    );
+  }
+
+  Widget _makeAnotherTestableWidget(Widget body) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<TVDetailBloc>(create: (c) => detailBloc),
+        BlocProvider<TVDetailRecommendationsBloc>(
+            create: (c) => recommendationsBloc),
+        BlocProvider<TVDetailWatchlistBloc>(create: (c) => watchlistBloc)
+      ],
+      child: body,
     );
   }
 

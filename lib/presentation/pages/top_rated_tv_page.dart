@@ -24,6 +24,13 @@ class _TopRatedTVPageState extends State<TopRatedTVPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Top Rated TV'),
+        leading: IconButton(
+          key: Key('back_button'),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -37,13 +44,17 @@ class _TopRatedTVPageState extends State<TopRatedTVPage> {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final tv = state.result[index];
-                  return ItemCard(tv,onTap: () {
+                  return ItemCard(
+                    tv,
+                    onTap: () {
                       Navigator.pushNamed(
                         context,
                         TVDetailPage.ROUTE_NAME,
                         arguments: tv.id,
                       );
-                    },);
+                    },
+                    key: Key('item_$index'),
+                  );
                 },
                 itemCount: state.result.length,
               );

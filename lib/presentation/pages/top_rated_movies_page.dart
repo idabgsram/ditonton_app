@@ -24,6 +24,13 @@ class _TopRatedMoviesPageState extends State<TopRatedMoviesPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Top Rated Movies'),
+        leading: IconButton(
+          key: Key('back_button'),
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -47,6 +54,7 @@ class _TopRatedMoviesPageState extends State<TopRatedMoviesPage> {
                         arguments: movie.id,
                       );
                     },
+                    key: Key('item_$index'),
                   );
                 },
                 itemCount: state.result.length,

@@ -55,6 +55,7 @@ class _PopularMoviesPageState extends State<PopularMoviesPage> {
                         arguments: movie.id,
                       );
                     },
+                    key: Key('item_$index'),
                   );
                 },
                 itemCount: state.result.length,
