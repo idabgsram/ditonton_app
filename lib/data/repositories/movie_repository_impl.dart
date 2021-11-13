@@ -24,18 +24,19 @@ class MovieRepositoryImpl implements MovieRepository {
 
   @override
   Future<Either<Failure, List<Movie>>> getNowPlayingMovies() async {
-if (await networkInfo.isConnected) {
+    if (await networkInfo.isConnected) {
       try {
         final result = await remoteDataSource.getNowPlayingMovies();
-        localDataSource.cacheNowPlayingMovies(
-            result.map((movie) => MovieTable.fromDTO(movie)).toList());
+        localDataSource.cacheMovies(
+            result.map((movie) => MovieTable.fromDTO(movie)).toList(),
+            'nowplaying');
         return Right(result.map((model) => model.toEntity()).toList());
       } on ServerException {
         return Left(ServerFailure(''));
       }
     } else {
       try {
-        final result = await localDataSource.getCachedNowPlayingMovies();
+        final result = await localDataSource.getCachedMovies('nowplaying');
         return Right(result.map((model) => model.toEntity()).toList());
       } on CacheException catch (e) {
         return Left(CacheFailure(e.message));
@@ -69,25 +70,45 @@ if (await networkInfo.isConnected) {
 
   @override
   Future<Either<Failure, List<Movie>>> getPopularMovies() async {
-    try {
-      final result = await remoteDataSource.getPopularMovies();
-      return Right(result.map((model) => model.toEntity()).toList());
-    } on ServerException {
-      return Left(ServerFailure(''));
-    } on SocketException {
-      return Left(ConnectionFailure('Failed to connect to the network'));
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDataSource.getPopularMovies();
+        localDataSource.cacheMovies(
+            result.map((movie) => MovieTable.fromDTO(movie)).toList(),
+            'popular');
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on ServerException {
+        return Left(ServerFailure(''));
+      }
+    } else {
+      try {
+        final result = await localDataSource.getCachedMovies('popular');
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on CacheException catch (e) {
+        return Left(CacheFailure(e.message));
+      }
     }
   }
 
   @override
   Future<Either<Failure, List<Movie>>> getTopRatedMovies() async {
-    try {
-      final result = await remoteDataSource.getTopRatedMovies();
-      return Right(result.map((model) => model.toEntity()).toList());
-    } on ServerException {
-      return Left(ServerFailure(''));
-    } on SocketException {
-      return Left(ConnectionFailure('Failed to connect to the network'));
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDataSource.getTopRatedMovies();
+        localDataSource.cacheMovies(
+            result.map((movie) => MovieTable.fromDTO(movie)).toList(),
+            'toprated');
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on ServerException {
+        return Left(ServerFailure(''));
+      }
+    } else {
+      try {
+        final result = await localDataSource.getCachedMovies('toprated');
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on CacheException catch (e) {
+        return Left(CacheFailure(e.message));
+      }
     }
   }
 

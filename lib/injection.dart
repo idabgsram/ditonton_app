@@ -55,9 +55,7 @@ import 'package:ditonton/presentation/bloc/tv_episodes_detail_bloc.dart';
 import 'package:ditonton/presentation/bloc/tv_seasons_detail_bloc.dart';
 import 'package:ditonton/presentation/bloc/watchlist_movies_bloc.dart';
 import 'package:ditonton/presentation/bloc/watchlist_tv_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:get_it/get_it.dart';
-import 'package:http/io_client.dart';
 
 final locator = GetIt.instance;
 
@@ -222,6 +220,7 @@ void init() {
     () => TVRepositoryImpl(
       remoteDataSource: locator(),
       localDataSource: locator(),
+      networkInfo: locator()
     ),
   );
 

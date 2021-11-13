@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:ditonton/common/network_info.dart';
 import 'package:ditonton/data/datasources/tv_local_data_source.dart';
 import 'package:ditonton/data/datasources/tv_remote_data_source.dart';
 import 'package:ditonton/data/models/tv_table.dart';
@@ -15,21 +16,33 @@ import 'package:ditonton/common/failure.dart';
 class TVRepositoryImpl implements TVRepository {
   final TVRemoteDataSource remoteDataSource;
   final TVLocalDataSource localDataSource;
+  final NetworkInfo networkInfo;
 
   TVRepositoryImpl({
     required this.remoteDataSource,
     required this.localDataSource,
+    required this.networkInfo,
   });
 
   @override
   Future<Either<Failure, List<TV>>> getOnTheAirTVs() async {
-    try {
-      final result = await remoteDataSource.getOnTheAirTV();
-      return Right(result.map((model) => model.toEntity()).toList());
-    } on ServerException {
-      return Left(ServerFailure(''));
-    } on SocketException {
-      return Left(ConnectionFailure('Failed to connect to the network'));
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDataSource.getOnTheAirTV();
+        localDataSource.cacheTVs(
+            result.map((movie) => TVTable.fromDTO(movie)).toList(),
+            'ota');
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on ServerException {
+        return Left(ServerFailure(''));
+      }
+    } else {
+      try {
+        final result = await localDataSource.getCachedTVs('ota');
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on CacheException catch (e) {
+        return Left(CacheFailure(e.message));
+      }
     }
   }
 
@@ -59,25 +72,43 @@ class TVRepositoryImpl implements TVRepository {
 
   @override
   Future<Either<Failure, List<TV>>> getPopularTVs() async {
-    try {
-      final result = await remoteDataSource.getPopularTV();
-      return Right(result.map((model) => model.toEntity()).toList());
-    } on ServerException {
-      return Left(ServerFailure(''));
-    } on SocketException {
-      return Left(ConnectionFailure('Failed to connect to the network'));
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDataSource.getPopularTV();
+        localDataSource.cacheTVs(
+            result.map((movie) => TVTable.fromDTO(movie)).toList(), 'popular');
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on ServerException {
+        return Left(ServerFailure(''));
+      }
+    } else {
+      try {
+        final result = await localDataSource.getCachedTVs('popular');
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on CacheException catch (e) {
+        return Left(CacheFailure(e.message));
+      }
     }
   }
 
   @override
   Future<Either<Failure, List<TV>>> getTopRatedTVs() async {
-    try {
-      final result = await remoteDataSource.getTopRatedTV();
-      return Right(result.map((model) => model.toEntity()).toList());
-    } on ServerException {
-      return Left(ServerFailure(''));
-    } on SocketException {
-      return Left(ConnectionFailure('Failed to connect to the network'));
+    if (await networkInfo.isConnected) {
+      try {
+        final result = await remoteDataSource.getTopRatedTV();
+        localDataSource.cacheTVs(
+            result.map((movie) => TVTable.fromDTO(movie)).toList(), 'toprated');
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on ServerException {
+        return Left(ServerFailure(''));
+      }
+    } else {
+      try {
+        final result = await localDataSource.getCachedTVs('toprated');
+        return Right(result.map((model) => model.toEntity()).toList());
+      } on CacheException catch (e) {
+        return Left(CacheFailure(e.message));
+      }
     }
   }
 
