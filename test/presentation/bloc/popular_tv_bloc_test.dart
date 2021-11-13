@@ -40,6 +40,7 @@ void main() {
 
   test('initial state should be empty', () {
     expect(bloc.state, DataEmpty());
+    expect(FetchData().props, []);
   });
 
   blocTest<PopularTVBloc, PopularTVState>(

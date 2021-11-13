@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:ditonton/common/connection.dart';
 import 'package:ditonton/data/datasources/tv_remote_data_source.dart';
 import 'package:ditonton/common/exception.dart';
 import 'package:ditonton/data/models/tv_detail_model.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 
+import '../../helpers/test_helper.mocks.dart';
 import '../../json_reader.dart';
 
 void main() {
@@ -18,11 +18,11 @@ void main() {
   const BASE_URL = 'https://api.themoviedb.org/3';
 
   late TVRemoteDataSourceImpl dataSource;
-  late Connection mockHttpClient;
+  late MockHttpClient mockHttpClient;
 
   setUp(() {
-    mockHttpClient = Connection();
-    dataSource = TVRemoteDataSourceImpl();
+    mockHttpClient = MockHttpClient();
+    dataSource = TVRemoteDataSourceImpl(client:mockHttpClient);
   });
 
   group('get On The Air TVs', () {

@@ -25,6 +25,8 @@ void main() {
 
   test('initial state should be empty', () {
     expect(searchBloc.state, SearchEmpty());
+    expect(OnQueryChanged('').props, ['']);
+    expect(OnRefreshChanged('Movies').props, ['Movies']);
   });
 
   final tMovieModel = Movie(

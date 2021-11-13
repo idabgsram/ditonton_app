@@ -4,10 +4,14 @@ import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../utils/fake_cache_manager.dart';
+
 void main() {
   late Movie movieData;
+  late FakeCacheManager cacheManager;
 
   setUp(() {
+    cacheManager = FakeCacheManager();
     movieData = Movie(
       adult: false,
       backdropPath: '/muth4OYamXf41G2evdrLEg8d3om.jpg',
@@ -24,6 +28,11 @@ void main() {
       voteAverage: 7.2,
       voteCount: 13507,
     );
+  });
+
+  tearDown(() {
+    PaintingBinding.instance?.imageCache?.clear();
+    PaintingBinding.instance?.imageCache?.clearLiveImages();
   });
 
   Widget _makeTestableWidget(Widget body) {
@@ -43,9 +52,28 @@ void main() {
     await tester.pumpWidget(_makeTestableWidget(ItemCard(
       movieData,
       isMovies: true,
+      cacheManager: cacheManager,
     )));
     final textFinder = find.text('Spider-Man');
     expect(textFinder, findsOneWidget);
     expect(cardFinder, findsOneWidget);
+  });
+
+  testWidgets('Check if ItemCard on error should show error image', (WidgetTester tester) async {
+    cacheManager.throwsNotFound('http://somerandomaddress.com');
+    final cardFinder = find.byType(Card);
+    await tester.pumpWidget(_makeTestableWidget(ItemCard(
+      movieData,
+      isMovies: true,
+      cacheManager: cacheManager,
+    )));
+    await tester.pumpAndSettle();
+    final textFinder = find.text('Spider-Man');
+    final errorFinder = find.byType(Icon);
+    final errorKeyFinder = find.byKey(Key('error_icon'));
+    expect(textFinder, findsOneWidget);
+    expect(cardFinder, findsOneWidget);
+    expect(errorFinder, findsOneWidget);
+    expect(errorKeyFinder, findsOneWidget);
   });
 }

@@ -40,7 +40,9 @@ void main() {
 
   test('initial state should be empty', () {
     expect(bloc.state, DataEmpty());
+    expect(FetchData().props, []);
   });
+
 
   blocTest<PopularMoviesBloc, PopularMoviesState>(
     'Should emit [Loading, HasData] when data is gotten successfully',

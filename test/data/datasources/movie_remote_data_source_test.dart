@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:ditonton/common/connection.dart';
 import 'package:ditonton/data/datasources/movie_remote_data_source.dart';
 import 'package:ditonton/data/models/movie_detail_model.dart';
 import 'package:ditonton/data/models/movie_response.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 
+import '../../helpers/test_helper.mocks.dart';
 import '../../json_reader.dart';
 
 void main() {
@@ -16,11 +16,11 @@ void main() {
   const BASE_URL = 'https://api.themoviedb.org/3';
 
   late MovieRemoteDataSourceImpl dataSource;
-  late Connection mockHttpClient;
+  late MockHttpClient mockHttpClient;
 
   setUp(() {
-    mockHttpClient = Connection();
-    dataSource = MovieRemoteDataSourceImpl();
+    mockHttpClient = MockHttpClient();
+    dataSource = MovieRemoteDataSourceImpl(client: mockHttpClient);
   });
 
   group('get Now Playing Movies', () {
