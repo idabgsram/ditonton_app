@@ -2,9 +2,6 @@ part of 'tv_episodes_detail_bloc.dart';
 
 abstract class TVEpisodesDetailEvent extends Equatable {
   const TVEpisodesDetailEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
 class FetchData extends TVEpisodesDetailEvent {

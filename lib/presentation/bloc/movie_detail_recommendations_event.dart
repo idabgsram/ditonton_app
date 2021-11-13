@@ -2,9 +2,6 @@ part of 'movie_detail_recommendations_bloc.dart';
 
 abstract class MovieDetailRecommendationsEvent extends Equatable {
   const MovieDetailRecommendationsEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
 class FetchRecommendationsData extends MovieDetailRecommendationsEvent {

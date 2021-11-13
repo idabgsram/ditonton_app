@@ -1,4 +1,5 @@
 import 'package:ditonton/presentation/bloc/top_rated_tv_bloc.dart';
+import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +37,13 @@ class _TopRatedTVPageState extends State<TopRatedTVPage> {
               return ListView.builder(
                 itemBuilder: (context, index) {
                   final tv = state.result[index];
-                  return ItemCard(tv);
+                  return ItemCard(tv,onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        TVDetailPage.ROUTE_NAME,
+                        arguments: tv.id,
+                      );
+                    },);
                 },
                 itemCount: state.result.length,
               );

@@ -2,6 +2,8 @@ import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/common/utils.dart';
 import 'package:ditonton/presentation/bloc/watchlist_movies_bloc.dart';
 import 'package:ditonton/presentation/bloc/watchlist_tv_bloc.dart';
+import 'package:ditonton/presentation/pages/movie_detail_page.dart';
+import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -88,6 +90,13 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
                     return ItemCard(
                       movie,
                       isMovies: true,
+                      onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        MovieDetailPage.ROUTE_NAME,
+                        arguments: movie.id,
+                      );
+                    },
                     );
                   },
                   itemCount: state.result.length,
@@ -128,7 +137,14 @@ class _WatchlistPageState extends State<WatchlistPage> with RouteAware {
               : ListView.builder(
                   itemBuilder: (context, index) {
                     final tv = state.tvResult[index];
-                    return ItemCard(tv);
+                    return ItemCard(tv,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        TVDetailPage.ROUTE_NAME,
+                        arguments: tv.id,
+                      );
+                    },);
                   },
                   itemCount: state.tvResult.length,
                 );

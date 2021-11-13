@@ -1,6 +1,8 @@
 import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/presentation/bloc/search_bloc.dart';
 import 'package:ditonton/presentation/bloc/search_type_bloc.dart';
+import 'package:ditonton/presentation/pages/movie_detail_page.dart';
+import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -94,6 +96,15 @@ class SearchPage extends StatelessWidget {
                                       final item = result[index];
                                       return ItemCard(
                                         item,
+                                        onTap: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            searchType.type == 'Movies'
+                                                ? MovieDetailPage.ROUTE_NAME
+                                                : TVDetailPage.ROUTE_NAME,
+                                            arguments: item.id,
+                                          );
+                                        },
                                         isMovies: searchType.type ==
                                             'Movies', //data.isMovies,
                                       );

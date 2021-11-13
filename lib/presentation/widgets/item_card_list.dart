@@ -3,25 +3,22 @@ import 'package:ditonton/common/constants.dart';
 import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/pages/tv_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class ItemCard extends StatelessWidget {
   final dynamic item;
   final bool isMovies;
+  final Function()? onTap;
+  final BaseCacheManager? cacheManager;
 
-  ItemCard(this.item, {this.isMovies = false});
+  ItemCard(this.item, {this.onTap, this.isMovies = false, this.cacheManager});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: InkWell(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            isMovies ? MovieDetailPage.ROUTE_NAME : TVDetailPage.ROUTE_NAME,
-            arguments: item.id,
-          );
-        },
+        onTap: onTap,
         child: Stack(
           alignment: Alignment.bottomLeft,
           children: [
@@ -66,7 +63,8 @@ class ItemCard extends StatelessWidget {
                   placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),
                   ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  cacheManager: cacheManager,
+                  errorWidget: (context, url, error) => Icon(Icons.error, key: Key('error_icon')),
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(8)),
               ),

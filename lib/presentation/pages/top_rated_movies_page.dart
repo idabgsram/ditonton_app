@@ -1,4 +1,5 @@
 import 'package:ditonton/presentation/bloc/top_rated_movies_bloc.dart';
+import 'package:ditonton/presentation/pages/movie_detail_page.dart';
 import 'package:ditonton/presentation/widgets/item_card_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,13 @@ class _TopRatedMoviesPageState extends State<TopRatedMoviesPage> {
                   return ItemCard(
                     movie,
                     isMovies: true,
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        MovieDetailPage.ROUTE_NAME,
+                        arguments: movie.id,
+                      );
+                    },
                   );
                 },
                 itemCount: state.result.length,
