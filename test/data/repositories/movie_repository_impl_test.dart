@@ -110,7 +110,7 @@ void main() {
         await repository.getNowPlayingMovies();
         // assert
         verify(mockRemoteDataSource.getNowPlayingMovies());
-        verify(mockLocalDataSource.cacheNowPlayingMovies([testMovieCache]));
+        verify(mockLocalDataSource.cacheMovies([testMovieCache],'nowplaying'));
       });
 
       test(
@@ -134,105 +134,204 @@ void main() {
 
       test('should return cached data when device is offline', () async {
         // arrange
-        when(mockLocalDataSource.getCachedNowPlayingMovies())
+        when(mockLocalDataSource.getCachedMovies('nowplaying'))
             .thenAnswer((_) async => [testMovieCache]);
         // act
         final result = await repository.getNowPlayingMovies();
         // assert
-        verify(mockLocalDataSource.getCachedNowPlayingMovies());
+        verify(mockLocalDataSource.getCachedMovies('nowplaying'));
         final resultList = result.getOrElse(() => []);
         expect(resultList, [testMovieFromCache]);
       });
 
       test('should return CacheFailure when app has no cache', () async {
         // arrange
-        when(mockLocalDataSource.getCachedNowPlayingMovies())
+        when(mockLocalDataSource.getCachedMovies('nowplaying'))
             .thenThrow(CacheException('No Cache'));
         // act
         final result = await repository.getNowPlayingMovies();
         // assert
-        verify(mockLocalDataSource.getCachedNowPlayingMovies());
+        verify(mockLocalDataSource.getCachedMovies('nowplaying'));
         expect(result, Left(CacheFailure('No Cache')));
       });
     });
   });
 
   group('Popular Movies', () {
-    test('should return movie list when call to data source is success',
-        () async {
+ test('should check if the device is online', () async {
       // arrange
+      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       when(mockRemoteDataSource.getPopularMovies())
-          .thenAnswer((_) async => tMovieModelList);
+          .thenAnswer((_) async => []);
       // act
-      final result = await repository.getPopularMovies();
+      await repository.getPopularMovies();
       // assert
-      /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
-      final resultList = result.getOrElse(() => []);
-      expect(resultList, tMovieList);
+      verify(mockNetworkInfo.isConnected);
     });
 
-    test(
-        'should return server failure when call to data source is unsuccessful',
-        () async {
-      // arrange
-      when(mockRemoteDataSource.getPopularMovies())
-          .thenThrow(ServerException());
-      // act
-      final result = await repository.getPopularMovies();
-      // assert
-      expect(result, Left(ServerFailure('')));
+    group('when device is online', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
+
+      test(
+          'should return remote data when the call to remote data source is successful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getPopularMovies())
+            .thenAnswer((_) async => tMovieModelList);
+        // act
+        final result = await repository.getPopularMovies();
+        // assert
+        verify(mockRemoteDataSource.getPopularMovies());
+        /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
+        final resultList = result.getOrElse(() => []);
+        expect(resultList, tMovieList);
+      });
+
+      test(
+          'should cache data locally when the call to remote data source is successful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getPopularMovies())
+            .thenAnswer((_) async => tMovieModelList);
+        // act
+        await repository.getPopularMovies();
+        // assert
+        verify(mockRemoteDataSource.getPopularMovies());
+        verify(mockLocalDataSource.cacheMovies([testMovieCache],'popular'));
+      });
+
+      test(
+          'should return server failure when the call to remote data source is unsuccessful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getPopularMovies())
+            .thenThrow(ServerException());
+        // act
+        final result = await repository.getPopularMovies();
+        // assert
+        verify(mockRemoteDataSource.getPopularMovies());
+        expect(result, equals(Left(ServerFailure(''))));
+      });
     });
 
-    test(
-        'should return connection failure when device is not connected to the internet',
-        () async {
-      // arrange
-      when(mockRemoteDataSource.getPopularMovies())
-          .thenThrow(SocketException('Failed to connect to the network'));
-      // act
-      final result = await repository.getPopularMovies();
-      // assert
-      expect(
-          result, Left(ConnectionFailure('Failed to connect to the network')));
+    group('when device is offline', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+
+      test('should return cached data when device is offline', () async {
+        // arrange
+        when(mockLocalDataSource.getCachedMovies('popular'))
+            .thenAnswer((_) async => [testMovieCache]);
+        // act
+        final result = await repository.getPopularMovies();
+        // assert
+        verify(mockLocalDataSource.getCachedMovies('popular'));
+        final resultList = result.getOrElse(() => []);
+        expect(resultList, [testMovieFromCache]);
+      });
+
+      test('should return CacheFailure when app has no cache', () async {
+        // arrange
+        when(mockLocalDataSource.getCachedMovies('popular'))
+            .thenThrow(CacheException('No Cache'));
+        // act
+        final result = await repository.getPopularMovies();
+        // assert
+        verify(mockLocalDataSource.getCachedMovies('popular'));
+        expect(result, Left(CacheFailure('No Cache')));
+      });
     });
   });
 
   group('Top Rated Movies', () {
-    test('should return movie list when call to data source is successful',
-        () async {
+     test('should check if the device is online', () async {
       // arrange
+      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       when(mockRemoteDataSource.getTopRatedMovies())
-          .thenAnswer((_) async => tMovieModelList);
+          .thenAnswer((_) async => []);
       // act
-      final result = await repository.getTopRatedMovies();
+      await repository.getTopRatedMovies();
       // assert
-      /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
-      final resultList = result.getOrElse(() => []);
-      expect(resultList, tMovieList);
+      verify(mockNetworkInfo.isConnected);
     });
 
-    test('should return ServerFailure when call to data source is unsuccessful',
-        () async {
-      // arrange
-      when(mockRemoteDataSource.getTopRatedMovies())
-          .thenThrow(ServerException());
-      // act
-      final result = await repository.getTopRatedMovies();
-      // assert
-      expect(result, Left(ServerFailure('')));
+    group('when device is online', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
+
+      test(
+          'should return remote data when the call to remote data source is successful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getTopRatedMovies())
+            .thenAnswer((_) async => tMovieModelList);
+        // act
+        final result = await repository.getTopRatedMovies();
+        // assert
+        verify(mockRemoteDataSource.getTopRatedMovies());
+        /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
+        final resultList = result.getOrElse(() => []);
+        expect(resultList, tMovieList);
+      });
+
+      test(
+          'should cache data locally when the call to remote data source is successful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getTopRatedMovies())
+            .thenAnswer((_) async => tMovieModelList);
+        // act
+        await repository.getTopRatedMovies();
+        // assert
+        verify(mockRemoteDataSource.getTopRatedMovies());
+        verify(mockLocalDataSource.cacheMovies([testMovieCache],'toprated'));
+      });
+
+      test(
+          'should return server failure when the call to remote data source is unsuccessful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getTopRatedMovies())
+            .thenThrow(ServerException());
+        // act
+        final result = await repository.getTopRatedMovies();
+        // assert
+        verify(mockRemoteDataSource.getTopRatedMovies());
+        expect(result, equals(Left(ServerFailure(''))));
+      });
     });
 
-    test(
-        'should return ConnectionFailure when device is not connected to the internet',
-        () async {
-      // arrange
-      when(mockRemoteDataSource.getTopRatedMovies())
-          .thenThrow(SocketException('Failed to connect to the network'));
-      // act
-      final result = await repository.getTopRatedMovies();
-      // assert
-      expect(
-          result, Left(ConnectionFailure('Failed to connect to the network')));
+    group('when device is offline', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+
+      test('should return cached data when device is offline', () async {
+        // arrange
+        when(mockLocalDataSource.getCachedMovies('toprated'))
+            .thenAnswer((_) async => [testMovieCache]);
+        // act
+        final result = await repository.getTopRatedMovies();
+        // assert
+        verify(mockLocalDataSource.getCachedMovies('toprated'));
+        final resultList = result.getOrElse(() => []);
+        expect(resultList, [testMovieFromCache]);
+      });
+
+      test('should return CacheFailure when app has no cache', () async {
+        // arrange
+        when(mockLocalDataSource.getCachedMovies('toprated'))
+            .thenThrow(CacheException('No Cache'));
+        // act
+        final result = await repository.getTopRatedMovies();
+        // assert
+        verify(mockLocalDataSource.getCachedMovies('toprated'));
+        expect(result, Left(CacheFailure('No Cache')));
+      });
     });
   });
 

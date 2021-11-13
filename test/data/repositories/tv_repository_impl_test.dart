@@ -23,13 +23,16 @@ void main() {
   late TVRepositoryImpl repository;
   late MockTVRemoteDataSource mockRemoteDataSource;
   late MockTVLocalDataSource mockLocalDataSource;
+  late MockNetworkInfo mockNetworkInfo;
 
   setUp(() {
     mockRemoteDataSource = MockTVRemoteDataSource();
     mockLocalDataSource = MockTVLocalDataSource();
+    mockNetworkInfo = MockNetworkInfo();
     repository = TVRepositoryImpl(
       remoteDataSource: mockRemoteDataSource,
       localDataSource: mockLocalDataSource,
+      networkInfo: mockNetworkInfo,
     );
   });
 
@@ -71,121 +74,269 @@ void main() {
   final tTVList = <TV>[tTV];
 
   group('On The Air TVs', () {
-    test(
-        'should return remote data when the call to remote data source is successful',
-        () async {
+    test('should check if the device is online', () async {
       // arrange
+      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       when(mockRemoteDataSource.getOnTheAirTV())
-          .thenAnswer((_) async => tTVModelList);
+          .thenAnswer((_) async => []);
       // act
-      final result = await repository.getOnTheAirTVs();
+      await repository.getOnTheAirTVs();
       // assert
-      verify(mockRemoteDataSource.getOnTheAirTV());
-      /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
-      final resultList = result.getOrElse(() => []);
-      expect(resultList, tTVList);
+      verify(mockNetworkInfo.isConnected);
     });
 
-    test(
-        'should return server failure when the call to remote data source is unsuccessful',
-        () async {
-      // arrange
-      when(mockRemoteDataSource.getOnTheAirTV()).thenThrow(ServerException());
-      // act
-      final result = await repository.getOnTheAirTVs();
-      // assert
-      verify(mockRemoteDataSource.getOnTheAirTV());
-      expect(result, equals(Left(ServerFailure(''))));
+    group('when device is online', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
+
+      test(
+          'should return remote data when the call to remote data source is successful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getOnTheAirTV())
+            .thenAnswer((_) async => tTVModelList);
+        // act
+        final result = await repository.getOnTheAirTVs();
+        // assert
+        verify(mockRemoteDataSource.getOnTheAirTV());
+        /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
+        final resultList = result.getOrElse(() => []);
+        expect(resultList, tTVList);
+      });
+
+      test(
+          'should cache data locally when the call to remote data source is successful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getOnTheAirTV())
+            .thenAnswer((_) async => tTVModelList);
+        // act
+        await repository.getOnTheAirTVs();
+        // assert
+        verify(mockRemoteDataSource.getOnTheAirTV());
+        verify(mockLocalDataSource.cacheTVs([testTVCache],'ota'));
+      });
+
+      test(
+          'should return server failure when the call to remote data source is unsuccessful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getOnTheAirTV())
+            .thenThrow(ServerException());
+        // act
+        final result = await repository.getOnTheAirTVs();
+        // assert
+        verify(mockRemoteDataSource.getOnTheAirTV());
+        expect(result, equals(Left(ServerFailure(''))));
+      });
     });
 
-    test(
-        'should return connection failure when the device is not connected to internet',
-        () async {
-      // arrange
-      when(mockRemoteDataSource.getOnTheAirTV())
-          .thenThrow(SocketException('Failed to connect to the network'));
-      // act
-      final result = await repository.getOnTheAirTVs();
-      // assert
-      verify(mockRemoteDataSource.getOnTheAirTV());
-      expect(result,
-          equals(Left(ConnectionFailure('Failed to connect to the network'))));
+    group('when device is offline', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+
+      test('should return cached data when device is offline', () async {
+        // arrange
+        when(mockLocalDataSource.getCachedTVs('ota'))
+            .thenAnswer((_) async => [testTVCache]);
+        // act
+        final result = await repository.getOnTheAirTVs();
+        // assert
+        verify(mockLocalDataSource.getCachedTVs('ota'));
+        final resultList = result.getOrElse(() => []);
+        expect(resultList, [testTVFromCache]);
+      });
+
+      test('should return CacheFailure when app has no cache', () async {
+        // arrange
+        when(mockLocalDataSource.getCachedTVs('ota'))
+            .thenThrow(CacheException('No Cache'));
+        // act
+        final result = await repository.getOnTheAirTVs();
+        // assert
+        verify(mockLocalDataSource.getCachedTVs('ota'));
+        expect(result, Left(CacheFailure('No Cache')));
+      });
     });
   });
 
   group('Popular TV', () {
-    test('should return TV list when call to data source is success', () async {
+    test('should check if the device is online', () async {
       // arrange
+      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       when(mockRemoteDataSource.getPopularTV())
-          .thenAnswer((_) async => tTVModelList);
+          .thenAnswer((_) async => []);
       // act
-      final result = await repository.getPopularTVs();
+      await repository.getPopularTVs();
       // assert
-      /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
-      final resultList = result.getOrElse(() => []);
-      expect(resultList, tTVList);
+      verify(mockNetworkInfo.isConnected);
     });
 
-    test(
-        'should return server failure when call to data source is unsuccessful',
-        () async {
-      // arrange
-      when(mockRemoteDataSource.getPopularTV()).thenThrow(ServerException());
-      // act
-      final result = await repository.getPopularTVs();
-      // assert
-      expect(result, Left(ServerFailure('')));
+    group('when device is online', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
+
+      test(
+          'should return remote data when the call to remote data source is successful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getPopularTV())
+            .thenAnswer((_) async => tTVModelList);
+        // act
+        final result = await repository.getPopularTVs();
+        // assert
+        verify(mockRemoteDataSource.getPopularTV());
+        /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
+        final resultList = result.getOrElse(() => []);
+        expect(resultList, tTVList);
+      });
+
+      test(
+          'should cache data locally when the call to remote data source is successful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getPopularTV())
+            .thenAnswer((_) async => tTVModelList);
+        // act
+        await repository.getPopularTVs();
+        // assert
+        verify(mockRemoteDataSource.getPopularTV());
+        verify(mockLocalDataSource.cacheTVs([testTVCache],'popular'));
+      });
+
+      test(
+          'should return server failure when the call to remote data source is unsuccessful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getPopularTV())
+            .thenThrow(ServerException());
+        // act
+        final result = await repository.getPopularTVs();
+        // assert
+        verify(mockRemoteDataSource.getPopularTV());
+        expect(result, equals(Left(ServerFailure(''))));
+      });
     });
 
-    test(
-        'should return connection failure when device is not connected to the internet',
-        () async {
-      // arrange
-      when(mockRemoteDataSource.getPopularTV())
-          .thenThrow(SocketException('Failed to connect to the network'));
-      // act
-      final result = await repository.getPopularTVs();
-      // assert
-      expect(
-          result, Left(ConnectionFailure('Failed to connect to the network')));
+    group('when device is offline', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+
+      test('should return cached data when device is offline', () async {
+        // arrange
+        when(mockLocalDataSource.getCachedTVs('popular'))
+            .thenAnswer((_) async => [testTVCache]);
+        // act
+        final result = await repository.getPopularTVs();
+        // assert
+        verify(mockLocalDataSource.getCachedTVs('popular'));
+        final resultList = result.getOrElse(() => []);
+        expect(resultList, [testTVFromCache]);
+      });
+
+      test('should return CacheFailure when app has no cache', () async {
+        // arrange
+        when(mockLocalDataSource.getCachedTVs('popular'))
+            .thenThrow(CacheException('No Cache'));
+        // act
+        final result = await repository.getPopularTVs();
+        // assert
+        verify(mockLocalDataSource.getCachedTVs('popular'));
+        expect(result, Left(CacheFailure('No Cache')));
+      });
     });
   });
 
   group('Top Rated TVs', () {
-    test('should return TV list when call to data source is successful',
-        () async {
+    test('should check if the device is online', () async {
       // arrange
+      when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
       when(mockRemoteDataSource.getTopRatedTV())
-          .thenAnswer((_) async => tTVModelList);
+          .thenAnswer((_) async => []);
       // act
-      final result = await repository.getTopRatedTVs();
+      await repository.getTopRatedTVs();
       // assert
-      /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
-      final resultList = result.getOrElse(() => []);
-      expect(resultList, tTVList);
+      verify(mockNetworkInfo.isConnected);
     });
 
-    test('should return ServerFailure when call to data source is unsuccessful',
-        () async {
-      // arrange
-      when(mockRemoteDataSource.getTopRatedTV()).thenThrow(ServerException());
-      // act
-      final result = await repository.getTopRatedTVs();
-      // assert
-      expect(result, Left(ServerFailure('')));
+    group('when device is online', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
+
+      test(
+          'should return remote data when the call to remote data source is successful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getTopRatedTV())
+            .thenAnswer((_) async => tTVModelList);
+        // act
+        final result = await repository.getTopRatedTVs();
+        // assert
+        verify(mockRemoteDataSource.getTopRatedTV());
+        /* workaround to test List in Right. Issue: https://github.com/spebbe/dartz/issues/80 */
+        final resultList = result.getOrElse(() => []);
+        expect(resultList, tTVList);
+      });
+
+      test(
+          'should cache data locally when the call to remote data source is successful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getTopRatedTV())
+            .thenAnswer((_) async => tTVModelList);
+        // act
+        await repository.getTopRatedTVs();
+        // assert
+        verify(mockRemoteDataSource.getTopRatedTV());
+        verify(mockLocalDataSource.cacheTVs([testTVCache],'toprated'));
+      });
+
+      test(
+          'should return server failure when the call to remote data source is unsuccessful',
+          () async {
+        // arrange
+        when(mockRemoteDataSource.getTopRatedTV())
+            .thenThrow(ServerException());
+        // act
+        final result = await repository.getTopRatedTVs();
+        // assert
+        verify(mockRemoteDataSource.getTopRatedTV());
+        expect(result, equals(Left(ServerFailure(''))));
+      });
     });
 
-    test(
-        'should return ConnectionFailure when device is not connected to the internet',
-        () async {
-      // arrange
-      when(mockRemoteDataSource.getTopRatedTV())
-          .thenThrow(SocketException('Failed to connect to the network'));
-      // act
-      final result = await repository.getTopRatedTVs();
-      // assert
-      expect(
-          result, Left(ConnectionFailure('Failed to connect to the network')));
+    group('when device is offline', () {
+      setUp(() {
+        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+
+      test('should return cached data when device is offline', () async {
+        // arrange
+        when(mockLocalDataSource.getCachedTVs('toprated'))
+            .thenAnswer((_) async => [testTVCache]);
+        // act
+        final result = await repository.getTopRatedTVs();
+        // assert
+        verify(mockLocalDataSource.getCachedTVs('toprated'));
+        final resultList = result.getOrElse(() => []);
+        expect(resultList, [testTVFromCache]);
+      });
+
+      test('should return CacheFailure when app has no cache', () async {
+        // arrange
+        when(mockLocalDataSource.getCachedTVs('toprated'))
+            .thenThrow(CacheException('No Cache'));
+        // act
+        final result = await repository.getTopRatedTVs();
+        // assert
+        verify(mockLocalDataSource.getCachedTVs('toprated'));
+        expect(result, Left(CacheFailure('No Cache')));
+      });
     });
   });
 

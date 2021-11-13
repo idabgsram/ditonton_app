@@ -3,11 +3,12 @@
 // Do not manually edit this file.
 
 import 'dart:async' as _i9;
-import 'dart:convert' as _i28;
-import 'dart:typed_data' as _i29;
+import 'dart:convert' as _i29;
+import 'dart:typed_data' as _i30;
 
 import 'package:dartz/dartz.dart' as _i2;
 import 'package:ditonton/common/failure.dart' as _i10;
+import 'package:ditonton/common/network_info.dart' as _i28;
 import 'package:ditonton/data/datasources/db/database_helper.dart' as _i26;
 import 'package:ditonton/data/datasources/movie_local_data_source.dart' as _i15;
 import 'package:ditonton/data/datasources/movie_remote_data_source.dart'
@@ -212,6 +213,18 @@ class MockMovieLocalDataSource extends _i1.Mock
           returnValue: Future<List<_i16.MovieTable>>.value(<_i16.MovieTable>[]))
       as _i9.Future<List<_i16.MovieTable>>);
   @override
+  _i9.Future<void> cacheMovies(
+          List<_i16.MovieTable>? movies, String? categories) =>
+      (super.noSuchMethod(Invocation.method(#cacheMovies, [movies, categories]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+  @override
+  _i9.Future<List<_i16.MovieTable>> getCachedMovies(String? categories) =>
+      (super.noSuchMethod(Invocation.method(#getCachedMovies, [categories]),
+              returnValue:
+                  Future<List<_i16.MovieTable>>.value(<_i16.MovieTable>[]))
+          as _i9.Future<List<_i16.MovieTable>>);
+  @override
   String toString() => super.toString();
 }
 
@@ -393,6 +406,16 @@ class MockTVLocalDataSource extends _i1.Mock implements _i24.TVLocalDataSource {
               returnValue: Future<List<_i25.TVTable>>.value(<_i25.TVTable>[]))
           as _i9.Future<List<_i25.TVTable>>);
   @override
+  _i9.Future<void> cacheTVs(List<_i25.TVTable>? tvs, String? categories) =>
+      (super.noSuchMethod(Invocation.method(#cacheTVs, [tvs, categories]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+  @override
+  _i9.Future<List<_i25.TVTable>> getCachedTVs(String? categories) =>
+      (super.noSuchMethod(Invocation.method(#getCachedTVs, [categories]),
+              returnValue: Future<List<_i25.TVTable>>.value(<_i25.TVTable>[]))
+          as _i9.Future<List<_i25.TVTable>>);
+  @override
   String toString() => super.toString();
 }
 
@@ -451,6 +474,56 @@ class MockDatabaseHelper extends _i1.Mock implements _i26.DatabaseHelper {
                   <Map<String, dynamic>>[]))
           as _i9.Future<List<Map<String, dynamic>>>);
   @override
+  _i9.Future<void> insertCacheTransaction(
+          List<_i16.MovieTable>? movies, String? category) =>
+      (super.noSuchMethod(
+          Invocation.method(#insertCacheTransaction, [movies, category]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+  @override
+  _i9.Future<List<Map<String, dynamic>>> getCacheMovies(String? category) =>
+      (super.noSuchMethod(Invocation.method(#getCacheMovies, [category]),
+              returnValue: Future<List<Map<String, dynamic>>>.value(
+                  <Map<String, dynamic>>[]))
+          as _i9.Future<List<Map<String, dynamic>>>);
+  @override
+  _i9.Future<int> clearCache(String? category) =>
+      (super.noSuchMethod(Invocation.method(#clearCache, [category]),
+          returnValue: Future<int>.value(0)) as _i9.Future<int>);
+  @override
+  _i9.Future<void> insertTVCacheTransaction(
+          List<_i25.TVTable>? tvs, String? category) =>
+      (super.noSuchMethod(
+          Invocation.method(#insertTVCacheTransaction, [tvs, category]),
+          returnValue: Future<void>.value(),
+          returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
+  @override
+  _i9.Future<List<Map<String, dynamic>>> getTVCache(String? category) =>
+      (super.noSuchMethod(Invocation.method(#getTVCache, [category]),
+              returnValue: Future<List<Map<String, dynamic>>>.value(
+                  <Map<String, dynamic>>[]))
+          as _i9.Future<List<Map<String, dynamic>>>);
+  @override
+  _i9.Future<int> clearTVCache(String? category) =>
+      (super.noSuchMethod(Invocation.method(#clearTVCache, [category]),
+          returnValue: Future<int>.value(0)) as _i9.Future<int>);
+  @override
+  String toString() => super.toString();
+}
+
+/// A class which mocks [NetworkInfo].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNetworkInfo extends _i1.Mock implements _i28.NetworkInfo {
+  MockNetworkInfo() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i9.Future<bool> get isConnected =>
+      (super.noSuchMethod(Invocation.getter(#isConnected),
+          returnValue: Future<bool>.value(false)) as _i9.Future<bool>);
+  @override
   String toString() => super.toString();
 }
 
@@ -476,7 +549,7 @@ class MockHttpClient extends _i1.Mock implements _i7.Client {
   _i9.Future<_i7.Response> post(Uri? url,
           {Map<String, String>? headers,
           Object? body,
-          _i28.Encoding? encoding}) =>
+          _i29.Encoding? encoding}) =>
       (super.noSuchMethod(
               Invocation.method(#post, [url],
                   {#headers: headers, #body: body, #encoding: encoding}),
@@ -486,7 +559,7 @@ class MockHttpClient extends _i1.Mock implements _i7.Client {
   _i9.Future<_i7.Response> put(Uri? url,
           {Map<String, String>? headers,
           Object? body,
-          _i28.Encoding? encoding}) =>
+          _i29.Encoding? encoding}) =>
       (super.noSuchMethod(
               Invocation.method(#put, [url],
                   {#headers: headers, #body: body, #encoding: encoding}),
@@ -496,7 +569,7 @@ class MockHttpClient extends _i1.Mock implements _i7.Client {
   _i9.Future<_i7.Response> patch(Uri? url,
           {Map<String, String>? headers,
           Object? body,
-          _i28.Encoding? encoding}) =>
+          _i29.Encoding? encoding}) =>
       (super.noSuchMethod(
               Invocation.method(#patch, [url],
                   {#headers: headers, #body: body, #encoding: encoding}),
@@ -506,7 +579,7 @@ class MockHttpClient extends _i1.Mock implements _i7.Client {
   _i9.Future<_i7.Response> delete(Uri? url,
           {Map<String, String>? headers,
           Object? body,
-          _i28.Encoding? encoding}) =>
+          _i29.Encoding? encoding}) =>
       (super.noSuchMethod(
               Invocation.method(#delete, [url],
                   {#headers: headers, #body: body, #encoding: encoding}),
@@ -517,12 +590,12 @@ class MockHttpClient extends _i1.Mock implements _i7.Client {
       (super.noSuchMethod(Invocation.method(#read, [url], {#headers: headers}),
           returnValue: Future<String>.value('')) as _i9.Future<String>);
   @override
-  _i9.Future<_i29.Uint8List> readBytes(Uri? url,
+  _i9.Future<_i30.Uint8List> readBytes(Uri? url,
           {Map<String, String>? headers}) =>
       (super.noSuchMethod(
               Invocation.method(#readBytes, [url], {#headers: headers}),
-              returnValue: Future<_i29.Uint8List>.value(_i29.Uint8List(0)))
-          as _i9.Future<_i29.Uint8List>);
+              returnValue: Future<_i30.Uint8List>.value(_i30.Uint8List(0)))
+          as _i9.Future<_i30.Uint8List>);
   @override
   _i9.Future<_i7.StreamedResponse> send(_i7.BaseRequest? request) =>
       (super.noSuchMethod(Invocation.method(#send, [request]),

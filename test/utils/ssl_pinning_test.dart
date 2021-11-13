@@ -1,8 +1,9 @@
 import 'dart:io';
 
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:ditonton/common/connection.dart';
+import 'package:ditonton/common/network_info.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 
 void main() {
@@ -14,6 +15,13 @@ void main() {
       await Connection.initClient();
       expect(Connection.client, TypeMatcher<IOClient>());
     });
+
+    test('Make sure Network info detect properly', () async {
+      NetworkInfoImpl nii = NetworkInfoImpl(DataConnectionChecker());
+      bool? connectionStatus = await nii.isConnected;
+      expect(connectionStatus, isNotNull);
+    });
+
     test('Checking if current SSL is valid', () async {
       final _client = await Connection.getClient;
       final response =

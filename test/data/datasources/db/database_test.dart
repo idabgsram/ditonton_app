@@ -53,6 +53,32 @@ void main() {
       expect(testRemove, 1);
     });
 
+    test('check TV-related cache function is working', () async {
+      // arrange
+      dbSource.setDatabase(await openDatabase(inMemoryDatabasePath, version: 2,
+          onCreate: (db, version) async {
+        await db.execute(
+            'CREATE TABLE cache_tv (itemId INTEGER PRIMARY KEY, id INTEGER, name TEXT, overview TEXT, posterPath TEXT, category TEXT)');
+      }));
+      // act
+      await dbSource.insertTVCacheTransaction([testTVTable],'ota');
+      final testGetByID = await dbSource.getTVCache('ota');
+      final testRemove = await dbSource.clearTVCache('ota');
+      await deleteDatabase(inMemoryDatabasePath);
+      // assert
+      expect(testGetByID, [
+        {
+          'itemId': 1,
+          'id': 1,
+          'name': 'name',
+          'overview': 'overview',
+          'posterPath': 'posterPath',
+          'category': 'ota'
+        }
+      ]);
+      expect(testRemove, 1);
+    });
+
     test('check Movies-related function is working', () async {
       // arrange
       dbSource.setDatabase(await openDatabase(inMemoryDatabasePath, version: 2,
@@ -75,6 +101,32 @@ void main() {
           'title': 'title',
           'overview': 'overview',
           'posterPath': 'posterPath'
+        }
+      ]);
+      expect(testRemove, 1);
+    });
+
+    test('check Movies-related cache function is working', () async {
+      // arrange
+      dbSource.setDatabase(await openDatabase(inMemoryDatabasePath, version: 2,
+          onCreate: (db, version) async {
+        await db.execute(
+            'CREATE TABLE cache (itemId INTEGER PRIMARY KEY, id INTEGER, title TEXT, overview TEXT, posterPath TEXT, category TEXT)');
+      }));
+      // act
+      await dbSource.insertCacheTransaction([testMovieTable],'nowplaying');
+      final testGetByID = await dbSource.getCacheMovies('nowplaying');
+      final testRemove = await dbSource.clearCache('nowplaying');
+      await deleteDatabase(inMemoryDatabasePath);
+      // assert
+      expect(testGetByID, [
+        {
+          'itemId': 1,
+          'id': 1,
+          'title': 'title',
+          'overview': 'overview',
+          'posterPath': 'posterPath',
+          'category': 'nowplaying'
         }
       ]);
       expect(testRemove, 1);

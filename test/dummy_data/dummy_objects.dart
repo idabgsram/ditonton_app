@@ -263,3 +263,27 @@ final testTVMap = {
   'posterPath': 'posterPath',
   'name': 'name',
 };
+
+final testTVCache = TVTable(
+  id: 888,
+  overview:
+      'Bitten by a radioactive spider, Peter Parker develops spider-like superpowers. He uses these to fight crime while trying to balance it with the struggles of his personal life.',
+  posterPath: '/wXthtEN5kdWA1bHz03lkuCJS6hA.jpg',
+  name: 'Spider-Man',
+);
+
+final testTVCacheMap = {
+  'id': 888,
+  'overview':
+      'Bitten by a radioactive spider, Peter Parker develops spider-like superpowers. He uses these to fight crime while trying to balance it with the struggles of his personal life.',
+  'posterPath': '/wXthtEN5kdWA1bHz03lkuCJS6hA.jpg',
+  'name': 'Spider-Man',
+};
+
+final testTVFromCache = TV.watchlist(
+  id: 888,
+  overview:
+      'Bitten by a radioactive spider, Peter Parker develops spider-like superpowers. He uses these to fight crime while trying to balance it with the struggles of his personal life.',
+  posterPath: '/wXthtEN5kdWA1bHz03lkuCJS6hA.jpg',
+  name: 'Spider-Man',
+);

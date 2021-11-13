@@ -97,4 +97,38 @@ void main() {
       expect(result, [testTVTable]);
     });
   });
+
+  group('cache tvs section', () {
+    test('should call database helper to save data', () async {
+      // arrange
+      when(mockDatabaseHelper.clearTVCache('ota'))
+          .thenAnswer((_) async => 1);
+      // act
+      await dataSource.cacheTVs([testTVCache],'ota');
+      // assert
+      verify(mockDatabaseHelper.clearTVCache('ota'));
+      verify(mockDatabaseHelper
+          .insertTVCacheTransaction([testTVCache], 'ota'));
+    });
+
+    test('should return list of tvs from db when data exist', () async {
+      // arrange
+      when(mockDatabaseHelper.getTVCache('ota'))
+          .thenAnswer((_) async => [testTVCacheMap]);
+      // act
+      final result = await dataSource.getCachedTVs('ota');
+      // assert
+      expect(result, [testTVCache]);
+    });
+
+    test('should throw CacheException when cache data is not exist', () async {
+      // arrange
+      when(mockDatabaseHelper.getTVCache('ota'))
+          .thenAnswer((_) async => []);
+      // act
+      final call = dataSource.getCachedTVs('ota');
+      // assert
+      expect(() => call, throwsA(isA<CacheException>()));
+    });
+  });
 }
