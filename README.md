@@ -1,18 +1,24 @@
 # Ditonton v1.0.1
 
-a Dicoding's a199-flutter-expert-project
-Improved by Ida Bagus Rama Mahendra
+a Project Improved by Ida Bagus Rama Mahendra
 
 # Getting Started
-This project is improved using Flutter 2.5.3
+Requires Flutter 2.5.3 or newer
 
 # Build
-run :
+type :
 `flutter build`
 
+# Running Project
+type :
+`flutter run`
+
 # Testing
-to run Unit & widget testing, also coverage Check :
+to run coverage testing, type :
 `flutter test --coverage`
+
+to generate lcov HTML, type :
+`genhtml coverage/lcov.info -o coverage/html`
 
 to run basic Integration Test :
 `flutter drive --target=test_driver/app.dart` 
