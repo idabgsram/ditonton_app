@@ -1,0 +1,35 @@
+
+{
+    "air_date": "2019-01-25",
+    "crew": [
+        {
+            "job": "Animation Director",
+            "character": "Basketball Captain (voice)",
+            "name": "Huang Feng",
+            "id": 2965969,
+            "profile_path": null
+        }
+    ],
+    "episode_number": 3,
+    "guest_stars": [
+        {
+            "job": "Animation Director",
+            "character": "Basketball Captain (voice)",
+            "id": 1661870,
+            "name": "Aina Suzuki",
+            "profile_path": "/bRLwfft4yckDTpLenlbTrt3FRRN.jpg"
+        },
+        {
+            "job": "Animation Director",
+            "character": "Beard Man (voice)",
+            "id": 3211842,
+            "name": "Ryota Akazawa",
+            "profile_path": null
+        }
+    ],
+    "name": "A Mountain of Problems",
+    "overview": "Nino isn't happy that Futaro is beginning to get along with her sisters, so she takes matters into her own hands.",
+    "id": 1659817,
+    "season_number": 1,
+    "still_path": "/vkuYEpktTjfZTZcl8XcChR0CN71.jpg"
+}
