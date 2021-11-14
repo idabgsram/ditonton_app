@@ -1,15 +1,11 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_analytics/observer.dart';
 
 class FirebaseAnalyticsUtils {
-  final FirebaseAnalytics _analytics = FirebaseAnalytics();
-
-  FirebaseAnalyticsObserver getAnalyticsObserver() =>
-      FirebaseAnalyticsObserver(analytics: _analytics);
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   Future logEvent(
       {required String eventName, Map<String, dynamic>? data}) async {
-    await _analytics.logEvent(
+    await analytics.logEvent(
       name: eventName,
       parameters: data,
     );
