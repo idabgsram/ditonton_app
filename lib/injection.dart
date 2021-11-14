@@ -241,4 +241,5 @@ void init() {
   // external
   locator.registerLazySingleton(() => Connection.client);
   locator.registerLazySingleton(() => DataConnectionChecker());
+  locator.registerSingleton(() => FirebaseAnalyticsUtils());
 }
