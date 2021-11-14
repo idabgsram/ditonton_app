@@ -2,6 +2,9 @@ const String BASE_IMAGE_URL = 'https://image.tmdb.org/t/p/w500';
 const String NO_IMAGE_URL =
     'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/768px-No_image_available.svg.png';
 
+const API_KEY = 'api_key=76315bd76ea937981aa95c14d71bbac8';
+const BASE_URL = 'https://api.themoviedb.org/3';
+
 /* putting cert to assets is kinda risky, they can easily replace them,
  so hardcoding the cert might be better? */
 const sslCertificate = """-----BEGIN CERTIFICATE-----

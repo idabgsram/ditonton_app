@@ -13,7 +13,6 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class TVDetailPage extends StatefulWidget {
-
   final int id;
   final BaseCacheManager? cacheManager;
   TVDetailPage({required this.id, this.cacheManager});
@@ -65,6 +64,7 @@ class DetailContent extends StatelessWidget {
 
   DetailContent(this.tv, {this.cacheManager});
 
+  @override
   Widget build(BuildContext mainContext) {
     final screenWidth = MediaQuery.of(mainContext).size.width;
     return Stack(

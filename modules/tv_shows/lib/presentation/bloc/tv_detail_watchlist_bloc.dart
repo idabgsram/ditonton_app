@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:tv_shows/domain/entities/tv_detail.dart';
 import 'package:tv_shows/domain/usecases/get_tv_watchlist_status.dart';
-import 'package:watchlist/domain/usecases/remove_tv_watchlist.dart';
-import 'package:watchlist/domain/usecases/save_tv_watchlist.dart';
+import 'package:tv_shows/domain/usecases/remove_tv_watchlist.dart';
+import 'package:tv_shows/domain/usecases/save_tv_watchlist.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
