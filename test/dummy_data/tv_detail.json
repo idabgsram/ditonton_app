@@ -1,0 +1,52 @@
+{
+    "backdrop_path": "backdropPath",
+    "episode_run_time": [
+        60
+    ],
+    "first_air_date": "2015-08-23",
+    "genres": [
+        {
+            "id": 1,
+            "name": "Action"
+        }
+    ],
+    "id": 1,
+    "in_production": true,
+    "last_episode_to_air": {
+        "air_date": "2002-12-01",
+        "episode_number": 1,
+        "id": 1,
+        "name": "name",
+        "overview": "overview",
+        "still_path": "stillPath"
+    },
+    "name": "name",
+    "next_episode_to_air": {
+        "air_date": "2002-12-08",
+        "episode_number": 2,
+        "id": 2,
+        "name": "name",
+        "overview": "overview",
+        "still_path": "stillPath"
+    },
+    "number_of_episodes": 2,
+    "number_of_seasons": 1,
+    "original_name": "originalName",
+    "overview": "overview",
+    "popularity": 1,
+    "poster_path": "posterPath",
+    "seasons": [
+        {
+            "air_date": "airDate",
+            "episode_count": 2,
+            "id": 1,
+            "name": "name",
+            "overview": "overview",
+            "poster_path": "posterPath",
+            "season_number": 1
+        }
+    ],
+    "type": "type",
+    "vote_average": 1,
+    "vote_count": 1
+}
