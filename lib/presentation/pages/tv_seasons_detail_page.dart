@@ -251,7 +251,7 @@ class DetailContent extends StatelessWidget {
                 child: Row(children: [
                   ClipRRect(
                     child: CachedNetworkImage(
-                      key: Key('cached_image_crew'),
+                      key: Key('cached_image_episodes_${episodeData.id}'),
                       cacheManager: cacheManager,
                       imageUrl: episodeData.stillPath != null
                           ? '$BASE_IMAGE_URL${episodeData.stillPath}'
@@ -261,7 +261,7 @@ class DetailContent extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       ),
                       errorWidget: (context, url, error) => Container(
-                          key: Key('cached_image_crew_error'),
+                          key: Key('cached_image_episodes_error_${episodeData.id}'),
                           height: 120,
                           color: Colors.black38,
                           child: Icon(Icons.error)),

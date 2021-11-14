@@ -11,6 +11,7 @@ import 'package:ditonton/presentation/pages/tv_seasons_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,8 @@ class TVDetailPage extends StatefulWidget {
   static const ROUTE_NAME = '/tv-shows/detail';
 
   final int id;
-  TVDetailPage({required this.id});
+  final BaseCacheManager? cacheManager;
+  TVDetailPage({required this.id, this.cacheManager});
 
   @override
   _TVDetailPageState createState() => _TVDetailPageState();
@@ -48,8 +50,8 @@ class _TVDetailPageState extends State<TVDetailPage> {
             );
           } else if (state is DataAvailable) {
             return SafeArea(
-              child: DetailContent(state.result),
-            );
+                child: DetailContent(state.result,
+                    cacheManager: widget.cacheManager));
           } else if (state is DataError) {
             return Text(state.message, key: Key('provider_message'));
           } else {
@@ -63,21 +65,24 @@ class _TVDetailPageState extends State<TVDetailPage> {
 
 class DetailContent extends StatelessWidget {
   final TVDetail tv;
+  final BaseCacheManager? cacheManager;
 
-  DetailContent(this.tv);
+  DetailContent(this.tv, {this.cacheManager});
 
-  @override
   Widget build(BuildContext mainContext) {
     final screenWidth = MediaQuery.of(mainContext).size.width;
     return Stack(
       children: [
         CachedNetworkImage(
+          key: Key('cached_image_poster'),
+          cacheManager: cacheManager,
           imageUrl: 'https://image.tmdb.org/t/p/w500${tv.posterPath}',
           width: screenWidth,
           placeholder: (context, url) => Center(
             child: CircularProgressIndicator(),
           ),
-          errorWidget: (context, url, error) => Icon(Icons.error),
+          errorWidget: (context, url, error) =>
+              Icon(Icons.error, key: Key('cached_image_poster_error')),
         ),
         BlocListener<TVDetailWatchlistBloc, TVDetailWatchlistState>(
             listener: (context, state) {
@@ -342,6 +347,8 @@ class DetailContent extends StatelessWidget {
                                                               const EdgeInsets
                                                                   .all(4.0),
                                                           child: InkWell(
+                                                            key: Key(
+                                                                'recom_item_$index'),
                                                             onTap: () {
                                                               Navigator
                                                                   .pushReplacementNamed(
@@ -361,6 +368,10 @@ class DetailContent extends StatelessWidget {
                                                               ),
                                                               child:
                                                                   CachedNetworkImage(
+                                                                key: Key(
+                                                                    'cached_image_recom_$index'),
+                                                                cacheManager:
+                                                                    cacheManager,
                                                                 imageUrl:
                                                                     'https://image.tmdb.org/t/p/w500${tv.posterPath}',
                                                                 placeholder:
@@ -370,11 +381,15 @@ class DetailContent extends StatelessWidget {
                                                                   child:
                                                                       CircularProgressIndicator(),
                                                                 ),
-                                                                errorWidget: (context,
-                                                                        url,
-                                                                        error) =>
-                                                                    Icon(Icons
-                                                                        .error),
+                                                                errorWidget:
+                                                                    (context,
+                                                                            url,
+                                                                            error) =>
+                                                                        Icon(
+                                                                  Icons.error,
+                                                                  key: Key(
+                                                                      'cached_image_recom_error_$index'),
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
@@ -388,7 +403,7 @@ class DetailContent extends StatelessWidget {
                                                 'No similar recommendation currently'),
                                       );
                                     } else {
-                                      return Container();
+                                      return Container(key: Key('empty_recom'));
                                     }
                                   },
                                 ),
@@ -481,6 +496,7 @@ class DetailContent extends StatelessWidget {
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 4),
         child: InkWell(
+            key: Key('seasons_item_$index'),
             onTap: seasonData.episodeCount < 1
                 ? null
                 : () {
@@ -531,6 +547,8 @@ class DetailContent extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     child: CachedNetworkImage(
+                      key: Key('cached_image_seasons_item_$index'),
+                      cacheManager: cacheManager,
                       imageUrl: seasonData.posterPath != null
                           ? '$BASE_IMAGE_URL${seasonData.posterPath}'
                           : '$NO_IMAGE_URL',
@@ -539,6 +557,7 @@ class DetailContent extends StatelessWidget {
                         child: CircularProgressIndicator(),
                       ),
                       errorWidget: (context, url, error) => Container(
+                          key: Key('cached_image_seasons_error_$index'),
                           height: 120,
                           color: Colors.black38,
                           child: Icon(Icons.error)),

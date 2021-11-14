@@ -29,6 +29,23 @@ final testMovie = Movie(
   voteCount: 13507,
 );
 
+final testMovieAlternative = Movie(
+  adult: false,
+  backdropPath: '/muth4OYamXf41G2evdrLEg8d3om.jpg',
+  genreIds: [14, 28],
+  id: 557,
+  originalTitle: 'Spider-Man',
+  overview:
+      'After being bitten by a genetically altered spider, nerdy high school student Peter Parker is endowed with amazing powers to become the Amazing superhero known as Spider-Man.',
+  popularity: 60.441,
+  posterPath: null,
+  releaseDate: '2002-05-01',
+  title: 'Spider-Man',
+  video: false,
+  voteAverage: 7.2,
+  voteCount: 13507,
+);
+
 final testMovieList = [testMovie];
 
 final testMovieDetail = MovieDetail(
@@ -41,6 +58,21 @@ final testMovieDetail = MovieDetail(
   posterPath: 'posterPath',
   releaseDate: 'releaseDate',
   runtime: 120,
+  title: 'title',
+  voteAverage: 1,
+  voteCount: 1,
+);
+
+final testMovieDetailAlternative = MovieDetail(
+  adult: false,
+  backdropPath: 'backdropPath',
+  genres: [Genre(id: 1, name: 'Action')],
+  id: 1,
+  originalTitle: 'originalTitle',
+  overview: 'overview',
+  posterPath: 'posterPath',
+  releaseDate: 'releaseDate',
+  runtime: 40,
   title: 'title',
   voteAverage: 1,
   voteCount: 1,
@@ -108,6 +140,23 @@ final testTV = TV(
   originCountry: ["US"],
 );
 
+final testTVAlternative = TV(
+  backdropPath: '/4QNBIgt5fwgNCN3OSU6BTFv0NGR.jpg',
+  genreIds: [16, 10759],
+  id: 888,
+  name: 'Spider-Man',
+  overview:
+      'Bitten by a radioactive spider, Peter Parker develops spider-like superpowers. He uses these to fight crime while trying to balance it with the struggles of his personal life.',
+  popularity: 82.967,
+  posterPath: null,
+  firstAirDate: '1994-11-19',
+  originalName: 'Spider-Man',
+  originalLanguage: "en",
+  voteAverage: 8.3,
+  voteCount: 633,
+  originCountry: ["US"],
+);
+
 final testTVList = [testTV];
 
 final testTVDetail = TVDetail(
@@ -138,6 +187,92 @@ final testTVDetail = TVDetail(
       episodeNumber: 2,
       id: 2,
       name: "name",
+      overview: "overview",
+      stillPath: "stillPath"),
+  seasons: [
+    TVDetailSeason(
+        airDate: "airDate",
+        episodeCount: 2,
+        id: 1,
+        name: "name",
+        overview: "overview",
+        posterPath: "posterPath",
+        seasonNumber: 1)
+  ],
+  type: "type",
+);
+
+final testTVDetailCorrectImage = TVDetail(
+  backdropPath: 'backdropPath',
+  genres: [Genre(id: 1, name: 'Action')],
+  id: 1,
+  originalName: 'originalTitle',
+  overview: 'overview',
+  popularity: 1,
+  posterPath: '/9CDV3wzGxIVF2vBFk2WV0Z3SCab.jpg',
+  numberOfSeasons: 1,
+  numberOfEpisodes: 2,
+  name: 'name',
+  voteAverage: 1,
+  voteCount: 1,
+  episodeRunTime: [60],
+  firstAirDate: "2021-12-01",
+  inProduction: true,
+  lastEpisodeToAir: TVDetailEpisodes(
+      airDate: "2002-12-01",
+      episodeNumber: 1,
+      id: 1,
+      name: "name",
+      overview: "overview",
+      stillPath: "/9CDV3wzGxIVF2vBFk2WV0Z3SCab.jpg"),
+  nextEpisodeToAir: TVDetailEpisodes(
+      airDate: "2002-12-08",
+      episodeNumber: 2,
+      id: 2,
+      name: "name",
+      overview: "overview",
+      stillPath: "/9CDV3wzGxIVF2vBFk2WV0Z3SCab.jpg"),
+  seasons: [
+    TVDetailSeason(
+        airDate: "airDate",
+        episodeCount: 2,
+        id: 1,
+        name: "name",
+        overview: "overview",
+        posterPath: "/9CDV3wzGxIVF2vBFk2WV0Z3SCab.jpg",
+        seasonNumber: 1)
+  ],
+  type: "type",
+);
+
+final testTVDetailAlternative = TVDetail(
+  backdropPath: 'backdropPath',
+  genres: [Genre(id: 1, name: 'Action')],
+  id: 1,
+  originalName: 'originalTitle',
+  overview: 'overview',
+  popularity: 1,
+  posterPath: 'posterPath',
+  numberOfSeasons: 1,
+  numberOfEpisodes: 2,
+  name: 'name',
+  voteAverage: 1,
+  voteCount: 1,
+  episodeRunTime: [30,60],
+  firstAirDate: "2021-12-01",
+  inProduction: true,
+  lastEpisodeToAir: TVDetailEpisodes(
+      airDate: "2002-12-01",
+      episodeNumber: 1,
+      id: 1,
+      name: null,
+      overview: "overview",
+      stillPath: "stillPath"),
+  nextEpisodeToAir: TVDetailEpisodes(
+      airDate: "2002-12-08",
+      episodeNumber: 2,
+      id: 2,
+      name: null,
       overview: "overview",
       stillPath: "stillPath"),
   seasons: [

@@ -308,7 +308,7 @@ class ItemList extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(16)),
                 child: CachedNetworkImage(
                   imageUrl: item.posterPath != null
-                      ? '$BASE_IMAGE_URL${item.posterPath}'
+                      ? 'https://image.tmdb.org/t/p/w500${item.posterPath}'
                       : '$NO_IMAGE_URL',
                   placeholder: (context, url) => Center(
                     child: CircularProgressIndicator(),

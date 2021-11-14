@@ -176,8 +176,8 @@ void main() {
     }
     final cniFinder = find.byKey(Key('cached_image_poster'));
     final errorKeyFinder = find.byKey(Key('cached_image_poster_error'));
-    final cniCrewFinder = find.byKey(Key('cached_image_crew'));
-    final errorCrewKeyFinder = find.byKey(Key('cached_image_crew_error'));
+    final cniCrewFinder = find.byKey(Key('cached_image_crew_1661870'));
+    final errorCrewKeyFinder = find.byKey(Key('cached_image_crew_error_1661870'));
     expect(cniFinder, findsWidgets);
     expect(errorKeyFinder, findsWidgets);
     expect(cniCrewFinder, findsWidgets);
