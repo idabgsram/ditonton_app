@@ -62,12 +62,14 @@ class _HomePageState extends State<HomePage> {
                   leading: Icon(Icons.save_alt),
                   title: Text('Watchlist'),
                   onTap: () {
+                    FirebaseAnalyticsUtils().logEvent(eventName: 'watchlist');
                     Navigator.pushNamed(context, WATCHLIST_ROUTE);
                   },
                 ),
                 ListTile(
                   key: Key('about_tile'),
                   onTap: () {
+                    FirebaseAnalyticsUtils().logEvent(eventName: 'about');
                     Navigator.pushNamed(context, ABOUT_ROUTE);
                   },
                   leading: Icon(Icons.info_outline),
@@ -91,6 +93,7 @@ class _HomePageState extends State<HomePage> {
             actions: [
               IconButton(
                 onPressed: () {
+                  FirebaseAnalyticsUtils().logEvent(eventName: 'search');
                   Navigator.pushNamed(context, SEARCH_ROUTE);
                 },
                 icon: Icon(Icons.search),
@@ -131,8 +134,10 @@ class _HomePageState extends State<HomePage> {
           _buildSubHeading(
             key: Key('popular_movies_more'),
             title: 'Popular',
-            onTap: () =>
-                Navigator.pushNamed(context, POPULAR_MOVIES_ROUTE),
+            onTap: () {
+              FirebaseAnalyticsUtils().logEvent(eventName: 'popular_movies');
+              Navigator.pushNamed(context, POPULAR_MOVIES_ROUTE);
+            },
           ),
           BlocBuilder<HomePopularMoviesBloc, HomePopularMoviesState>(
               builder: (context, state) {
@@ -152,8 +157,10 @@ class _HomePageState extends State<HomePage> {
           _buildSubHeading(
             key: Key('toprate_movies_more'),
             title: 'Top Rated',
-            onTap: () =>
-                Navigator.pushNamed(context, TOP_RATED_MOVIES_ROUTE),
+            onTap: () {
+              FirebaseAnalyticsUtils().logEvent(eventName: 'top_rated_movies');
+              Navigator.pushNamed(context, TOP_RATED_MOVIES_ROUTE);
+            },
           ),
           BlocBuilder<HomeTopRatedMoviesBloc, HomeTopRatedMoviesState>(
               builder: (context, state) {
@@ -183,7 +190,10 @@ class _HomePageState extends State<HomePage> {
           _buildSubHeading(
             key: Key('ota_tv_more'),
             title: 'On The Air',
-            onTap: () => Navigator.pushNamed(context, ON_THE_AIR_TV_ROUTE),
+            onTap: () {
+              FirebaseAnalyticsUtils().logEvent(eventName: 'ota_tv');
+              Navigator.pushNamed(context, ON_THE_AIR_TV_ROUTE);
+            },
           ),
           BlocBuilder<HomeOTATVBloc, HomeOTATVState>(builder: (context, state) {
             if (state is DataOTATVLoading) {
@@ -200,7 +210,10 @@ class _HomePageState extends State<HomePage> {
           _buildSubHeading(
             key: Key('popular_tv_more'),
             title: 'Popular',
-            onTap: () => Navigator.pushNamed(context, POPULAR_TV_ROUTE),
+            onTap: () {
+              FirebaseAnalyticsUtils().logEvent(eventName: 'popular_tv');
+              Navigator.pushNamed(context, POPULAR_TV_ROUTE);
+            },
           ),
           BlocBuilder<HomePopularTVBloc, HomePopularTVState>(
               builder: (context, state) {
@@ -218,8 +231,10 @@ class _HomePageState extends State<HomePage> {
           _buildSubHeading(
             key: Key('toprate_tv_more'),
             title: 'Top Rated',
-            onTap: () =>
-                Navigator.pushNamed(context, TOP_RATED_TV_ROUTE),
+            onTap: () {
+              FirebaseAnalyticsUtils().logEvent(eventName: 'top_rated_tv');
+              Navigator.pushNamed(context, TOP_RATED_TV_ROUTE);
+            },
           ),
           BlocBuilder<HomeTopRatedTVBloc, HomeTopRatedTVState>(
               builder: (context, state) {
@@ -287,9 +302,7 @@ class ItemList extends StatelessWidget {
               onTap: () {
                 Navigator.pushNamed(
                   context,
-                  isMovies
-                      ? MOVIE_DETAIL_ROUTE
-                      : TV_DETAIL_ROUTE,
+                  isMovies ? MOVIE_DETAIL_ROUTE : TV_DETAIL_ROUTE,
                   arguments: item.id,
                 );
               },

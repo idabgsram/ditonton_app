@@ -5,3 +5,4 @@ export 'network_info.dart';
 export 'connection.dart';
 export 'routes.dart';
 export 'utils.dart';
+export 'analytics.dart';

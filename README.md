@@ -26,8 +26,11 @@ type :
 `flutter run`
 
 # Testing
-to run coverage testing, type :
+to run normal testing, type :
 `flutter test modules/core modules/home modules/movies modules/search modules/tv_shows modules/watchlist --coverage`
+
+to run universal coverage testing (linux or mac), type :
+`./test-coverage.sh`
 
 to generate lcov HTML, type :
 `genhtml coverage/lcov.info -o coverage/html`
