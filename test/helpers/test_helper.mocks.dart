@@ -29,7 +29,7 @@ import 'package:ditonton/domain/entities/tv.dart' as _i18;
 import 'package:ditonton/domain/entities/tv_detail.dart' as _i19;
 import 'package:ditonton/domain/entities/tv_episodes.dart' as _i21;
 import 'package:ditonton/domain/entities/tv_seasons.dart' as _i20;
-import 'package:ditonton/domain/repositories/movie_repository.dart' as _i8;
+import 'package:movies/domain/repositories/movie_repository.dart' as _i8;
 import 'package:ditonton/domain/repositories/tv_repository.dart' as _i17;
 import 'package:http/http.dart' as _i7;
 import 'package:mockito/mockito.dart' as _i1;

@@ -56,7 +56,7 @@ void main() {
 
   final routes = <String, WidgetBuilder>{
     '/': (BuildContext context) => FakeHomePage(),
-    TVDetailPage.ROUTE_NAME: (BuildContext context) => FakeTargetPage(),
+    TV_DETAIL_ROUTE: (BuildContext context) => FakeTargetPage(),
     '/second': (BuildContext context) =>
         _makeAnotherTestableWidget(widgetToTest),
   };

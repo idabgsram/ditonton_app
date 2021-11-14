@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:core/core.dart';
 import 'package:ditonton/presentation/bloc/tv_seasons_detail_bloc.dart';
 import 'package:ditonton/presentation/pages/tv_episodes_detail_page.dart';
 import 'package:ditonton/presentation/pages/tv_seasons_detail_page.dart';
@@ -56,7 +57,7 @@ void main() {
 
   final routes = <String, WidgetBuilder>{
     '/': (BuildContext context) => FakeHomePage(),
-    TVEpisodesDetailPage.ROUTE_NAME: (BuildContext context) => FakeTargetPage(),
+    TV_EPISODES_DETAIL_ROUTE: (BuildContext context) => FakeTargetPage(),
     '/second': (BuildContext context) =>
         _makeAnotherTestableWidget(widgetToTest),
   };
