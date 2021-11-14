@@ -23,10 +23,6 @@ runTests () {
   if [ -f "pubspec.yaml" ] && [ -d "test" ]; then
     echo "running tests in $1"
     flutter pub get
-    # check if build_runner needs to be run
-    if grep build_runner pubspec.yaml > /dev/null ; then
-      flutter packages pub run build_runner build --delete-conflicting-outputs
-    fi
 
     escapedPath="$(echo $1 | sed 's/\//\\\//g')"
 
@@ -50,8 +46,8 @@ runTests () {
 }
 
 runReport() {
-    if [ -f "lcov.info" ] && ! [ "$TRAVIS" ]; then
-        genhtml lcov.info -o coverage --no-function-coverage -s -p `pwd`/coverage
+    if [ -f "coverage/lcov.info" ] && ! [ "$TRAVIS" ]; then
+        genhtml coverage/lcov.info -o coverage --no-function-coverage -s -p `pwd`/coverage
         open coverage/index.html
     fi
 }
@@ -66,7 +62,7 @@ case $1 in
         currentDir=`pwd`
         # if no parameter passed
         if [ -z $1 ]; then
-            rm -f lcov.info
+            rm -f coverage/lcov.info
             dirs=(`find . -maxdepth 2 -type d`)
             for dir in "${dirs[@]}"; do
                 runTests $dir $currentDir
