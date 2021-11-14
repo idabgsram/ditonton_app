@@ -1,3 +1,5 @@
+[![Codemagic build status](https://api.codemagic.io/apps/617b756fa05d5ec5b323a0de/617b756fa05d5ec5b323a0dd/status_badge.svg)](https://codemagic.io/apps/617b756fa05d5ec5b323a0de/617b756fa05d5ec5b323a0dd/latest_build) [![codecov](https://codecov.io/gh/idabgsram/ditonton_app/branch/master/graph/badge.svg?token=WFN4DPWBDM)](https://codecov.io/gh/idabgsram/ditonton_app)
+
 # Ditonton v1.0.1
 
 a Project Improved by Ida Bagus Rama Mahendra
