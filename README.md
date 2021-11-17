@@ -29,7 +29,7 @@ type :
 
 # Testing
 to run normal testing, type :
-`flutter test modules/core modules/home modules/movies modules/search modules/tv_shows modules/watchlist --coverage`
+`flutter test modules/about modules/core modules/home modules/movies modules/search modules/tv_shows modules/watchlist --coverage`
 
 to run universal coverage testing (linux or mac), type :
 `./test-coverage.sh`

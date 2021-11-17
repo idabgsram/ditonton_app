@@ -152,9 +152,9 @@ class DatabaseHelper {
     final db = await database;
     db!.transaction((txn) async {
       for (final movie in movies) {
-          final movieJson = movie.toJson();
-          movieJson['category'] = category;
-          txn.insert(_tblCache, movieJson);
+        final movieJson = movie.toJson();
+        movieJson['category'] = category;
+        txn.insert(_tblCache, movieJson);
       }
     });
   }
@@ -184,9 +184,9 @@ class DatabaseHelper {
     final db = await database;
     db!.transaction((txn) async {
       for (final tv in tvs) {
-          final movieJson = tv.toJson();
-          movieJson['category'] = category;
-          txn.insert(_tblTVCache, movieJson);
+        final tvJson = tv.toJson();
+        tvJson['category'] = category;
+        txn.insert(_tblTVCache, tvJson);
       }
     });
   }

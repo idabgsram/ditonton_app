@@ -12,9 +12,6 @@ import '../../helpers/test_helper.mocks.dart';
 import '../../json_reader.dart';
 
 void main() {
-  const API_KEY = 'api_key=76315bd76ea937981aa95c14d71bbac8';
-  const BASE_URL = 'https://api.themoviedb.org/3';
-
   late MovieRemoteDataSourceImpl dataSource;
   late MockHttpClient mockHttpClient;
 

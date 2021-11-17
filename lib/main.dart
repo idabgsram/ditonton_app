@@ -1,5 +1,4 @@
 import 'package:core/core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:home/presentation/bloc/home_now_playing_movies_bloc.dart';
 import 'package:home/presentation/bloc/home_ota_tv_bloc.dart';
 import 'package:home/presentation/bloc/home_popular_movies_bloc.dart';
