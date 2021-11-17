@@ -35,7 +35,7 @@ void main() {
       print('Going back..');
       await driver.tap(find.byValueKey('back_button'));
       print('OK its done!');
-    });
+    }, timeout:Timeout.none);
 
     test('TV Page check', () async {
       await driver.waitFor(find.text('TV Shows'));
@@ -60,7 +60,7 @@ void main() {
       print('Going back..');
       await driver.tap(find.byValueKey('back_button'));
       print('OK its done!');
-    });
+    }, timeout:Timeout.none);
 
     test('Watchlist Page check', () async {
       final drawerFinder = find.byTooltip('Open navigation menu');
@@ -71,6 +71,6 @@ void main() {
       print('Going back..');
       await driver.tap(find.byValueKey('back_button'));
       print('OK its done!');
-    });
+    }, timeout:Timeout.none);
   });
 }
