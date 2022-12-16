@@ -8,8 +8,7 @@ homepage:
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
-  flutter: ">=1.17.0"
+  sdk: '>=2.17.6 <3.0.0'
 
 dependencies:
   flutter:
@@ -20,13 +19,13 @@ dependencies:
     path: ../movies
   tv_shows:
     path: ../tv_shows
-  flutter_bloc: ^7.2.0
+  flutter_bloc: ^8.1.1
 
 dev_dependencies:
-  mockito: ^5.0.16
-  mocktail: ^0.2.0
-  build_runner: ^2.0.4
-  bloc_test: ^8.3.0
+  mockito: ^5.3.2
+  mocktail: ^0.3.0
+  build_runner: ^2.3.0
+  bloc_test: ^9.1.0
   flutter_test:
     sdk: flutter
 
